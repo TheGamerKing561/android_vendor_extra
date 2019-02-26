@@ -8,3 +8,6 @@
 
 # Inherit SELinux Makefile
 include $(VENDOR_EXTRA_PATH)/sepolicy/SEPolicy.mk
+
+# Security patch level
+VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
