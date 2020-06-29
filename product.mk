@@ -34,6 +34,17 @@ TARGET_BOOTANIMATION_HALF_RES := true
 PRODUCT_PACKAGES += \
     Bellis
 
+# Init
+PRODUCT_PACKAGES += \
+    init.safailnet.rc
+
+PRODUCT_PACKAGES += \
+    neofetch
+
+# Iperf3
+PRODUCT_PACKAGES += \
+    iperf3
+
 # Overlays
 PRODUCT_PACKAGES += \
     FrameworkOverlayEXTRA \
@@ -41,13 +52,6 @@ PRODUCT_PACKAGES += \
     SystemUIOverlayEXTRA \
     SystemUIOverlayRIPPLE \
     UpdaterOverlayEXTRA
-
-# Rootdir
-PRODUCT_PACKAGES += \
-    init.safailnet.rc
-
-PRODUCT_PACKAGES += \
-    neofetch
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
