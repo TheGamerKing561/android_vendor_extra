@@ -48,6 +48,7 @@ PRODUCT_PACKAGES += \
 # Overlays
 PRODUCT_PACKAGES += \
     FrameworkOverlayEXTRA \
+    SettingsOverlayEXTRA \
     SimpleDeviceConfigOverlayEXTRA \
     SystemUIOverlayEXTRA \
     SystemUIOverlayLEGACY \
