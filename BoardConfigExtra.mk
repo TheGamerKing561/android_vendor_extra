@@ -9,6 +9,11 @@
 # Inherit SELinux Makefile
 include $(VENDOR_EXTRA_PATH)/sepolicy/SEPolicy.mk
 
+# Architecture
+ifneq (,$(filter $(TARGET_BOARD_PLATFORM),lahaina))
+TARGET_ARCH_VARIANT := armv8-2a-dotprod
+endif
+
 # Kernel
 ifneq (,$(filter $(PRODUCT_DEVICE),cerro dodge tiro xaga))
 KERNEL_LTO := thin
