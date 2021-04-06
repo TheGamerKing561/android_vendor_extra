@@ -1,7 +1,7 @@
 From 54f8a9080fd39b8dec321d8af7654219594b749c Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Wed, 7 Oct 2020 00:24:54 -0700
-Subject: [PATCH] init: Report valid verified boot for SafetyNet checks
+Subject: [PATCH 1/2] init: Report valid verified boot for SafetyNet checks
 
 Google's SafetyNet integrity checks will check the values of these
 properties when performing basic attestation. Setting fake values helps
