@@ -13,3 +13,9 @@ on early-init && property:ro.boot.product.hardware.sku=moonstone_p_global
 
 on early-init && property:ro.boot.product.hardware.sku=sunstone_global
     setprop ro.boot.hardware.sku sunstone_global
+
+# Overrides
+service statsd /system/bin/echo ""
+    override
+    oneshot
+    disabled

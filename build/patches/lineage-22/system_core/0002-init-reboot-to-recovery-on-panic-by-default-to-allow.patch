@@ -1,7 +1,7 @@
 From 52e672e0533d6fe8011601ae7c73cb097a55e2f7 Mon Sep 17 00:00:00 2001
 From: Alexander Martinz <amartinz@shiftphones.com>
 Date: Fri, 27 Aug 2021 13:37:54 +0200
-Subject: [PATCH 3/3] init: reboot to recovery on panic by default to allow
+Subject: [PATCH 2/2] init: reboot to recovery on panic by default to allow
  reading pstore
 
 Note: bootloaders can still change the reboot target using cmdline.
