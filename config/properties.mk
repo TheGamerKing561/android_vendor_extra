@@ -11,6 +11,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     dalvik.vm.dex2oat64.enabled=true
 
+# Too many tombstones can cause bugreports to grow too large to be uploaded.
+PRODUCT_PRODUCT_PROPERTIES += \
+    tombstoned.max_tombstone_count=10
+
 ifneq ($(filter daisy prague stanford ysl,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 # Set lowram options
 PRODUCT_PRODUCT_PROPERTIES += \
