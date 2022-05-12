@@ -28,6 +28,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
     ro.surface_flinger.game_default_frame_rate_override=$(TARGET_GAME_DEFAULT_FRAME_RATE) \
     debug.sf.enable_egl_image_tracker=0
 
+# hwui
+PRODUCT_PRODUCT_PROPERTIES += \
+    debug.hwui.skia_atrace_enabled=false
+
 # Display
 ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 PRODUCT_PRODUCT_PROPERTIES += \
