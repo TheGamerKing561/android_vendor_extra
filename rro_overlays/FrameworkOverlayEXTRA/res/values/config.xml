@@ -40,5 +40,7 @@
         <item>com.mediatek.ims</item>
         <!-- Life360 -->
         <item>com.life360.android.safetymapd</item>
+        <!-- SystemUI -->
+        <item>com.android.systemui</item>
     </string-array>
 </resources>
