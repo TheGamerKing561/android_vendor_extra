@@ -42,5 +42,7 @@
         <item>com.life360.android.safetymapd</item>
         <!-- SystemUI -->
         <item>com.android.systemui</item>
+        <!-- Tethering -->
+        <item>com.android.networkstack.tethering</item>
     </string-array>
 </resources>
