@@ -12,7 +12,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.oem_unlock_supported=0
 
-# Graphics
+# SurfaceFlinger
 TARGET_GAME_DEFAULT_FRAME_RATE ?= 60
 ifneq ($(filter lisa nairo racer,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 TARGET_GAME_DEFAULT_FRAME_RATE := 90
@@ -25,7 +25,8 @@ TARGET_GAME_DEFAULT_FRAME_RATE := 144
 endif
 
 PRODUCT_PRODUCT_PROPERTIES += \
-    ro.surface_flinger.game_default_frame_rate_override=$(TARGET_GAME_DEFAULT_FRAME_RATE)
+    ro.surface_flinger.game_default_frame_rate_override=$(TARGET_GAME_DEFAULT_FRAME_RATE) \
+    debug.sf.enable_egl_image_tracker=0
 
 # Display
 ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
