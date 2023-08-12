@@ -45,6 +45,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     init.extra.rc
 
+ifneq ($(filter lisa venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+PRODUCT_PACKAGES += \
+    init.sm8350.rc
+endif
+
 # Iperf3
 PRODUCT_PACKAGES += \
     iperf3

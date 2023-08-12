@@ -24,3 +24,10 @@ prebuilt_etc {
     sub_dir: "init",
     product_specific: true,
 }
+
+prebuilt_etc {
+    name: "init.sm8350.rc",
+    src: "init.sm8350.rc",
+    sub_dir: "init",
+    vendor: true,
+}
