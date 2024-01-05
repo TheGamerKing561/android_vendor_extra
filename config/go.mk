@@ -23,8 +23,8 @@ SYSTEMUI_OPTIMIZE_JAVA := true
 # Reduce system server verbosity
 PRODUCT_SYSTEM_SERVER_DEBUG_INFO := false
 
-# Disable Scudo to save RAM.
-PRODUCT_DISABLE_SCUDO := true
+# Use the low memory allocator to save RSS.
+MALLOC_SVELTE := true
 
 # Dexpreopt
 WITH_DEXPREOPT_DEBUG_INFO := false
