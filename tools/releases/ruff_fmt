@@ -1,4 +1,0 @@
-#!/bin/bash
-
-ruff check --config=ruff.toml --select=I *.py --fix --no-cache
-ruff format --config=ruff.toml *.py --no-cache

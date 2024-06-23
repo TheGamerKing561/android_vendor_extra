@@ -1,6 +1,6 @@
 # Shebang is intentionally missing - do not run as a script
 
-# Copyright (C) 2024-2025 Giovanni Ricca
+# SPDX-FileCopyrightText: Giovanni Ricca
 # SPDX-License-Identifier: Apache-2.0
 
 # Override host metadata to make builds more reproducible and avoid leaking info
