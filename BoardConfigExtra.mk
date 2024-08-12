@@ -10,6 +10,11 @@
 include $(VENDOR_EXTRA_PATH)/sepolicy/SEPolicy.mk
 
 # Kernel
+ifneq (,$(filter $(PRODUCT_DEVICE),dodge))
+BOARD_KERNEL_CMDLINE += \
+    rcutree.enable_rcu_lazy=1
+endif
+
 ifneq (,$(filter $(PRODUCT_DEVICE),xaga dodge))
 KERNEL_LTO := thin
 endif
