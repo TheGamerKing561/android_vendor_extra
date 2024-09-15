@@ -60,6 +60,9 @@
 
         <!-- Don't pin camera app to save memory -->
         <item>runtime_native_boot/pin_camera=false</item>
+
+        <!-- Media Provider -->
+        <item>mediaprovider/allowed_cloud_providers=com.google.android.apps.photos.cloudpicker</item>
     </string-array>
 
     <string-array name="configs_base_soft">
