@@ -62,6 +62,7 @@ apply_patches() {
         cd "${root_dir}/${project_path}" || continue
 
         # Apply patches and suppress abort messages
+        LOGI "Applying patches from ${patches_dir}/${project_name}\n"
         git am --no-gpg-sign "${patches_dir}/${project_name}"/*.patch || git am --abort &>/dev/null
     done
 
