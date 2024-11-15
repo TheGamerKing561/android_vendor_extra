@@ -85,17 +85,6 @@ GH_MESSAGE = f"""📅 Build date: `{GH_TAG}`
 📕 [Wiki & Instructions](https://wiki.itsvixano.me/devices/{sys.argv[1]}/)
 🔧 [Bug reporting](https://wiki.itsvixano.me/troubleshooting/)"""
 
-# Add warning about signed builds
-if GH_LINEAGE == "21.0" and sys.argv[1] in [
-    "daisy",
-    "lisa",
-    "miatoll",
-    "sakura",
-    "xaga",
-    "ysl",
-]:
-    GH_MESSAGE += f"\n\n_Since the Android 14 QPR3 update (June 2024 patches), I decided to start signing the builds with our private keys (hence you can't update your existing installation with the updater). Please follow the [Upgrade](http://wiki.itsvixano.me/devices/{sys.argv[1]}/upgrade) instructions to migrate from unsigned to signed builds._"
-
 # Calculate the sha1sums of the assets
 GH_MESSAGE += "\n\n🔗 Sha1sums"
 for asset in GH_ASSETS:
