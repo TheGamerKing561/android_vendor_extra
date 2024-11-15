@@ -7,10 +7,12 @@
 
 import sys
 import os
-from config import GH_TOKEN
+from datetime import datetime as dt
 from hashlib import md5
 from re import search, sub
 from glob import glob
+
+from config import GH_TOKEN
 
 # Release build
 is_release_build = os.environ.get("RELEASE_BUILD", "false") == "true"
@@ -28,6 +30,12 @@ version, datetime, incremental, codename = (
     getprop("ro.build.version.incremental"),  # incremental
     getprop("ro.lineage.device"),  # codename
 )
+
+if int(float(version)) >= 22:
+    incremental_json = dt.fromtimestamp(int(incremental)).strftime("%Y%m%d")
+else:
+    incremental_json = sub("[^0-9]", "", incremental)[:-6]
+
 filename = max(
     glob("".join(["lineage-", version, "*", ".zip"])),
     key=os.path.getctime,
@@ -39,7 +47,7 @@ url = "".join(
         "https://github.com/ItsVixano-releases/LineageOS_",
         codename,
         "/releases/download/",
-        sub("[^0-9]", "", incremental)[:-6],
+        incremental_json,
         "/",
         filename,
     ]
