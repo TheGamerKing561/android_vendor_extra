@@ -41,19 +41,19 @@ except FileNotFoundError:
 def get_device(var):
     return {
         # LineageOS 22.0
-        # - None
+        'daisy': {1: 'Mi A2 Lite', 2: '22.0', 3: 'LineageOS_daisy'},
+        'gemstone': {1: 'Redmi Note 12 5G', 2: '22.0', 3: 'LineageOS_gemstone'},
+        'lisa': {1: 'Xiaomi 11 Lite 5G NE', 2: '22.0', 3: 'LineageOS_lisa'},
+        'miatoll': {1: 'Xiaomi Atoll Family', 2: '22.0', 3: 'LineageOS_miatoll'},
+        'sakura': {1: 'Redmi 6 Pro', 2: '22.0', 3: 'LineageOS_sakura'},
+        'xaga': {1: 'POCO X4 GT', 2: '22.0', 3: 'LineageOS_xaga'},
+        'ysl': {1: 'Redmi S2/Y2', 2: '22.0', 3: 'LineageOS_ysl'},
         # LineageOS 21.0
-        'daisy': {1: 'Mi A2 Lite', 2: '21.0', 3: 'LineageOS_daisy'},
-        'gemstone': {1: 'Redmi Note 12 5G', 2: '21.0', 3: 'LineageOS_gemstone'},
-        'lisa': {1: 'Xiaomi 11 Lite 5G NE', 2: '21.0', 3: 'LineageOS_lisa'},
-        'miatoll': {1: 'Xiaomi Atoll Family', 2: '21.0', 3: 'LineageOS_miatoll'},
-        'sakura': {1: 'Redmi 6 Pro', 2: '21.0', 3: 'LineageOS_sakura'},
-        'xaga': {1: 'POCO X4 GT', 2: '21.0', 3: 'LineageOS_xaga'},
-        'ysl': {1: 'Redmi S2/Y2', 2: '21.0', 3: 'LineageOS_ysl'},
+        # - None
         # LineageOS 20.0
         'prague': {1: 'Huawei P8 Lite 2017', 2: '20.0', 3: 'LineageOS_prague'},
         'stanford': {1: 'Honor 9', 2: '20.0', 3: 'LineageOS_stanford'},
-        ## TEST ##
+        # Test
         'test': {1: 'Test Device', 2: '12.3', 3: 'LineageOS_test'},
     }.get(var)  # fmt: skip
 
