@@ -1,7 +1,7 @@
 From 17a9480c9a8af36aa0d4b3dc87007f8efe003d39 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Fri, 8 Nov 2024 20:17:23 +0000
-Subject: [PATCH 7/7] soong: scripts: Only display `BuildId`
+Subject: [PATCH 7/6] soong: scripts: Only display `BuildId`
 
 * Matches Pixel behaviour
 
