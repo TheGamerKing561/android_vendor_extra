@@ -1,7 +1,3 @@
-#
-# go_vendor.prop for vendor/extra
-#
-
 # Set lowram options
 ro.lmk.critical_upgrade=true
 ro.lmk.upgrade_pressure=40

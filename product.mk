@@ -4,14 +4,20 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Inherit Android Go Makefile
+VENDOR_EXTRA_PATH := vendor/extra
+
+# Inherit vendor/extra configs
 $(call inherit-product, vendor/extra/config/go.mk)
+$(call inherit-product, vendor/extra/config/security.mk)
 
 # Inherit priv Makefile
 $(call inherit-product-if-exists, vendor/extra/priv/product.mk)
 
 # Inherit MiuiCamera Makefile
 $(call inherit-product-if-exists, vendor/xiaomi/miuicamera-$(shell echo -n $(TARGET_PRODUCT) | sed -e 's/^[a-z]*_//g')/device.mk)
+
+# Updater
+$(call soong_config_set,lineage_extra,product_version_major,$(PRODUCT_VERSION_MAJOR))
 
 # Audio (Debugging)
 PRODUCT_PACKAGES += \
@@ -22,14 +28,8 @@ PRODUCT_PACKAGES += \
 TARGET_BOOTANIMATION_HALF_RES := true
 
 # Bellis
-ifneq (,$(wildcard packages/apps/Bellis))
 PRODUCT_PACKAGES += \
     Bellis
-endif
-
-# MindTheGapps
-PRODUCT_EXTRA_RECOVERY_KEYS += \
-    vendor/extra/build/target/product/security/mindthegapps
 
 # Overlays
 PRODUCT_PACKAGES += \
@@ -38,26 +38,13 @@ PRODUCT_PACKAGES += \
     RippleSystemUIOverlay \
     SimpleDeviceConfigOverlay
 
-# RemovePackages
-PRODUCT_PACKAGES += \
-    RemovePackages
-
 # Rootdir
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/etc/init.safailnet.rc:$(TARGET_COPY_OUT_PRODUCT)/etc/init/init.safailnet.rc
+    $(VENDOR_EXTRA_PATH)/rootdir/etc/init.safailnet.rc:$(TARGET_COPY_OUT_PRODUCT)/etc/init/init.safailnet.rc
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/bin/neofetch:$(TARGET_COPY_OUT_SYSTEM)/bin/neofetch
+    $(VENDOR_EXTRA_PATH)/rootdir/bin/neofetch:$(TARGET_COPY_OUT_SYSTEM)/bin/neofetch
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-    $(LOCAL_PATH)
-
-# Spoof `dev-keys` builds into `release-keys`
-ifneq ($(DEFAULT_SYSTEM_DEV_CERTIFICATE),build/make/target/product/security/testkey)
-ifeq ($(shell expr $(PRODUCT_VERSION_MAJOR) \< 22),1)
-PRODUCT_BUILD_PROP_OVERRIDES += \
-    BUILD_VERSION_TAGS="release-keys" \
-    BUILD_DISPLAY_ID="$(BUILD_ID)"
-endif
-endif
+    $(VENDOR_EXTRA_PATH)

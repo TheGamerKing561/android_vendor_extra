@@ -1,0 +1,29 @@
+//
+// Copyright (C) 2024 Giovanni Ricca
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+soong_config_module_type {
+    name: "lineage_updater_overlay",
+    module_type: "runtime_resource_overlay",
+    config_namespace: "lineage_extra",
+    value_variables: ["product_version_major"],
+    properties: ["resource_dirs"],
+}
+
+lineage_updater_overlay {
+    name: "LineageUpdaterOverlay",
+    soong_config_variables: {
+        product_version_major: {
+            resource_dirs: ["%s/res"],
+            conditions_default: {
+                resource_dirs: ["base/res"],
+            },
+        },
+    },
+    manifest: "AndroidManifest.xml",
+    system_ext_specific: true,
+    certificate: "platform",
+    sdk_version: "current",
+}
