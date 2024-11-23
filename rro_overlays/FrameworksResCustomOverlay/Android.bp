@@ -6,6 +6,6 @@
 //
 
 runtime_resource_overlay {
-    name: "FrameworksResOverlay",
-    system_ext_specific: true,
+    name: "FrameworksResCustomOverlay",
+    product_specific: true,
 }

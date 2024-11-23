@@ -33,7 +33,7 @@ PRODUCT_PACKAGES += \
 
 # Overlays
 PRODUCT_PACKAGES += \
-    FrameworksResOverlay \
+    FrameworksResCustomOverlay \
     LineageUpdaterOverlay \
     RippleSystemUIOverlay \
     SimpleDeviceConfigOverlay
