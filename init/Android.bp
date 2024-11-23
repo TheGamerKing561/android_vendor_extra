@@ -1,0 +1,21 @@
+// Init scripts
+sh_binary {
+    name: "neofetch",
+    src: "neofetch",
+    product_specific: true,
+}
+
+// Init configuration files
+prebuilt_etc {
+    name: "init.debugrom.rc",
+    src: "init.debugrom.rc",
+    sub_dir: "init",
+    product_specific: true,
+}
+
+prebuilt_etc {
+    name: "init.safailnet.rc",
+    src: "init.safailnet.rc",
+    sub_dir: "init",
+    product_specific: true,
+}

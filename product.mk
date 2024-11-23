@@ -39,11 +39,11 @@ PRODUCT_PACKAGES += \
     SimpleDeviceConfigOverlay
 
 # Rootdir
-PRODUCT_COPY_FILES += \
-    $(VENDOR_EXTRA_PATH)/rootdir/etc/init.safailnet.rc:$(TARGET_COPY_OUT_PRODUCT)/etc/init/init.safailnet.rc
+PRODUCT_PACKAGES += \
+    init.safailnet.rc
 
-PRODUCT_COPY_FILES += \
-    $(VENDOR_EXTRA_PATH)/rootdir/bin/neofetch:$(TARGET_COPY_OUT_SYSTEM)/bin/neofetch
+PRODUCT_PACKAGES += \
+    neofetch
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
