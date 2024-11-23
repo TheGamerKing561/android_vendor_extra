@@ -1,0 +1,37 @@
+From 45c7dcda89fd31ba701757d993e8342192bfcc6f Mon Sep 17 00:00:00 2001
+From: nift4 <nift4@protonmail.com>
+Date: Tue, 3 Sep 2024 18:16:46 +0200
+Subject: [PATCH 2/3] compat: expose android.hardware.sensors@1.0-convert as
+ shared lib
+
+Some MTK blobs used to link against libsensorndkbridge for this but
+libsensorndkbridge migrated to AIDL. However it turns out these blobs
+weren't even using ASensor* APIs but just the convert APIs that are
+provided as static lib in AOSP.
+
+Change-Id: Iecfdbb2c82be502ded090207829bf6489dd91891
+---
+ Android.bp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Android.bp b/Android.bp
+index 1704f38..e71d791 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -238,6 +238,13 @@ cc_library_shared {
+     vendor_available: true,
+ }
+ 
++cc_library_shared {
++    name: "android.hardware.sensors@1.0-convert-shared",
++    shared_libs: ["libhidlbase"],
++    whole_static_libs: ["android.hardware.sensors@1.0-convert"],
++    vendor_available: true,
++}
++
+ cc_library_shared {
+     name: "libaudioproxy_shim",
+     srcs: ["libaudioproxy/libaudioproxy_shim.cpp"],
+-- 
+2.47.0
+

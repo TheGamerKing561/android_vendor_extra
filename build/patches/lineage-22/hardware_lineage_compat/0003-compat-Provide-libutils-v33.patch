@@ -1,7 +1,7 @@
-From 2c9790203b8ca47dd2954f298ccd3c6bc930976c Mon Sep 17 00:00:00 2001
+From ecbc6d64814dce49d7340bec256656f7d4605aca Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Sat, 16 Nov 2024 10:53:31 +0000
-Subject: [PATCH] compat: Provide libutils-v33
+Subject: [PATCH 3/3] compat: Provide libutils-v33
 
 Copied from prebuilts/vndk/v33/arm64/*/shared/vndk-sp
 and changed SONAME using the following command:
@@ -17,10 +17,10 @@ Change-Id: Ib91ff45ce3a2f015aad7673fde930b72e540d7c8
  create mode 100755 vndk/v33/arm64/libutils-v33.so
 
 diff --git a/Android.bp b/Android.bp
-index 505b8bf..7db3ab7 100644
+index e71d791..38af0bd 100644
 --- a/Android.bp
 +++ b/Android.bp
-@@ -564,6 +564,24 @@ cc_prebuilt_library_shared {
+@@ -578,6 +578,24 @@ cc_prebuilt_library_shared {
      check_elf_files: false,
  }
  
