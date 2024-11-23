@@ -16,3 +16,6 @@ pm.dexopt.downgrade_after_inactive_days=10
 # Some notable apps that will be affected by this are gms and chrome.
 # b/65591595.
 pm.dexopt.shared=quicken
+
+# Memory optimizations
+ro.config.avoid_gfx_accel=true

@@ -11,9 +11,7 @@
 -include vendor/xiaomi/miuicamera-$(PRODUCT_DEVICE)/BoardConfig.mk
 
 # Props
-TARGET_VENDOR_PROP += $(VENDOR_EXTRA_PATH)/props/vendor.prop
-TARGET_SYSTEM_EXT_PROP += $(VENDOR_EXTRA_PATH)/props/system_ext.prop
+TARGET_PRODUCT_PROP += $(VENDOR_EXTRA_PATH)/props/product.prop
 ifneq ($(filter msm8953 hi3660 hi6250,$(TARGET_BOARD_PLATFORM)),)
-TARGET_VENDOR_PROP += $(VENDOR_EXTRA_PATH)/props/go_vendor.prop
-TARGET_SYSTEM_EXT_PROP += $(VENDOR_EXTRA_PATH)/props/go_system_ext.prop
+TARGET_PRODUCT_PROP += $(VENDOR_EXTRA_PATH)/props/go_product.prop
 endif
