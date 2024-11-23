@@ -25,3 +25,6 @@ PRODUCT_SYSTEM_SERVER_DEBUG_INFO := false
 
 # Disable Scudo to save RAM.
 PRODUCT_DISABLE_SCUDO := true
+
+# Dexpreopt
+WITH_DEXPREOPT_DEBUG_INFO := false
