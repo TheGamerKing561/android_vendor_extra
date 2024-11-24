@@ -36,7 +36,8 @@ PRODUCT_PACKAGES += \
     FrameworksResCustomOverlay \
     LineageUpdaterOverlay \
     RippleSystemUIOverlay \
-    SimpleDeviceConfigOverlay
+    SimpleDeviceConfigOverlay \
+    SystemUICustomOverlay
 
 # Rootdir
 PRODUCT_PACKAGES += \
