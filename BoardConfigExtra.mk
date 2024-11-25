@@ -5,7 +5,7 @@
 #
 
 # Inherit priv Makefile
--include $(VENDOR_EXTRA_PATH)/priv/BoardConfigPriv.mk
+-include $(VENDOR_EXTRA_PATH)-priv/BoardConfigPriv.mk
 
 # Inherit MiuiCamera Makefile
 -include vendor/xiaomi/miuicamera-$(PRODUCT_DEVICE)/BoardConfig.mk
