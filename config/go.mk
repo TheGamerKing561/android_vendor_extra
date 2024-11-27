@@ -25,6 +25,7 @@ PRODUCT_SYSTEM_SERVER_DEBUG_INFO := false
 
 # Use the low memory allocator to save RSS.
 MALLOC_SVELTE := true
+MALLOC_SVELTE_FOR_LIBC32 := true
 
 # Dexpreopt
 WITH_DEXPREOPT_DEBUG_INFO := false
