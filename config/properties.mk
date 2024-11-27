@@ -23,16 +23,9 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     pm.dexopt.downgrade_after_inactive_days=10
 
-# set the compiler filter for shared apks to quicken.
-# Rationale: speed has a lot of dex code expansion, it uses more ram and space
-# compared to quicken. Using quicken for shared APKs on Go devices may save RAM.
-# Note that this is a trade-off: here we trade clean pages for dirty pages,
-# extra cpu and battery. That's because the quicken files will be jit-ed in all
-# the processes that load of shared apk and the code cache is not shared.
-# Some notable apps that will be affected by this are gms and chrome.
-# b/65591595.
+# set the compiler filter for shared apks to verify.
 PRODUCT_PRODUCT_PROPERTIES += \
-    pm.dexopt.shared=quicken
+    pm.dexopt.shared=verify
 
 # Memory optimizations
 PRODUCT_PRODUCT_PROPERTIES += \
