@@ -5,15 +5,16 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-    <!-- Whether safe headphone volume is enabled or not (country specific). -->
+    <!-- Whether safe headphone hearing is enforced by any regulation (e.g.
+         EN50332-3, EN50332-2) or not (country specific). -->
     <bool name="config_safe_media_volume_enabled">false</bool>
+
+    <!-- The amount to scale fullscreen snapshots for Overview and snapshot starting windows. -->
+    <item name="config_highResTaskSnapshotScale" format="float" type="dimen">0.8</item>
 
     <!-- The max scale for the wallpaper when it's zoomed in -->
     <item name="config_wallpaperMaxScale" format="float" type="dimen">1</item>
 
     <!-- the number of the max cached processes in the system. -->
     <integer name="config_customizedMaxCachedProcesses">64</integer>
-
-    <!-- The amount to scale fullscreen snapshots for Overview and snapshot starting windows. -->
-    <item name="config_highResTaskSnapshotScale" format="float" type="dimen">0.8</item>
 </resources>
