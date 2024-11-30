@@ -1,0 +1,328 @@
+From 0f9f273cef75997ddd525a44869141c14666d23c Mon Sep 17 00:00:00 2001
+From: Ricky Cheung <rcheung844@gmail.com>
+Date: Tue, 16 Jul 2024 18:58:14 +0800
+Subject: [PATCH 2/2] wcnss-service: Allow using WCNSS QMI without building
+ with BSP
+
+Currently, wcnss-service will generate a default MAC address set in
+WCNSS_qcom_cfg.ini for devcies building without a custom libwcnss_qmi.
+This is not ideal and does not meet charter requirements for LineageOS.
+
+This patch introductes a new part of the service that loads QMI/QCCI
+functions via libdl, without requiring the use of most headers from
+QCOM BSPs (so that we won't receive a DMCA complaint from QCOM),
+while utilizing the existing open-sourced components.
+
+In missing_qmi_client_api.h, missing magic constants, functions and
+types are pulled from generic device blobs. Only required structs
+are created for the purposes of this library. These include:
+* dms_get_mac_address_req_msg_v01
+* dms_get_mac_address_resp_msg_v01
+
+To enable this feature for a device, the following needs to be added
+to BoardConfig.mk:
+TARGET_USES_QCOM_WCNSS_QMI := true
+TARGET_WCNSS_QMI_INCLUDE_DIR := $(DEVICE_PATH)/wifi/include
+
+A custom header file named missing_constants.h has to be created
+under the device tree. The directory containing this header file
+needs to be defined under TARGET_WCNSS_QMI_INCLUDE_DIR.
+Otherwise, you should not define TARGET_USES_QCOM_WCNSS_QMI to true.
+
+The header file should consist of a few constants required by
+libqmiservices.so. These constants are compiled into the library and
+is originally located in the BSPs. However, they can be obtained
+easily with a decompiler.
+
+Please note that for each QMI stack upgrade, it is possible that the
+constants would be modified. In that case, the maintainer would
+have to update these values manually.
+
+A sample of the header library can be found at the following link:
+https://gist.github.com/TipzRickyCheung/c4a15690a4ccf713114944db0db1d98b
+
+For testing, dms_get_service_object_shimshim_v01() is implemented to
+test for DMS_V01_IDL_MINOR_VERS, the only value observed to change
+between different QMI blobs.
+
+Before shipping a device with this feature, please note that some
+of them will obtain the MAC address in reverse of what is expected.
+It is best advised to check the generated MAC address supplied in
+your logs against a list of vendor OUIs to make sure it is what would
+be expected. Set TARGET_USES_WCNSS_MAC_ADDR_REV to true if it is
+reversed.
+
+This patch should only support legacy-um and newer devices.
+Older ones from before legacy-um (e.g. MSM8916, MSM8994) may require
+some changes to wcnss_qmi_client.c (or old blobs in general).
+Since LineageOS dropped support for them in Android 12, no impact
+will be observed.
+
+Devices that does not use this feature is unaffected by this change.
+Maintainers may continue to use prebuilt wcnss_service blobs if using
+this feature is found to be unsatisfactory.
+
+Co-authored-by: Quallenauge <Hamsi2k@freenet.de>
+Test: boots, verified device MAC address is correct
+Change-Id: Ie77c56b6fae55ea451f1cacad4015d290c81e7c5
+---
+ wcnss-service/Android.mk               | 17 +++--
+ wcnss-service/missing_qmi_client_api.c | 90 ++++++++++++++++++++++++++
+ wcnss-service/missing_qmi_client_api.h | 71 ++++++++++++++++++++
+ wcnss-service/wcnss_qmi_client.c       | 17 +++++
+ 4 files changed, 190 insertions(+), 5 deletions(-)
+ create mode 100644 wcnss-service/missing_qmi_client_api.c
+ create mode 100644 wcnss-service/missing_qmi_client_api.h
+
+diff --git a/wcnss-service/Android.mk b/wcnss-service/Android.mk
+index 47df0a8..b61a6ca 100644
+--- a/wcnss-service/Android.mk
++++ b/wcnss-service/Android.mk
+@@ -12,18 +12,25 @@ ifeq ($(strip $(TARGET_USES_QCOM_WCNSS_QMI)),true)
+ ifeq ($(TARGET_USES_WCNSS_MAC_ADDR_REV),true)
+ LOCAL_CFLAGS += -DWCNSS_QMI_MAC_ADDR_REV
+ endif
+-ifeq ($(TARGET_PROVIDES_WCNSS_QMI),true)
+-LOCAL_CFLAGS += -DWCNSS_QMI_OSS
+-LOCAL_SHARED_LIBRARIES += libdl
+-else
++ifneq ($(QCPATH),)
+ LOCAL_CFLAGS += -DWCNSS_QMI -DMDM_DETECT
+ LOCAL_HEADER_LIBRARIES += libqmi_common_headers
+-LOCAL_SRC_FILES += wcnss_qmi_client.c device_management_service_v01.c
++LOCAL_SRC_FILES += device_management_service_v01.c
+ LOCAL_SHARED_LIBRARIES += libqmi_cci libqmi_common_so
+ LOCAL_HEADER_LIBRARIES += libmdmdetect_headers
+ LOCAL_SHARED_LIBRARIES += libmdmdetect
+ LOCAL_HEADER_LIBRARIES += libril-qc-qmi-services-headers
++else
++LOCAL_CFLAGS += -DWCNSS_QMI -DWCNSS_QMI_OSS
++LOCAL_SHARED_LIBRARIES += libdl
++LOCAL_SRC_FILES += missing_qmi_client_api.c
++ifneq ($(TARGET_PROVIDES_WCNSS_QMI),true)
++LOCAL_SRC_FILES += wcnss_qmi_client.c
+ endif #TARGET_PROVIDES_WCNSS_QMI
++ifneq ($(TARGET_WCNSS_QMI_INCLUDE_DIR),)
++LOCAL_C_INCLUDES += $(TARGET_WCNSS_QMI_INCLUDE_DIR)
++endif #TARGET_WCNSS_QMI_INCLUDE_DIR
++endif #QCPATH
+ endif #TARGET_USES_QCOM_WCNSS_QMI
+ LOCAL_MODULE_TAGS := optional
+ LOCAL_CFLAGS += -Wall -Werror
+diff --git a/wcnss-service/missing_qmi_client_api.c b/wcnss-service/missing_qmi_client_api.c
+new file mode 100644
+index 0000000..3285c24
+--- /dev/null
++++ b/wcnss-service/missing_qmi_client_api.c
+@@ -0,0 +1,90 @@
++/*
++ * Copyright (C) 2024 The LineageOS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#ifdef WCNSS_QMI_OSS
++#include <log/log.h>
++#include <dlfcn.h>
++#include "missing_qmi_client_api.h"
++
++#define SUCCESS 0
++#define FAILED -1
++
++#define QMI_CCI_LIB "libqmi_cci.so"
++#define QMISERVICES_LIB "libqmiservices.so"
++
++int missing_client_api_init()
++{
++    /* Get a handle of libqmi_cci.so */
++    libqmi_cci_handle = dlopen(QMI_CCI_LIB, RTLD_NOW);
++    if (!libqmi_cci_handle) {
++        ALOGE("%s: Failed to open %s: %s", __func__, QMI_CCI_LIB, dlerror());
++        goto exit;
++    }
++
++    qmi_client_init_instance = dlsym(libqmi_cci_handle, "qmi_client_init_instance");
++    if (!qmi_client_init_instance) {
++        ALOGE("%s: Failed to resolve function: %s: %s", __func__, "qmi_client_init_instance", dlerror());
++        goto exit;
++    }
++
++    qmi_client_send_msg_sync = dlsym(libqmi_cci_handle, "qmi_client_send_msg_sync");
++    if (!qmi_client_send_msg_sync) {
++        ALOGE("%s: Failed to resolve function: %s: %s", __func__, "qmi_client_send_msg_sync", dlerror());
++        goto exit;
++    }
++
++    qmi_client_release = dlsym(libqmi_cci_handle, "qmi_client_release");
++    if (!qmi_client_release) {
++        ALOGE("%s: Failed to resolve function: %s: %s", __func__, "qmi_client_release", dlerror());
++        goto exit;
++    }
++
++    /* Get a handle of libqmiservices.so */
++    libqmiservices_handle = dlopen(QMISERVICES_LIB, RTLD_NOW);
++    if (!libqmiservices_handle) {
++        ALOGE("%s: Failed to open %s: %s", __func__, QMISERVICES_LIB, dlerror());
++        goto exit;
++    }
++
++    dms_get_service_object_internal_v01 = dlsym(libqmiservices_handle, "dms_get_service_object_internal_v01");
++    if (!dms_get_service_object_internal_v01) {
++        ALOGE("%s: Failed to resolve function: %s: %s", __func__, "dms_get_service_object_internal_v01", dlerror());
++        goto exit;
++    }
++    return SUCCESS;
++
++exit:
++    return FAILED;
++}
++
++#ifdef ENABLE_DMS_SHIM
++void *dms_get_service_object_shimshim_v01()
++{
++    for (int i = 0; i < 255; ++i)
++    {
++        /* Only DMS_V01_IDL_MINOR_VERS is observed to vary between different blobs */
++        void* result = dms_get_service_object_internal_v01(1, i, 6);
++        if (result)
++        {
++            ALOGI("%s: Found magic value: %d", __func__, i);
++            return result;
++        }
++    }
++    // Nothing found
++    return 0;
++}
++#endif
++#endif
+diff --git a/wcnss-service/missing_qmi_client_api.h b/wcnss-service/missing_qmi_client_api.h
+new file mode 100644
+index 0000000..744f187
+--- /dev/null
++++ b/wcnss-service/missing_qmi_client_api.h
+@@ -0,0 +1,71 @@
++/*
++ * Copyright (C) 2024 The LineageOS Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#ifdef WCNSS_QMI_OSS
++/* From TARGET_WCNSS_QMI_INCLUDE_DIR */
++#include <missing_constants.h>
++
++/* Decide whether to use the DMS shim */
++#if !defined (DMS_V01_IDL_MAJOR_VERS) && !defined(DMS_V01_IDL_MINOR_VERS) && !defined(DMS_V01_IDL_TOOL_VERS)
++#define ENABLE_DMS_SHIM
++#endif
++
++/* Missing magic */
++#define QMI_NO_ERR 0
++#define QMI_CLIENT_INSTANCE_ANY 0xffff
++#define DMS_DEVICE_MAC_WLAN_V01 0
++#define QMI_DMS_GET_MAC_ADDRESS_REQ_V01 0x5Cull
++
++/* Local functions */
++int missing_client_api_init();
++void *dms_get_service_object_shimshim_v01();
++
++/* Library handles */
++void *libqmiservices_handle;
++void *libqmi_cci_handle;
++
++/* Missing QMI/QCCI functions */
++void *(*dms_get_service_object_internal_v01)(int32_t, int32_t, int32_t);
++#ifdef ENABLE_DMS_SHIM
++#define dms_get_service_object_v01() dms_get_service_object_shimshim_v01()
++#else
++#define dms_get_service_object_v01() dms_get_service_object_internal_v01( \
++			DMS_V01_IDL_MAJOR_VERS, DMS_V01_IDL_MINOR_VERS, \
++			DMS_V01_IDL_TOOL_VERS)
++#endif
++
++int (*qmi_client_init_instance)(void*, unsigned int, void*, void**, void**, uint32_t, void**);
++int (*qmi_client_send_msg_sync)(void*, unsigned int, void*, unsigned int,
++								void*, unsigned int, unsigned int);
++int (*qmi_client_release)(void*);
++
++/* Missing types */
++typedef int qmi_client_error_type;
++typedef void *qmi_client_type;
++typedef void *qmi_client_os_params;
++
++typedef struct {
++	int device;
++} dms_get_mac_address_req_msg_v01;
++
++typedef struct {
++	uint8_t  pad1[8];
++	uint8_t  mac_address_valid;
++	uint32_t mac_address_len;
++	uint8_t  mac_address[6];
++	uint8_t  pad2[2];
++} dms_get_mac_address_resp_msg_v01;
++#endif
+diff --git a/wcnss-service/wcnss_qmi_client.c b/wcnss-service/wcnss_qmi_client.c
+index 3e1fb0e..8815247 100644
+--- a/wcnss-service/wcnss_qmi_client.c
++++ b/wcnss-service/wcnss_qmi_client.c
+@@ -30,8 +30,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #define LOG_TAG "wcnss_qmi"
+ #include <cutils/log.h>
+ #include "wcnss_qmi_client.h"
++
++#ifdef WCNSS_QMI_OSS
++#include "missing_qmi_client_api.h"
++#else
+ #include "qmi_client.h"
+ #include "device_management_service_v01.h"
++#endif
++
+ #include <cutils/properties.h>
+ #include <string.h>
+ 
+@@ -48,10 +54,21 @@ int wcnss_init_qmi()
+ {
+ 	qmi_client_error_type qmi_client_err;
+ 
++#ifdef WCNSS_QMI_OSS
++	qmi_client_err = missing_client_api_init();
++	if (qmi_client_err != QMI_NO_ERR) {
++		ALOGE("%s: Error while Initializing missing client APIs: %d",
++			  __func__, qmi_client_err);
++		goto exit;
++	}
++#endif
++
+ 	ALOGE("%s: Initialize wcnss QMI Interface", __func__);
+         qmi_client_os_params dms_os_params;
+ 
++#ifndef WCNSS_QMI_OSS
+ 	memset(&dms_os_params, 0, sizeof(qmi_client_os_params));
++#endif
+ 	qmi_client_err = qmi_client_init_instance(dms_get_service_object_v01(),
+ 			QMI_CLIENT_INSTANCE_ANY, NULL, NULL,
+ 			&dms_os_params, 5000, &dms_qmi_client);
+-- 
+2.47.1
+
