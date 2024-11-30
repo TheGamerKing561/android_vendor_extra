@@ -13,9 +13,6 @@ $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/go.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/properties.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/security.mk)
 
-# Inherit priv Makefile
-$(call inherit-product-if-exists, $(VENDOR_EXTRA_PATH)-priv/product.mk)
-
 # Inherit MiuiCamera Makefile
 $(call inherit-product-if-exists, vendor/xiaomi/miuicamera-$(VENDOR_EXTRA_TARGET_DEVICE)/device.mk)
 

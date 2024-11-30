@@ -71,7 +71,6 @@ apply_patches() {
 
 if [[ "${APPLY_PATCHES}" == "true" ]]; then
     apply_patches "${VENDOR_EXTRA_PATH}"/build/patches/lineage-"${LOS_VERSION}"
-    apply_patches "${VENDOR_EXTRA_PATH}"-priv/build/patches/lineage-"${LOS_VERSION}"
 fi
 
 # functions
