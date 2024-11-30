@@ -1,7 +1,7 @@
-From dd3d92190e2da21e26d2e7b8b52f9e2d58702507 Mon Sep 17 00:00:00 2001
+From 1afcf7025cf49f9d39dcc959fd1d93bf4e2e97ad Mon Sep 17 00:00:00 2001
 From: Jeferson <jroliveira.oliveira301@gmail.com>
 Date: Fri, 17 Jun 2022 15:01:28 +0200
-Subject: [PATCH 02/72] base: SystemUI: Allow flags to be overrideable
+Subject: [PATCH 02/83] base: SystemUI: Allow flags to be overrideable
 
 Change-Id: Ibc17db2878c026120e831bb587a2d00d55ba4856
 ---
@@ -22,5 +22,5 @@ index 763930db..b3e8185e 100644
      <bool name="flag_monet">true</bool>
  
 -- 
-2.42.0
+2.47.0
 

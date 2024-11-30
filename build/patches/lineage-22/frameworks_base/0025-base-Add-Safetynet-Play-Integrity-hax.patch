@@ -1,0 +1,333 @@
+From ea66dbafa763acb3a4931b45bf7042a0e8e99468 Mon Sep 17 00:00:00 2001
+From: Danny Lin <danny@kdrag0n.dev>
+Date: Sun, 18 Jun 2023 12:13:11 +0530
+Subject: [PATCH 25/37] base: Add Safetynet/Play Integrity hax
+
+Author: Danny Lin <danny@kdrag0n.dev>
+Date:   Mon Oct 11 19:59:51 2021 -0700
+
+    Alter model name to avoid SafetyNet HW attestation enforcement
+
+    As of September 2, Google is enforcing SafetyNet's previously
+    opportunistic hardware-backed attestation based on device information.
+    Append a space to the device model name in order to avoid such
+    enforcement.
+
+    Also contains:
+            Spoof build fingerprint for Google Play Services
+
+            SafetyNet's CTS profile attestation checks whether Build.FINGERPRINT
+            matches that of the device's stock OS, which has passed CTS testing.
+            Spoof the fingerprint for Google Play Services to help pass SafetyNet.
+
+            We used to set the real system build fingerprint to the stock one, but
+            Android relies on each build having a unique fingerprint in order to
+            clear the correct caches and update persistent state for system changes.
+            On devices that no longer receive updates from the OEM, the build
+            fingerprint never changes and Android doesn't account for updates
+            correctly, which causes issues when updating without wiping data.
+            Only spoofing the fingerprint for Google Play Services fixes this issue.
+
+            Corresponding vendor commit:
+            "Only use stock build fingerprint for Google Play Services"
+
+            NB: This code is under the gmscompat package, but it does not depend on
+            any code from gmscompat.
+
+            Change-Id: I26a2498eb2e2163933303b03f6d516e5fb30fe51
+
+    * We don't need to spoof the fingerprint here since we do it globally, but we
+      use the Build field spoofing code it added for model
+
+    Change-Id: Ib7779e0aae40cab3730a56785e9231896917ab0a
+
+Author: Danny Lin <danny@kdrag0n.dev>
+Date:   Mon Oct 11 20:00:44 2021 -0700
+
+    keystore: Block key attestation for SafetyNet
+
+    SafetyNet (part of Google Play Services) opportunistically uses
+    hardware-backed key attestation via KeyStore as a strong integrity
+    check. This causes SafetyNet to fail on custom ROMs because the verified
+    boot key and bootloader unlock state can be detected from attestation
+    certificates.
+
+    As a workaround, we can take advantage of the fact that SafetyNet's
+    usage of key attestation is opportunistic (i.e. falls back to basic
+    integrity checks if it fails) and prevent it from getting the
+    attestation certificate chain from KeyStore. This is done by checking
+    the stack for DroidGuard, which is the codename for SafetyNet, and
+    pretending that the device doesn't support key attestation.
+
+    Key attestation has only been blocked for SafetyNet specifically, as
+    Google Play Services and other apps have many valid reasons to use it.
+    For example, it appears to be involved in Google's mobile security key
+    ferature.
+
+    Change-Id: I5146439d47f42dc6231cb45c4dab9f61540056f6
+
+Author: Tim Zimmermann <tim@linux4.de>
+Date:   Fri Jun 3 17:20:55 2022 +0200
+
+    core: Spoof build properties for SafetyNet
+
+    * Unfortunately system side security patch can't be spoofed
+      so we'll need to update the fingerprint every month
+
+    Change-Id: I3c6c17c43d297d18e7f19fa74b3d6c17b9961378
+
+Author: Tim Zimmermann <tim@linux4.de>
+Date:   Sat Jun 4 18:38:07 2022 +0200
+
+    core: Also spoof properties for samsung apps
+
+    * Especially galaxy wearable apps don't work
+      on samsung devices running AOSP
+
+    Change-Id: I3663df8761c52ab8a1259c17e3a663ebf2b0ddbd
+
+Author: SamarV-121 <samarvispute121@pm.me>
+Date:   Tue Nov 29 08:41:15 2022 +0000
+
+    gmscompat: Spoof Nexus 6P build fingerprint for GMS
+
+    * Helps to pass DEVICE_INTEGRITY, tested using https://github.com/1nikolas/play-integrity-checker-app
+    REF: https://github.com/kdrag0n/safetynet-fix/pull/207
+
+    Change-Id: Id5f98f2f95f775ebba0a484caccb0e3beb75849b
+
+Author: SamarV-121 <samarvispute121@pm.me>
+Date:   Wed Nov 30 06:37:02 2022 +0000
+
+    gmscompat: Stop spoofing vendor properties
+
+    Change-Id: If1ba11a211efdbb4e0e752073b28a785eebc0132
+
+Author: Danny Lin <danny@kdrag0n.dev>
+Date:   Mon Nov 1 20:06:48 2021 -0700
+
+    Limit SafetyNet workarounds to unstable GMS process
+
+    The unstable process is where SafetyNet attestation actually runs, so
+    we only need to spoof the model in that process. Leaving other processes
+    fixes various issues caused by model detection and flag provisioning,
+    including screen-off Voice Match in Google Assistant, broken At a Glance
+    weather and settings on Android 12, and more.
+
+    Change-Id: Idcf663907a6c3d0408dbd45b1ac53c9eb4200df8
+
+Author: SamarV-121 <samarvispute121@pm.me>
+Date:   Sat Dec 24 12:10:55 2022 +0000
+
+    AttestationHooks: Cleanup and refactor a bit
+
+    Change-Id: I957a06e97ec1deb949eb659474658df8fb791924
+
+Author: Anirudh Gupta <anirudhgupta109@aosip.dev>
+Date:   Wed Jan 4 18:20:56 2023 +0000
+
+    gmscompat: Set shipping level to 32 for devices >=33
+
+    If ro.product.first_api_level is 33, its forced to use HW attestation even though the safteynet checker app shows BASIC
+    setting it to 32 allows for software attestation and passing CTS
+
+    Change-Id: Ie7326eaac48424cdea3d9633ebe13c65053ef6c1
+    Signed-off-by: Dyneteve <dyneteve@hentaios.com>
+
+Author: Dyneteve <dyneteve@hentaios.com>
+Date:   Wed Feb 8 15:21:01 2023 +0000
+
+    gmscompat: Make CTS/Play Integrity pass again
+
+    The logic behind CTS and Play Integrity has been updated today it now
+    checks the product and model names against the fingerprint and if
+    they do not match the CTS profile will fail.
+
+    Also while we are at it use a newer FP from Pixel XL and add logging
+    for key attestation blocking for debugging.
+
+    Test: Boot, check for CTS and Play Integrity
+
+    Change-Id: I089d5ef935bba40338e10c795ea7d181103ffd15
+    Signed-off-by: Dyneteve <dyneteve@hentaios.com>
+
+Author: Tim Josten <timjosten@gmail.com>
+Date:   Tue Oct 24 21:55:02 2023 +0700
+
+    gmscompat: Fix GMS drain triggered by an outdated ROM build date
+
+    If the build date exceeds a month, GMS, thinking the device is Pixel, attempts a system update, which unexpectedly fails. This goes into an endless cycle which drains battery very quickly and generates a lot of heat. Let's fix it by spoofing the build date to something always fresh.
+
+    Change-Id: Ib38883026d2a957e0d0a570e164c415dac154bb1
+
+Change-Id: I774a8ffc98e329f5ccd79f07b0189b2ed19a6780
+---
+ core/java/android/app/Instrumentation.java    |   4 +
+ .../internal/gmscompat/AttestationHooks.java  | 104 ++++++++++++++++++
+ .../keystore2/AndroidKeyStoreSpi.java         |   3 +
+ 3 files changed, 111 insertions(+)
+ create mode 100644 core/java/com/android/internal/gmscompat/AttestationHooks.java
+
+diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
+index db216b1af..9445bc1b5 100644
+--- a/core/java/android/app/Instrumentation.java
++++ b/core/java/android/app/Instrumentation.java
+@@ -63,6 +63,8 @@ import android.view.WindowManagerGlobal;
+ 
+ import com.android.internal.content.ReferrerIntent;
+ 
++import com.android.internal.gmscompat.AttestationHooks;
++
+ import java.io.File;
+ import java.lang.annotation.Retention;
+ import java.lang.annotation.RetentionPolicy;
+@@ -1351,6 +1353,7 @@ public class Instrumentation {
+         Application app = getFactory(context.getPackageName())
+                 .instantiateApplication(cl, className);
+         app.attach(context);
++        AttestationHooks.initApplicationBeforeOnCreate(app);
+         return app;
+     }
+     
+@@ -1368,6 +1371,7 @@ public class Instrumentation {
+             ClassNotFoundException {
+         Application app = (Application)clazz.newInstance();
+         app.attach(context);
++        AttestationHooks.initApplicationBeforeOnCreate(app);
+         return app;
+     }
+ 
+diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+new file mode 100644
+index 000000000..5ee105879
+--- /dev/null
++++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+@@ -0,0 +1,104 @@
++/*
++ * Copyright (C) 2021 The Android Open Source Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.android.internal.gmscompat;
++
++import android.app.Application;
++import android.os.Build;
++import android.os.Build.VERSION;
++import android.util.Log;
++
++import java.lang.reflect.Field;
++import java.util.Arrays;
++
++/** @hide */
++public final class AttestationHooks {
++    private static final String TAG = "GmsCompat/Attestation";
++    private static final String PACKAGE_GMS = "com.google.android.gms";
++    private static final String PROCESS_UNSTABLE = "com.google.android.gms.unstable";
++    private static final String SAMSUNG = "com.samsung.android.";
++
++    private static volatile boolean sIsGms = false;
++
++    private AttestationHooks() { }
++
++    private static void setBuildField(String key, Object value) {
++        try {
++            // Unlock
++            Field field = Build.class.getDeclaredField(key);
++            field.setAccessible(true);
++
++            // Edit
++            field.set(null, value);
++
++            // Lock
++            field.setAccessible(false);
++        } catch (NoSuchFieldException | IllegalAccessException e) {
++            Log.e(TAG, "Failed to spoof Build." + key, e);
++        }
++    }
++
++    private static void setVersionField(String key, Integer value) {
++        try {
++            // Unlock
++            Field field = Build.VERSION.class.getDeclaredField(key);
++            field.setAccessible(true);
++
++            // Edit
++            field.set(null, value);
++
++            // Lock
++            field.setAccessible(false);
++        } catch (NoSuchFieldException | IllegalAccessException e) {
++            Log.e(TAG, "Failed to spoof Build." + key, e);
++        }
++    }
++
++    public static void initApplicationBeforeOnCreate(Application app) {
++        String packageName = app.getPackageName();
++        String processName = Application.getProcessName();
++
++        if (PACKAGE_GMS.equals(packageName)) {
++            setBuildField("TIME", System.currentTimeMillis());
++            if (PROCESS_UNSTABLE.equals(processName)) {
++              sIsGms = true;
++              setBuildField("FINGERPRINT", "google/marlin/marlin:7.1.2/NJH47F/4146041:user/release-keys");
++              setBuildField("PRODUCT", "marlin");
++              setBuildField("DEVICE", "marlin");
++              setBuildField("MODEL", "Pixel XL");
++              setVersionField("DEVICE_INITIAL_SDK_INT", Build.VERSION_CODES.N_MR1);
++            }
++        }
++
++        // Samsung apps like SmartThings, Galaxy Wearable crashes on samsung devices running AOSP
++        if (packageName.startsWith(SAMSUNG)) {
++          setBuildField("BRAND", "google");
++          setBuildField("MANUFACTURER", "google");
++        }
++    }
++
++    private static boolean isCallerSafetyNet() {
++        return Arrays.stream(Thread.currentThread().getStackTrace())
++                .anyMatch(elem -> elem.getClassName().contains("DroidGuard"));
++    }
++
++    public static void onEngineGetCertificateChain() {
++        // Check stack for SafetyNet
++        if (sIsGms && isCallerSafetyNet()) {
++            throw new UnsupportedOperationException();
++        }
++    }
++}
+diff --git a/keystore/java/android/security/keystore2/AndroidKeyStoreSpi.java b/keystore/java/android/security/keystore2/AndroidKeyStoreSpi.java
+index e6a63b9c4..6a80c14c9 100644
+--- a/keystore/java/android/security/keystore2/AndroidKeyStoreSpi.java
++++ b/keystore/java/android/security/keystore2/AndroidKeyStoreSpi.java
+@@ -48,6 +48,7 @@ import android.system.keystore2.ResponseCode;
+ import android.util.Log;
+ 
+ import com.android.internal.annotations.VisibleForTesting;
++import com.android.internal.gmscompat.AttestationHooks;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
+@@ -178,6 +179,8 @@ public class AndroidKeyStoreSpi extends KeyStoreSpi {
+ 
+     @Override
+     public Certificate[] engineGetCertificateChain(String alias) {
++        AttestationHooks.onEngineGetCertificateChain();
++
+         KeyEntryResponse response = getKeyMetadata(alias);
+ 
+         if (response == null || response.metadata.certificate == null) {
+-- 
+2.47.0
+

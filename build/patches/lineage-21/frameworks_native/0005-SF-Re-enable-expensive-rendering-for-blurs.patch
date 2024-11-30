@@ -1,0 +1,29 @@
+From a66a6faeec660e182dd58f077ee179bdd4f4241e Mon Sep 17 00:00:00 2001
+From: Adithya R <gh0strider.2k18.reborn@gmail.com>
+Date: Thu, 22 Feb 2024 11:03:51 +0530
+Subject: [PATCH 5/5] SF: Re-enable expensive rendering for blurs
+
+This was removed in 14, however nothing has changed that makes blur
+not require expensive rendering hints.
+
+Change-Id: I7893f240fbd1a20223ebce8d35e7a7a30e6392e2
+---
+ services/surfaceflinger/CompositionEngine/src/Output.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/services/surfaceflinger/CompositionEngine/src/Output.cpp b/services/surfaceflinger/CompositionEngine/src/Output.cpp
+index 332d1688ae..d8437b9019 100644
+--- a/services/surfaceflinger/CompositionEngine/src/Output.cpp
++++ b/services/surfaceflinger/CompositionEngine/src/Output.cpp
+@@ -1378,7 +1378,7 @@ std::optional<base::unique_fd> Output::composeSurfaces(
+     // or complex GPU shaders and it's expensive. We boost the GPU frequency so that
+     // GPU composition can finish in time. We must reset GPU frequency afterwards,
+     // because high frequency consumes extra battery.
+-    const bool expensiveRenderingExpected =
++    const bool expensiveRenderingExpected = mLayerRequestingBackgroundBlur != nullptr ||
+             std::any_of(clientCompositionLayers.begin(), clientCompositionLayers.end(),
+                         [outputDataspace =
+                                  clientCompositionDisplay.outputDataspace](const auto& layer) {
+-- 
+2.45.2
+

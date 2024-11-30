@@ -1,7 +1,7 @@
-From ef30d62dd383e6b7513d7187e1e582630d773af5 Mon Sep 17 00:00:00 2001
+From 8f57270e535c749f32048f1ce68770c078ce29db Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 20:05:42 -0700
-Subject: [PATCH 08/12] SystemUI: Remove Android build number from QS footer
+Subject: [PATCH 08/38] SystemUI: Remove Android build number from QS footer
 
 This is only shown when developer settings is enabled, but we developers
 tend to always have it enabled. Irrelevant text showing up in the QS

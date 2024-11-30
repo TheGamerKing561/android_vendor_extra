@@ -1,0 +1,27 @@
+From 24ca91fee466ffaadc3a1d10211088e037257ef4 Mon Sep 17 00:00:00 2001
+From: Alexander Koskovich <akoskovich@pm.me>
+Date: Wed, 8 Jun 2022 12:59:31 -0700
+Subject: [PATCH 2/5] sm6250-common: Define boot image security patch
+
+Change-Id: I2471d3412577fee8e7bca40743b38a2fc765884c
+---
+ BoardConfigCommon.mk | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
+index 02e692418..b7b0b18cf 100644
+--- a/BoardConfigCommon.mk
++++ b/BoardConfigCommon.mk
+@@ -168,7 +168,8 @@ TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)
+ ENABLE_VENDOR_RIL_SERVICE := true
+ 
+ # Security patch level
+-VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
++BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
++VENDOR_SECURITY_PATCH := $(BOOT_SECURITY_PATCH)
+ 
+ # Sepolicy
+ include device/lineage/sepolicy/libperfmgr/sepolicy.mk
+-- 
+2.47.0
+

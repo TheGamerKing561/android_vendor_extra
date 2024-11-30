@@ -1,0 +1,122 @@
+From 3fa7a0dd4516f74e0141f16306517c48569594bd Mon Sep 17 00:00:00 2001
+From: Adithya R <gh0strider.2k18.reborn@gmail.com>
+Date: Sat, 7 May 2022 18:26:16 +0530
+Subject: [PATCH 6/6] Launcher3: Allow hiding top shadow on statusbar
+
+On certain devices (especially amoled) with certain
+black-themed wallpapers, it looks quite bad. Add a
+toggle to disable it, inspired from lawnchair:
+
+https://github.com/LawnchairLauncher/lawnchair/commit/c99e61205cc4d5b5d3d9b827787c9fd873616060
+https://github.com/LawnchairLauncher/lawnchair/commit/e41e27a4d11e7f8352a3d2fa74afb04e8af9354a
+
+Co-authored-by: Suphon Thanakornpakapong <paphonb@gmail.com>
+Change-Id: Iaa9668fb0cb785572517c5ea27296daec2bf1ed3
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ res/values/lineage_strings.xml                 |  3 +++
+ res/xml/launcher_preferences.xml               |  6 ++++++
+ .../android/launcher3/graphics/SysUiScrim.java | 18 ++++++++++++++++--
+ 3 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/res/values/lineage_strings.xml b/res/values/lineage_strings.xml
+index 081caad2b7..453200fc67 100644
+--- a/res/values/lineage_strings.xml
++++ b/res/values/lineage_strings.xml
+@@ -60,4 +60,7 @@
+     <!-- Gestures -->
+     <string name="pref_dt_gesture_title">Double tap gesture</string>
+     <string name="pref_dt_gesture_summary">Double tap on empty space for screen-off</string>
++
++    <!-- Top shadow -->
++    <string name="show_top_shadow">Top shadow</string>
+ </resources>
+diff --git a/res/xml/launcher_preferences.xml b/res/xml/launcher_preferences.xml
+index 36554e849c..2cb76d06d9 100644
+--- a/res/xml/launcher_preferences.xml
++++ b/res/xml/launcher_preferences.xml
+@@ -103,4 +103,10 @@
+         android:defaultValue="true"
+         android:persistent="true" />
+ 
++    <SwitchPreference
++        android:key="pref_show_top_shadow"
++        android:title="@string/show_top_shadow"
++        android:defaultValue="true"
++        android:persistent="true" />
++
+ </androidx.preference.PreferenceScreen>
+diff --git a/src/com/android/launcher3/graphics/SysUiScrim.java b/src/com/android/launcher3/graphics/SysUiScrim.java
+index be995bc164..ecfa72b4b1 100644
+--- a/src/com/android/launcher3/graphics/SysUiScrim.java
++++ b/src/com/android/launcher3/graphics/SysUiScrim.java
+@@ -20,6 +20,7 @@ import static com.android.launcher3.config.FeatureFlags.KEYGUARD_ANIMATION;
+ import static com.android.launcher3.icons.GraphicsUtils.setColorAlphaBound;
+ 
+ import android.animation.ObjectAnimator;
++import android.content.SharedPreferences;
+ import android.graphics.Bitmap;
+ import android.graphics.Canvas;
+ import android.graphics.Color;
+@@ -35,6 +36,7 @@ import android.view.View;
+ 
+ import com.android.launcher3.BaseDraggingActivity;
+ import com.android.launcher3.DeviceProfile;
++import com.android.launcher3.LauncherPrefs;
+ import com.android.launcher3.R;
+ import com.android.launcher3.config.FeatureFlags;
+ import com.android.launcher3.testing.shared.ResourceUtils;
+@@ -47,7 +49,8 @@ import com.android.systemui.plugins.ResourceProvider;
+ /**
+  * View scrim which draws behind hotseat and workspace
+  */
+-public class SysUiScrim implements View.OnAttachStateChangeListener {
++public class SysUiScrim implements View.OnAttachStateChangeListener,
++        SharedPreferences.OnSharedPreferenceChangeListener {
+ 
+     public static final FloatProperty<SysUiScrim> SYSUI_PROGRESS =
+             new FloatProperty<SysUiScrim>("sysUiProgress") {
+@@ -100,6 +103,8 @@ public class SysUiScrim implements View.OnAttachStateChangeListener {
+     private static final int ALPHA_MASK_BITMAP_DP = 200;
+     private static final int ALPHA_MASK_WIDTH_DP = 2;
+ 
++    private static final String KEY_SHOW_TOP_SHADOW = "pref_show_top_shadow";
++
+     private boolean mDrawTopScrim, mDrawBottomScrim, mDrawWallpaperScrim;
+ 
+     private final RectF mWallpaperScrimRect = new RectF();
+@@ -126,7 +131,8 @@ public class SysUiScrim implements View.OnAttachStateChangeListener {
+         mMaskHeight = ResourceUtils.pxFromDp(ALPHA_MASK_BITMAP_DP,
+                 view.getResources().getDisplayMetrics());
+         mTopScrim = Themes.getAttrDrawable(view.getContext(), R.attr.workspaceStatusBarScrim);
+-        if (mTopScrim != null) {
++        SharedPreferences prefs = LauncherPrefs.getPrefs(view.getContext());
++        if (mTopScrim != null && prefs.getBoolean(KEY_SHOW_TOP_SHADOW, true)) {
+             mTopScrim.setDither(true);
+             mBottomMask = createDitheredAlphaMask();
+             mHideSysUiScrim = false;
+@@ -143,6 +149,7 @@ public class SysUiScrim implements View.OnAttachStateChangeListener {
+         mWallpaperScrimMaxAlpha = Color.alpha(wallpaperScrimColor);
+         mWallpaperScrimPaint.setColor(wallpaperScrimColor);
+ 
++        prefs.registerOnSharedPreferenceChangeListener(this);
+         view.addOnAttachStateChangeListener(this);
+     }
+ 
+@@ -218,6 +225,13 @@ public class SysUiScrim implements View.OnAttachStateChangeListener {
+         }
+     }
+ 
++    @Override
++    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
++        if (key.equals(KEY_SHOW_TOP_SHADOW)) {
++            mRoot.invalidate();
++        }
++    }
++
+     /**
+      * Set the width and height of the view being scrimmed
+      * @param w
+-- 
+2.46.0
+

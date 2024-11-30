@@ -1,0 +1,166 @@
+From 73a186e55c56758c120504c57137ccf89a97f77b Mon Sep 17 00:00:00 2001
+From: Pranav Vashi <neobuddy89@gmail.com>
+Date: Fri, 15 Jul 2022 17:47:04 +0530
+Subject: [PATCH 5/6] Launcher3: Set recents and app drawer opacity
+
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+Signed-off-by: Subhajeet Muhuri <subhajeet.muhuri@gmail.com>
+---
+ .../android/launcher3/uioverrides/states/AllAppsState.java | 7 +++++--
+ .../launcher3/uioverrides/states/OverviewState.java        | 6 +++++-
+ res/color-v31/overview_scrim.xml                           | 2 +-
+ res/color-v31/overview_scrim_dark.xml                      | 2 +-
+ src/com/android/launcher3/Utilities.java                   | 3 +++
+ .../android/launcher3/uioverrides/states/AllAppsState.java | 7 +++++--
+ .../launcher3/uioverrides/states/OverviewState.java        | 6 +++++-
+ 7 files changed, 25 insertions(+), 8 deletions(-)
+
+diff --git a/quickstep/src/com/android/launcher3/uioverrides/states/AllAppsState.java b/quickstep/src/com/android/launcher3/uioverrides/states/AllAppsState.java
+index 2a42175b5b..0e12094dd0 100644
+--- a/quickstep/src/com/android/launcher3/uioverrides/states/AllAppsState.java
++++ b/quickstep/src/com/android/launcher3/uioverrides/states/AllAppsState.java
+@@ -20,9 +20,12 @@ import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_ALLAP
+ 
+ import android.content.Context;
+ 
++import androidx.core.graphics.ColorUtils;
++
+ import com.android.launcher3.Launcher;
+ import com.android.launcher3.LauncherState;
+ import com.android.launcher3.R;
++import com.android.launcher3.Utilities;
+ import com.android.launcher3.util.Themes;
+ import com.android.launcher3.views.ActivityContext;
+ 
+@@ -115,8 +118,8 @@ public class AllAppsState extends LauncherState {
+ 
+     @Override
+     public int getWorkspaceScrimColor(Launcher launcher) {
+-        return launcher.getDeviceProfile().isTablet
++        return ColorUtils.setAlphaComponent(launcher.getDeviceProfile().isTablet
+                 ? launcher.getResources().getColor(R.color.widgets_picker_scrim)
+-                : Themes.getAttrColor(launcher, R.attr.allAppsScrimColor);
++                : Themes.getAttrColor(launcher, R.attr.allAppsScrimColor), Utilities.KEY_APP_DRAWER_OPACITY * 255 / 100);
+     }
+ }
+diff --git a/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java b/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
+index 52532ebf6e..6bc5b2cc38 100644
+--- a/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
++++ b/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
+@@ -22,10 +22,13 @@ import android.content.Context;
+ import android.graphics.Rect;
+ import android.os.SystemProperties;
+ 
++import androidx.core.graphics.ColorUtils;
++
+ import com.android.launcher3.DeviceProfile;
+ import com.android.launcher3.Launcher;
+ import com.android.launcher3.LauncherState;
+ import com.android.launcher3.R;
++import com.android.launcher3.Utilities;
+ import com.android.launcher3.util.DisplayController;
+ import com.android.launcher3.util.Themes;
+ import com.android.quickstep.util.LayoutUtils;
+@@ -117,7 +120,8 @@ public class OverviewState extends LauncherState {
+ 
+     @Override
+     public int getWorkspaceScrimColor(Launcher launcher) {
+-        return Themes.getAttrColor(launcher, R.attr.overviewScrimColor);
++        return ColorUtils.setAlphaComponent(
++                Themes.getAttrColor(launcher, R.attr.overviewScrimColor), Utilities.KEY_RECENTS_OPACITY * 255 / 100);
+     }
+ 
+     @Override
+diff --git a/res/color-v31/overview_scrim.xml b/res/color-v31/overview_scrim.xml
+index 212518ff65..b2beaf0d39 100644
+--- a/res/color-v31/overview_scrim.xml
++++ b/res/color-v31/overview_scrim.xml
+@@ -14,5 +14,5 @@
+      limitations under the License.
+ -->
+ <selector xmlns:android="http://schemas.android.com/apk/res/android">
+-  <item android:color="@android:color/system_neutral2_200" />
++  <item android:color="@android:color/system_neutral2_200" android:alpha="0.4" />
+ </selector>
+diff --git a/res/color-v31/overview_scrim_dark.xml b/res/color-v31/overview_scrim_dark.xml
+index 2ab8ecdec9..73b2f3b9e4 100644
+--- a/res/color-v31/overview_scrim_dark.xml
++++ b/res/color-v31/overview_scrim_dark.xml
+@@ -14,5 +14,5 @@
+      limitations under the License.
+ -->
+ <selector xmlns:android="http://schemas.android.com/apk/res/android">
+-  <item android:color="@android:color/system_neutral1_500" android:lStar="35" />
++  <item android:color="@android:color/system_neutral1_500" android:lStar="35" android:alpha="0.4" />
+ </selector>
+diff --git a/src/com/android/launcher3/Utilities.java b/src/com/android/launcher3/Utilities.java
+index f0e16a210e..8c6753f404 100644
+--- a/src/com/android/launcher3/Utilities.java
++++ b/src/com/android/launcher3/Utilities.java
+@@ -146,6 +146,9 @@ public final class Utilities {
+     public static final int TRANSLATE_LEFT = 2;
+     public static final int TRANSLATE_RIGHT = 3;
+ 
++    public static final int KEY_RECENTS_OPACITY = 70;
++    public static final int KEY_APP_DRAWER_OPACITY = 80;
++
+     @IntDef({TRANSLATE_UP, TRANSLATE_DOWN, TRANSLATE_LEFT, TRANSLATE_RIGHT})
+     public @interface AdjustmentDirection{}
+ 
+diff --git a/src_ui_overrides/com/android/launcher3/uioverrides/states/AllAppsState.java b/src_ui_overrides/com/android/launcher3/uioverrides/states/AllAppsState.java
+index 772a995324..437eadf1c6 100644
+--- a/src_ui_overrides/com/android/launcher3/uioverrides/states/AllAppsState.java
++++ b/src_ui_overrides/com/android/launcher3/uioverrides/states/AllAppsState.java
+@@ -20,9 +20,12 @@ import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_ALLAP
+ 
+ import android.content.Context;
+ 
++import androidx.core.graphics.ColorUtils;
++
+ import com.android.launcher3.Launcher;
+ import com.android.launcher3.LauncherState;
+ import com.android.launcher3.R;
++import com.android.launcher3.Utilities;
+ import com.android.launcher3.util.Themes;
+ import com.android.launcher3.views.ActivityContext;
+ 
+@@ -97,8 +100,8 @@ public class AllAppsState extends LauncherState {
+ 
+     @Override
+     public int getWorkspaceScrimColor(Launcher launcher) {
+-        return launcher.getDeviceProfile().isTablet
++        return ColorUtils.setAlphaComponent(launcher.getDeviceProfile().isTablet
+                 ? launcher.getResources().getColor(R.color.widgets_picker_scrim)
+-                : Themes.getAttrColor(launcher, R.attr.allAppsScrimColor);
++                : Themes.getAttrColor(launcher, R.attr.allAppsScrimColor), Utilities.KEY_APP_DRAWER_OPACITY * 255 / 100);
+     }
+ }
+diff --git a/src_ui_overrides/com/android/launcher3/uioverrides/states/OverviewState.java b/src_ui_overrides/com/android/launcher3/uioverrides/states/OverviewState.java
+index 7a228c42b8..8aeb4eadd4 100644
+--- a/src_ui_overrides/com/android/launcher3/uioverrides/states/OverviewState.java
++++ b/src_ui_overrides/com/android/launcher3/uioverrides/states/OverviewState.java
+@@ -19,9 +19,12 @@ import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_OVERV
+ 
+ import android.content.Context;
+ 
++import androidx.core.graphics.ColorUtils;
++
+ import com.android.launcher3.Launcher;
+ import com.android.launcher3.LauncherState;
+ import com.android.launcher3.R;
++import com.android.launcher3.Utilities;
+ import com.android.launcher3.util.Themes;
+ 
+ /**
+@@ -62,6 +65,7 @@ public class OverviewState extends LauncherState {
+ 
+     @Override
+     public int getWorkspaceScrimColor(Launcher launcher) {
+-        return Themes.getAttrColor(launcher, R.attr.overviewScrimColor);
++        return ColorUtils.setAlphaComponent(
++                Themes.getAttrColor(launcher, R.attr.overviewScrimColor), Utilities.KEY_RECENTS_OPACITY * 255 / 100);
+     }
+ }
+-- 
+2.46.0
+

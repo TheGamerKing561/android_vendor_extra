@@ -1,0 +1,57 @@
+From 05dc7713ace75a38e52ffc317502e72ed2208a52 Mon Sep 17 00:00:00 2001
+From: SamarV-121 <samar@samarv121.dev>
+Date: Thu, 30 Nov 2023 15:36:40 +0530
+Subject: [PATCH 27/37] gmscompat: Remove unwanted spoofing of
+ DEVICE_INITIAL_SDK_INT
+
+Change-Id: I902311e48ec5d214cf9768684a8d1d8bfe27d208
+---
+ .../internal/gmscompat/AttestationHooks.java   | 18 ------------------
+ 1 file changed, 18 deletions(-)
+
+diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+index 8996ca8c7..a331c4aa7 100644
+--- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
++++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+@@ -19,7 +19,6 @@ package com.android.internal.gmscompat;
+ import android.app.Application;
+ import android.content.Context;
+ import android.os.Build;
+-import android.os.Build.VERSION;
+ import android.text.TextUtils;
+ import android.util.Log;
+ 
+@@ -53,22 +52,6 @@ public final class AttestationHooks {
+         }
+     }
+ 
+-    private static void setVersionField(String key, Integer value) {
+-        try {
+-            // Unlock
+-            Field field = Build.VERSION.class.getDeclaredField(key);
+-            field.setAccessible(true);
+-
+-            // Edit
+-            field.set(null, value);
+-
+-            // Lock
+-            field.setAccessible(false);
+-        } catch (NoSuchFieldException | IllegalAccessException e) {
+-            Log.e(TAG, "Failed to spoof Build." + key, e);
+-        }
+-    }
+-
+     public static void initApplicationBeforeOnCreate(Context context) {
+         final String packageName = context.getPackageName();
+         final String processName = Application.getProcessName();
+@@ -86,7 +69,6 @@ public final class AttestationHooks {
+               setBuildField("PRODUCT", "marlin");
+               setBuildField("DEVICE", "marlin");
+               setBuildField("MODEL", "Pixel XL");
+-              setVersionField("DEVICE_INITIAL_SDK_INT", Build.VERSION_CODES.N_MR1);
+             }
+         }
+ 
+-- 
+2.47.0
+

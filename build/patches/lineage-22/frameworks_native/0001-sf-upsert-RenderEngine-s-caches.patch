@@ -1,0 +1,51 @@
+From c18e4cf10ec4ab36470930835ed710c66a180072 Mon Sep 17 00:00:00 2001
+From: Ramakant Singh <quic_ramakant@quicinc.com>
+Date: Fri, 3 Nov 2023 12:51:55 +0530
+Subject: [PATCH 1/5] sf: upsert RenderEngine's caches
+
+Upsert RenderEngine's caches before compostion start if there is
+dataspace change.
+CRs-Fixed: 3655517
+
+Change-Id: I34489510c0601bbcf4028eaf64afb2a02596750c
+---
+ services/surfaceflinger/Layer.cpp | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
+
+diff --git a/services/surfaceflinger/Layer.cpp b/services/surfaceflinger/Layer.cpp
+index 736fec6fb2..0be6bc0c43 100644
+--- a/services/surfaceflinger/Layer.cpp
++++ b/services/surfaceflinger/Layer.cpp
+@@ -3690,24 +3690,11 @@ void Layer::gatherBufferInfo() {
+                 err = mapper.setDataspace(mBufferInfo.mBuffer->getBuffer()->handle,
+                                           static_cast<ui::Dataspace>(mBufferInfo.mDataspace));
+             }
+-
+-            // Some GPU drivers may cache gralloc metadata which means before we composite we need
+-            // to upsert RenderEngine's caches. Put in a special workaround to be backwards
+-            // compatible with old vendors, with a ticking clock.
+-            static const int32_t kVendorVersion =
+-                    base::GetIntProperty("ro.board.api_level", __ANDROID_API_FUTURE__);
+-            if (const auto format =
+-                        static_cast<aidl::android::hardware::graphics::common::PixelFormat>(
+-                                mBufferInfo.mBuffer->getPixelFormat());
+-                err == OK && kVendorVersion < __ANDROID_API_U__ &&
+-                (format ==
+-                         aidl::android::hardware::graphics::common::PixelFormat::
+-                                 IMPLEMENTATION_DEFINED ||
+-                 format == aidl::android::hardware::graphics::common::PixelFormat::YCBCR_420_888 ||
+-                 format == aidl::android::hardware::graphics::common::PixelFormat::YV12 ||
+-                 format == aidl::android::hardware::graphics::common::PixelFormat::YCBCR_P010)) {
+-                mBufferInfo.mBuffer->remapBuffer();
+-            }
++            /* QTI_BEGIN */
++            // GPU drivers cache gralloc metadata which means before we composite we need
++            // to upsert RenderEngine's cache.
++            mBufferInfo.mBuffer->remapBuffer();
++            /* QTI_END */
+         }
+     }
+     if (lastDataspace != mBufferInfo.mDataspace) {
+-- 
+2.45.2
+

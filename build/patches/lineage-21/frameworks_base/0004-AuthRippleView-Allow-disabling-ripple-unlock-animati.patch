@@ -1,7 +1,7 @@
-From 0fc3262d5f93ae3e4b90e1ff348be3d42912bc59 Mon Sep 17 00:00:00 2001
+From eba3e0046b165b57966a210135610856ee6d9f72 Mon Sep 17 00:00:00 2001
 From: jhenrique09 <jhsv09@gmail.com>
 Date: Sun, 12 Feb 2023 13:56:11 -0300
-Subject: [PATCH 04/12] AuthRippleView: Allow disabling ripple unlock animation
+Subject: [PATCH 04/38] AuthRippleView: Allow disabling ripple unlock animation
  using overlay
 
 Change-Id: Ib5a1709e05ca1a405389ce0af25e7cb68c87b6ea
@@ -11,10 +11,10 @@ Change-Id: Ib5a1709e05ca1a405389ce0af25e7cb68c87b6ea
  2 files changed, 9 insertions(+)
 
 diff --git a/packages/SystemUI/res/values/lineage_config.xml b/packages/SystemUI/res/values/lineage_config.xml
-index 3bcd3ea0c..5eb0c1eea 100644
+index 8c3f635b2..16788a92f 100644
 --- a/packages/SystemUI/res/values/lineage_config.xml
 +++ b/packages/SystemUI/res/values/lineage_config.xml
-@@ -73,4 +73,7 @@
+@@ -71,4 +71,7 @@
  
      <!-- Whether to play turbulence noise after clicking the play button -->
      <bool name="config_turbulenceNoise">true</bool>

@@ -1,0 +1,48 @@
+From d1101368efb540b00fc7c6d95a30581ce8027c86 Mon Sep 17 00:00:00 2001
+From: Alexander Koskovich <akoskovich@pm.me>
+Date: Wed, 8 Jun 2022 12:59:31 -0700
+Subject: [PATCH] sm6250-common: Define boot image security patch
+
+Change-Id: I2471d3412577fee8e7bca40743b38a2fc765884c
+---
+ BoardConfigCommon.mk | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
+index 180dff3..6e9ce2d 100644
+--- a/BoardConfigCommon.mk
++++ b/BoardConfigCommon.mk
+@@ -172,7 +172,8 @@ TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)
+ ENABLE_VENDOR_RIL_SERVICE := true
+ 
+ # Security patch level
+-VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
++BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
++VENDOR_SECURITY_PATCH := $(BOOT_SECURITY_PATCH)
+ 
+ # Sepolicy
+ include device/qcom/sepolicy_vndr-legacy-um/SEPolicy.mk
+
+
+From dd0cfbf40de6d09dc02b06dd5d20bd1b3acf6675 Mon Sep 17 00:00:00 2001
+From: Alexander Winkowski <dereference23@outlook.com>
+Date: Mon, 18 Jul 2022 11:52:59 +0000
+Subject: [PATCH] sm6250-common: Disable wrapped keys
+
+---
+ rootdir/etc/fstab.qcom | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rootdir/etc/fstab.qcom b/rootdir/etc/fstab.qcom
+index 3986765d..ecfa059d 100644
+--- a/rootdir/etc/fstab.qcom
++++ b/rootdir/etc/fstab.qcom
+@@ -38,7 +38,7 @@ vendor                                                  /vendor
+ /dev/block/bootdevice/by-name/boot                      /boot                    emmc    defaults                                             defaults
+ /dev/block/bootdevice/by-name/recovery                  /recovery                emmc    defaults                                             defaults
+ /dev/block/by-name/metadata                             /metadata                ext4    noatime,nosuid,nodev,discard                         wait,check,formattable,first_stage_mount
+-/dev/block/bootdevice/by-name/userdata                  /data                    f2fs    noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,fsync_mode=nobarrier,inlinecrypt    latemount,wait,check,formattable,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized+wrappedkey_v0,metadata_encryption=aes-256-xts:wrappedkey_v0,keydirectory=/metadata/vold/metadata_encryption,quota,reservedsize=128M,sysfs_path=/sys/devices/platform/soc/1d84000.ufshc,checkpoint=fs
++/dev/block/bootdevice/by-name/userdata                  /data                    f2fs    noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,fsync_mode=nobarrier,inlinecrypt    latemount,wait,check,formattable,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption,quota,reservedsize=128M,sysfs_path=/sys/devices/platform/soc/1d84000.ufshc,checkpoint=fs
+ /devices/platform/soc/8804000.sdhci/mmc_host*           /storage/sdcard1         vfat    nosuid,nodev                                         wait,voldmanaged=sdcard1:auto,encryptable=footer
+ /devices/platform/soc/1da4000.ufshc_card/host*          /storage/sdcard1         vfat    nosuid,nodev                                         wait,voldmanaged=sdcard1:auto,encryptable=footer
+ /dev/block/bootdevice/by-name/modem                     /vendor/firmware_mnt     vfat    ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0 wait

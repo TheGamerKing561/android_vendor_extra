@@ -1,0 +1,58 @@
+From da47663072a1a5d7c9247ee69380f5d52be94728 Mon Sep 17 00:00:00 2001
+From: Oliver Scott <olivercscott@gmail.com>
+Date: Thu, 30 Jun 2022 13:47:42 -0400
+Subject: [PATCH 83/83] Enable backup service by default for all users
+
+Issue: calyxos#1057
+Change-Id: I3b2e1797c2e0d9e3af477f624c7d3ab613c2ea2c
+(cherry picked from commit 6928f1b63c01bc4c5805f5bae45864e44b2cb242)
+---
+ .../server/backup/BackupManagerService.java     | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
+
+diff --git a/services/backup/java/com/android/server/backup/BackupManagerService.java b/services/backup/java/com/android/server/backup/BackupManagerService.java
+index 38275f7c..6d143c89 100644
+--- a/services/backup/java/com/android/server/backup/BackupManagerService.java
++++ b/services/backup/java/com/android/server/backup/BackupManagerService.java
+@@ -289,17 +289,10 @@ public class BackupManagerService extends IBackupManager.Stub {
+     }
+ 
+     /**
+-     * Backup is activated for the system user if the suppress file does not exist. Backup is
+-     * activated for non-system users if the suppress file does not exist AND the user's activated
+-     * file exists.
++     * Backup is activated for all users if the suppress file does not exist.
+      */
+-    private boolean isBackupActivatedForUser(int userId) {
+-        if (getSuppressFileForSystemUser().exists()) {
+-            return false;
+-        }
+-
+-        return userId == UserHandle.USER_SYSTEM
+-                || getActivatedFileForNonSystemUser(userId).exists();
++    private boolean isBackupActivatedForUser() {
++        return !getSuppressFileForSystemUser().exists();
+     }
+ 
+     protected Context getContext() {
+@@ -336,7 +329,7 @@ public class BackupManagerService extends IBackupManager.Stub {
+             Slog.i(TAG, "Backup service not supported");
+             return;
+         }
+-        if (!isBackupActivatedForUser(userId)) {
++        if (!isBackupActivatedForUser()) {
+             Slog.i(TAG, "Backup not activated for user " + userId);
+             return;
+         }
+@@ -516,7 +509,7 @@ public class BackupManagerService extends IBackupManager.Stub {
+                     "isBackupServiceActive");
+         }
+         synchronized (mStateLock) {
+-            return !mGlobalDisable && isBackupActivatedForUser(userId);
++            return !mGlobalDisable && isBackupActivatedForUser();
+         }
+     }
+ 
+-- 
+2.47.0
+

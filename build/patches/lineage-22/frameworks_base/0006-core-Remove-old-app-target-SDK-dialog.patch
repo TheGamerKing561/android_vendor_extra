@@ -1,7 +1,7 @@
-From 1222ca17f0a7cb110af8f0523bacee5f3e5ab219 Mon Sep 17 00:00:00 2001
+From c79581c5d2d8c7b45145ca5d7fcc89b104e75f90 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 3 Nov 2020 22:43:12 -0800
-Subject: [PATCH 06/12] core: Remove old app target SDK dialog
+Subject: [PATCH 06/37] core: Remove old app target SDK dialog
 
 If an app is old, users should already know that, and there's usually no
 point in warning them about it because they would already be using a
@@ -17,10 +17,10 @@ Change-Id: I1a3021f0f9bec1ab6ff7641776391e1bd4c3cc49
  1 file changed, 2 deletions(-)
 
 diff --git a/services/core/java/com/android/server/wm/AppWarnings.java b/services/core/java/com/android/server/wm/AppWarnings.java
-index ad5f4427f..f7cb41fb0 100644
+index 9fd543fca..39b7bffd7 100644
 --- a/services/core/java/com/android/server/wm/AppWarnings.java
 +++ b/services/core/java/com/android/server/wm/AppWarnings.java
-@@ -210,8 +210,6 @@ class AppWarnings {
+@@ -256,8 +256,6 @@ class AppWarnings {
      public void onStartActivity(ActivityRecord r) {
          showUnsupportedCompileSdkDialogIfNeeded(r);
          showUnsupportedDisplaySizeDialogIfNeeded(r);
