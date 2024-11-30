@@ -1,7 +1,7 @@
 From d006945959585c0782dd93af2ecd88b41d4742b5 Mon Sep 17 00:00:00 2001
 From: SamarV-121 <samar@samarv121.dev>
 Date: Fri, 16 Feb 2024 09:32:05 +0530
-Subject: [PATCH 33/38] gmscompat: Add prop to disable gms spoofing
+Subject: [PATCH 33/37] gmscompat: Add prop to disable gms spoofing
 
 Change-Id: Ic67f0f6f720cba05a36d9d923880da93a46864f9
 ---

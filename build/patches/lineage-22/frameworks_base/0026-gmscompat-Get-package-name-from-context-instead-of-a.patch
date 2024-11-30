@@ -1,7 +1,7 @@
 From 26dbe565664f7b1fcc4964106244b4c5ded9feea Mon Sep 17 00:00:00 2001
 From: jhenrique09 <jhsv09@gmail.com>
 Date: Fri, 4 Nov 2022 15:40:04 -0300
-Subject: [PATCH 26/37] gmscompat: Get package name from context instead of app
+Subject: [PATCH 26/36] gmscompat: Get package name from context instead of app
 
 11-04 08:48:39.039 11637 11637 E AndroidRuntime: FATAL EXCEPTION: main
 11-04 08:48:39.039 11637 11637 E AndroidRuntime: Process: com.NextFloor.DestinyChild, PID: 11637

@@ -1,7 +1,7 @@
 From 090a4733d1736d1068508d6031fb35382b7a4486 Mon Sep 17 00:00:00 2001
 From: Dmitry Muhomor <muhomor.dmitry@gmail.com>
 Date: Mon, 11 Mar 2024 19:40:49 +0200
-Subject: [PATCH 24/38] SystemUI: allow to use some QS tiles while device is
+Subject: [PATCH 24/37] SystemUI: allow to use some QS tiles while device is
  locked
 
 ---

@@ -1,7 +1,7 @@
 From 4b8717e27dcfc4256ce93f6c7ac57fa72e16d26d Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Thu, 8 Jun 2023 16:55:44 +0530
-Subject: [PATCH 34/38] gmscompat: Un-spoof GMS while adding google account
+Subject: [PATCH 34/37] gmscompat: Un-spoof GMS while adding google account
 
 GMS uses its DroidGuard service (the same that's used for safetynet)
 to get the device name from the build fingerprint, which from our

@@ -1,7 +1,7 @@
 From 5c3361e4b52fef4df88090e9d7434559d044f70d Mon Sep 17 00:00:00 2001
 From: Jeferson <jroliveira.oliveira301@gmail.com>
 Date: Fri, 17 Jun 2022 15:04:04 +0200
-Subject: [PATCH 02/37] Revert "Ignore the charging ripple flag."
+Subject: [PATCH 02/36] Revert "Ignore the charging ripple flag."
 
 This reverts commit 575a868.
 

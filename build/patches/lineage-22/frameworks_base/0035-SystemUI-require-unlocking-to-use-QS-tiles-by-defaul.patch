@@ -1,7 +1,7 @@
 From 72f991ddfc9a6e7209ce1dd6911b16225b7fff29 Mon Sep 17 00:00:00 2001
 From: Dmitry Muhomor <muhomor.dmitry@gmail.com>
 Date: Mon, 11 Mar 2024 19:40:18 +0200
-Subject: [PATCH 35/37] SystemUI: require unlocking to use QS tiles by default
+Subject: [PATCH 35/36] SystemUI: require unlocking to use QS tiles by default
 
 ---
  .../src/com/android/systemui/qs/QSHost.java   |  1 +
