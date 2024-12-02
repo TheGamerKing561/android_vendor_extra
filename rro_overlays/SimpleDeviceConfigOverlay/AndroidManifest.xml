@@ -8,5 +8,6 @@
     package="org.protonaosp.deviceconfig.custom">
     <overlay
         android:isStatic="true"
+        android:priority="999"
         android:targetPackage="org.protonaosp.deviceconfig" />
 </manifest>

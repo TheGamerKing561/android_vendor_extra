@@ -9,5 +9,6 @@
     package="android.custom">
     <overlay
         android:isStatic="true"
+        android:priority="999"
         android:targetPackage="android" />
 </manifest>

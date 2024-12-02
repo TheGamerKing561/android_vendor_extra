@@ -8,5 +8,6 @@
     package="org.lineageos.overlay.updater">
     <overlay
         android:isStatic="true"
+        android:priority="999"
         android:targetPackage="org.lineageos.updater" />
 </manifest>

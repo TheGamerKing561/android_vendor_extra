@@ -8,6 +8,7 @@
     package="com.android.systemui.ripple">
     <overlay
         android:isStatic="true"
+        android:priority="999"
         android:requiredSystemPropertyName="ro.config.avoid_gfx_accel"
         android:requiredSystemPropertyValue="true"
         android:targetPackage="com.android.systemui" />
