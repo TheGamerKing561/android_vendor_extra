@@ -1,9 +1,6 @@
 #!/usr/bin/python3
-#
-# Copyright (C) 2022 Giovanni Ricca
-#
+# Copyright (C) 2024 Giovanni Ricca
 # SPDX-License-Identifier: Apache-2.0
-#
 
 import os
 import sys

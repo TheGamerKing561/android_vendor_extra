@@ -1,10 +1,7 @@
 # Shebang is intentionally missing - do not run as a script
 
-#
-# Copyright (C) 2022 Giovanni Ricca
-#
+# Copyright (C) 2024 Giovanni Ricca
 # SPDX-License-Identifier: Apache-2.0
-#
 
 # Enable ccache
 if [[ -f /etc/ccache.conf ]]; then

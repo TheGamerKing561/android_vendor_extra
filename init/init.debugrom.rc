@@ -1,7 +1,6 @@
 #
-# Copyright (C) 2022 Giovanni Ricca
-#
-# SPDX-License-Identifier: Apache-2.0
+# init.debugrom.rc: Easily grab bootlogs with a simple reboot
+# usage: Push it on /product/etc/init/, reboot, adb pull /data/misc/logd/bootlogs/
 #
 
 service logcatd_romboot /system/bin/logcatd -b all -D -f /data/misc/logd/bootlogs/logcatd_romboot.log
