@@ -1,4 +1,4 @@
-From c7a63c716b2d8d0a9f9912dde7390e23735288bb Mon Sep 17 00:00:00 2001
+From 94512b85d928d97ea9011af3791c60656f77f57b Mon Sep 17 00:00:00 2001
 From: iusmac <iusico.maxim@libero.it>
 Date: Sat, 17 Sep 2022 20:16:59 +0200
 Subject: [PATCH 1/2] libfmjni: Fix RDS info retrieving
@@ -75,5 +75,5 @@ index 9946cce..c98fcaa 100644
              ALOGE("Disable RDS failed\n");
              return ret;
 -- 
-2.40.1
+2.47.1
 

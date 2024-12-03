@@ -1,0 +1,57 @@
+From 2fb546b16324e9d6d2f7064f794bd0fccf666ed9 Mon Sep 17 00:00:00 2001
+From: tavukkdoner <customromtester174@gmail.com>
+Date: Mon, 13 May 2024 12:36:49 +0300
+Subject: [PATCH 2/2] libfmjni: Prevent invalid pthread_t from being passed to
+ pthread_join
+
+* No crash anymore when turning off FM Radio.
+
+Change-Id: I511e747a5a89bacb16f76e8fa44c1840967b3268
+---
+ FmRadioController.cpp | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/FmRadioController.cpp b/FmRadioController.cpp
+index c98fcaa..9753dcc 100644
+--- a/FmRadioController.cpp
++++ b/FmRadioController.cpp
+@@ -85,7 +85,10 @@ FmRadioController :: ~FmRadioController
+     }
+     if(event_listener_thread != 0) {
+         event_listener_canceled = true;
+-        pthread_join(event_listener_thread, NULL);
++        int result = pthread_join(event_listener_thread, NULL);
++        if (result == 0) {
++            event_listener_thread = 0;
++        }
+     }
+ }
+ 
+@@ -266,7 +269,10 @@ exit:
+                                      V4L2_CID_PRV_STATE, FM_DEV_NONE);
+ close_fd:
+     event_listener_canceled = true;
+-    pthread_join(event_listener_thread, NULL);
++    int result = pthread_join(event_listener_thread, NULL);
++    if (result == 0) {
++        event_listener_thread = 0;
++    }
+     if (strcmp(value, "rome") != 0) {
+         ret = FmIoctlsInterface::close_fm_patch_dl();
+         if (ret != FM_SUCCESS) {
+@@ -297,7 +303,11 @@ int FmRadioController ::Pwr_Down()
+     if(event_listener_thread != 0) {
+         ALOGD("%s, event_listener_thread cancelled\n", __func__);
+         event_listener_canceled = true;
+-        pthread_join(event_listener_thread, NULL);
++        int result = pthread_join(event_listener_thread, NULL);
++        //if thread is joined set event_listener_thread 0 to prevent crash
++        if (result == 0) {
++            event_listener_thread = 0;
++        }
+     }
+     if (strcmp(value, "rome") != 0) {
+         ret = FmIoctlsInterface::close_fm_patch_dl();
+-- 
+2.47.1
+
