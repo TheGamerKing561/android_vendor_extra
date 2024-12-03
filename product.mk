@@ -50,7 +50,7 @@ PRODUCT_PACKAGES += \
     FrameworkOverlayEXTRA \
     SimpleDeviceConfigOverlayEXTRA \
     SystemUIOverlayEXTRA \
-    SystemUIOverlayRIPPLE \
+    SystemUIOverlayLEGACY \
     UpdaterOverlayEXTRA
 
 # Soong namespaces
