@@ -33,11 +33,11 @@ PRODUCT_PACKAGES += \
 
 # Overlays
 PRODUCT_PACKAGES += \
-    FrameworksResCustomOverlay \
-    LineageUpdaterOverlay \
-    RippleSystemUIOverlay \
-    SimpleDeviceConfigOverlay \
-    SystemUICustomOverlay
+    FrameworkOverlayEXTRA \
+    SimpleDeviceConfigOverlayEXTRA \
+    SystemUIOverlayEXTRA \
+    SystemUIOverlayRIPPLE \
+    UpdaterOverlayEXTRA
 
 # Rootdir
 PRODUCT_PACKAGES += \

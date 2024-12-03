@@ -4,11 +4,9 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.systemui.ripple">
+    package="org.lineageos.updater.extra">
     <overlay
         android:isStatic="true"
         android:priority="999"
-        android:requiredSystemPropertyName="ro.config.avoid_gfx_accel"
-        android:requiredSystemPropertyValue="true"
-        android:targetPackage="com.android.systemui" />
+        android:targetPackage="org.lineageos.updater" />
 </manifest>

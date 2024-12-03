@@ -12,7 +12,7 @@ soong_config_module_type {
 }
 
 lineage_updater_overlay {
-    name: "LineageUpdaterOverlay",
+    name: "UpdaterOverlayEXTRA",
     soong_config_variables: {
         product_version_major: {
             resource_dirs: ["%s/res"],

@@ -4,9 +4,9 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="android.custom">
+    package="org.protonaosp.deviceconfig.extra">
     <overlay
         android:isStatic="true"
         android:priority="999"
-        android:targetPackage="android" />
+        android:targetPackage="org.protonaosp.deviceconfig" />
 </manifest>

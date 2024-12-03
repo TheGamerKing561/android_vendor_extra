@@ -4,9 +4,11 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.protonaosp.deviceconfig.custom">
+    package="com.android.systemui.extra.ripple">
     <overlay
         android:isStatic="true"
         android:priority="999"
-        android:targetPackage="org.protonaosp.deviceconfig" />
+        android:requiredSystemPropertyName="ro.config.avoid_gfx_accel"
+        android:requiredSystemPropertyValue="true"
+        android:targetPackage="com.android.systemui" />
 </manifest>

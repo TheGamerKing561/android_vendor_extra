@@ -4,6 +4,6 @@
 //
 
 runtime_resource_overlay {
-    name: "SystemUICustomOverlay",
+    name: "SystemUIOverlayRIPPLE",
     product_specific: true,
 }
