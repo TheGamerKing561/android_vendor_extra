@@ -38,5 +38,7 @@
         <item>com.shannon.imsservice</item>
         <!-- MediaTek ImsService -->
         <item>com.mediatek.ims</item>
+        <!-- Life360 -->
+        <item>com.life360.android.safetymapd</item>
     </string-array>
 </resources>
