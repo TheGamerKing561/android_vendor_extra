@@ -1,7 +1,7 @@
-From 318987a197f21fab33db740a7484732dd14ac43d Mon Sep 17 00:00:00 2001
+From 526eac72b6f79fe92014d12b97ceeba22309ec91 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Wed, 24 Mar 2021 18:56:33 -0700
-Subject: [PATCH 15/36] ThemedResourceCache: Replace ArrayMap with HashMap for
+Subject: [PATCH 13/34] ThemedResourceCache: Replace ArrayMap with HashMap for
  performance
 
 When opening and closing activities in Settings, a significant amount of
@@ -100,13 +100,13 @@ Change-Id: I39e1c4b03fe0e60f933f02e253d2d3c4a483146f
  1 file changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/core/java/android/content/res/ThemedResourceCache.java b/core/java/android/content/res/ThemedResourceCache.java
-index 690dfcf96..c3d7cd56b 100644
+index c7fcc1a38244..b756a2628fce 100644
 --- a/core/java/android/content/res/ThemedResourceCache.java
 +++ b/core/java/android/content/res/ThemedResourceCache.java
-@@ -22,10 +22,10 @@ import android.compat.annotation.UnsupportedAppUsage;
- import android.content.pm.ActivityInfo.Config;
+@@ -23,10 +23,10 @@ import android.content.pm.ActivityInfo.Config;
  import android.content.res.Resources.Theme;
  import android.content.res.Resources.ThemeKey;
+ import android.ravenwood.annotation.RavenwoodKeepWholeClass;
 -import android.util.ArrayMap;
  import android.util.LongSparseArray;
  
@@ -115,7 +115,7 @@ index 690dfcf96..c3d7cd56b 100644
  
  /**
   * Data structure used for caching data against themes.
-@@ -35,7 +35,7 @@ import java.lang.ref.WeakReference;
+@@ -37,7 +37,7 @@ import java.lang.ref.WeakReference;
  abstract class ThemedResourceCache<T> {
      public static final int UNDEFINED_GENERATION = -1;
      @UnsupportedAppUsage
@@ -124,7 +124,7 @@ index 690dfcf96..c3d7cd56b 100644
      private LongSparseArray<WeakReference<T>> mUnthemedEntries;
      private LongSparseArray<WeakReference<T>> mNullThemedEntries;
  
-@@ -174,7 +174,7 @@ abstract class ThemedResourceCache<T> {
+@@ -176,7 +176,7 @@ abstract class ThemedResourceCache<T> {
  
          if (mThemedEntries == null) {
              if (create) {
@@ -133,7 +133,7 @@ index 690dfcf96..c3d7cd56b 100644
              } else {
                  return null;
              }
-@@ -218,11 +218,8 @@ abstract class ThemedResourceCache<T> {
+@@ -220,11 +220,8 @@ abstract class ThemedResourceCache<T> {
       */
      private boolean pruneLocked(@Config int configChanges) {
          if (mThemedEntries != null) {
@@ -142,11 +142,11 @@ index 690dfcf96..c3d7cd56b 100644
 -                    mThemedEntries.removeAt(i);
 -                }
 -            }
-+            mThemedEntries.entrySet()
-+                .removeIf(entry -> pruneEntriesLocked(entry.getValue(), configChanges));
++	    mThemedEntries.entrySet()
++		.removeIf(entry -> pruneEntriesLocked(entry.getValue(), configChanges));
          }
  
          pruneEntriesLocked(mNullThemedEntries, configChanges);
 -- 
-2.47.0
+2.47.1
 

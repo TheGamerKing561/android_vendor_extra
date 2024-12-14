@@ -1,7 +1,7 @@
-From 0feba13d4ae40040d89740beac050c2586cb2f8b Mon Sep 17 00:00:00 2001
+From 02c83f02a39c07786bbd9d6111747735e28f198d Mon Sep 17 00:00:00 2001
 From: someone5678 <nemui3353@gmail.com>
 Date: Sat, 12 Aug 2023 17:01:41 +0800
-Subject: [PATCH 34/36] core: Hide ADB and developer setting enable status
+Subject: [PATCH 34/34] core: Hide ADB and developer setting enable status
 
 * Some apps check whether ADB or developer setting is enabled
 * Return 0 to selected apps when those apps getInt
@@ -17,10 +17,10 @@ Signed-off-by: Alexander Winkowski <dereference23@outlook.com>
  1 file changed, 41 insertions(+)
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index 88d389c87..e354aa2d2 100644
+index f7e992f54f38..457a57843099 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -4374,6 +4374,9 @@ public final class Settings {
+@@ -4411,6 +4411,9 @@ public final class Settings {
          /** @hide */
          @UnsupportedAppUsage
          public static int getIntForUser(ContentResolver cr, String name, int def, int userHandle) {
@@ -30,7 +30,7 @@ index 88d389c87..e354aa2d2 100644
              String v = getStringForUser(cr, name, userHandle);
              return parseIntSettingWithDefault(v, def);
          }
-@@ -4405,6 +4408,9 @@ public final class Settings {
+@@ -4442,6 +4445,9 @@ public final class Settings {
          @UnsupportedAppUsage
          public static int getIntForUser(ContentResolver cr, String name, int userHandle)
                  throws SettingNotFoundException {
@@ -40,7 +40,7 @@ index 88d389c87..e354aa2d2 100644
              String v = getStringForUser(cr, name, userHandle);
              return parseIntSetting(v, name);
          }
-@@ -7174,6 +7180,9 @@ public final class Settings {
+@@ -7235,6 +7241,9 @@ public final class Settings {
          /** @hide */
          @UnsupportedAppUsage
          public static int getIntForUser(ContentResolver cr, String name, int def, int userHandle) {
@@ -50,7 +50,7 @@ index 88d389c87..e354aa2d2 100644
              String v = getStringForUser(cr, name, userHandle);
              return parseIntSettingWithDefault(v, def);
          }
-@@ -7204,6 +7213,9 @@ public final class Settings {
+@@ -7265,6 +7274,9 @@ public final class Settings {
          /** @hide */
          public static int getIntForUser(ContentResolver cr, String name, int userHandle)
                  throws SettingNotFoundException {
@@ -60,7 +60,7 @@ index 88d389c87..e354aa2d2 100644
              String v = getStringForUser(cr, name, userHandle);
              return parseIntSetting(v, name);
          }
-@@ -18248,6 +18260,9 @@ public final class Settings {
+@@ -18386,6 +18398,9 @@ public final class Settings {
           * or not a valid integer.
           */
          public static int getInt(ContentResolver cr, String name, int def) {
@@ -70,7 +70,7 @@ index 88d389c87..e354aa2d2 100644
              String v = getString(cr, name);
              return parseIntSettingWithDefault(v, def);
          }
-@@ -18272,6 +18287,9 @@ public final class Settings {
+@@ -18410,6 +18425,9 @@ public final class Settings {
           */
          public static int getInt(ContentResolver cr, String name)
                  throws SettingNotFoundException {
@@ -80,7 +80,7 @@ index 88d389c87..e354aa2d2 100644
              String v = getString(cr, name);
              return parseIntSetting(v, name);
          }
-@@ -21400,4 +21418,27 @@ public final class Settings {
+@@ -21586,4 +21604,27 @@ public final class Settings {
          }
          return packages[0];
      }
@@ -109,5 +109,5 @@ index 88d389c87..e354aa2d2 100644
 +    }
  }
 -- 
-2.47.0
+2.47.1
 

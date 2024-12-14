@@ -1,7 +1,7 @@
-From 86fbfa1c5f678f92a0466481a9689563ceddd367 Mon Sep 17 00:00:00 2001
+From 18230db517364092e353a904233e42737d26a571 Mon Sep 17 00:00:00 2001
 From: Till Kottmann <deletescape@gmail.com>
 Date: Mon, 4 Jun 2018 17:44:56 +0200
-Subject: [PATCH 21/36] Cache pin algorithms in PinSet
+Subject: [PATCH 19/34] Cache pin algorithms in PinSet
 
 Change-Id: I6c2cd0261885b656910feffe76d67e169d8523c8
 Signed-off-by: Pranav <npv12@iitbbs.ac.in>
@@ -10,7 +10,7 @@ Signed-off-by: Pranav <npv12@iitbbs.ac.in>
  1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/core/java/android/security/net/config/PinSet.java b/core/java/android/security/net/config/PinSet.java
-index d3c975eb3..87fcde943 100644
+index d3c975eb3101..87fcde943dbc 100644
 --- a/core/java/android/security/net/config/PinSet.java
 +++ b/core/java/android/security/net/config/PinSet.java
 @@ -22,6 +22,7 @@ import java.util.Set;
@@ -38,5 +38,5 @@ index d3c975eb3..87fcde943 100644
          return algorithms;
      }
 -- 
-2.47.0
+2.47.1
 

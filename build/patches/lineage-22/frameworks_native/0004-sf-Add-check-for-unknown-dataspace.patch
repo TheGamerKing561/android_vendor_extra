@@ -1,7 +1,7 @@
-From 2171dd4b7043e60eb1c4257a5d5803e7f541e9a4 Mon Sep 17 00:00:00 2001
+From f4c1fec4b5d699cfbc1b738ef537ba2ae0a1b266 Mon Sep 17 00:00:00 2001
 From: BOREDDY MAHIDHAR <quic_bmahidha@quicinc.com>
 Date: Thu, 11 Jan 2024 13:10:18 +0530
-Subject: [PATCH 3/5] sf: Add check for unknown dataspace
+Subject: [PATCH 4/5] sf: Add check for unknown dataspace
 
 If dataspace returned from gralloc is Unknown, then drawingstate
 data space need to be set.
@@ -13,7 +13,7 @@ CRs-Fixed: 3713320
  1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/services/surfaceflinger/Layer.cpp b/services/surfaceflinger/Layer.cpp
-index 2e77289..2aa27f3 100644
+index 26b34e4266..0b1f40653b 100644
 --- a/services/surfaceflinger/Layer.cpp
 +++ b/services/surfaceflinger/Layer.cpp
 @@ -14,6 +14,12 @@
@@ -29,8 +29,8 @@ index 2e77289..2aa27f3 100644
  // TODO(b/129481165): remove the #pragma below and fix conversion issues
  
  #pragma clang diagnostic push
-@@ -3630,7 +3636,10 @@ void Layer::gatherBufferInfo() {
-             ATRACE_NAME("getDataspace");
+@@ -1297,7 +1303,10 @@ void Layer::gatherBufferInfo() {
+             SFTRACE_NAME("getDataspace");
              err = mapper.getDataspace(mBufferInfo.mBuffer->getBuffer()->handle, &dataspace);
          }
 -        if (err != OK || dataspace != mBufferInfo.mDataspace) {
@@ -39,8 +39,8 @@ index 2e77289..2aa27f3 100644
 +            && dataspace != ui::Dataspace::UNKNOWN) {
 +            /* QTI_END */
              {
-                 ATRACE_NAME("setDataspace");
+                 SFTRACE_NAME("setDataspace");
                  err = mapper.setDataspace(mBufferInfo.mBuffer->getBuffer()->handle,
 -- 
-2.47.0
+2.47.1
 

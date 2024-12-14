@@ -1,7 +1,7 @@
-From ea66dbafa763acb3a4931b45bf7042a0e8e99468 Mon Sep 17 00:00:00 2001
+From 1f143f7ad45e2ed4adf1d5b5438c40ce296c0295 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Sun, 18 Jun 2023 12:13:11 +0530
-Subject: [PATCH 25/36] base: Add Safetynet/Play Integrity hax
+Subject: [PATCH 25/34] base: Add Safetynet/Play Integrity hax
 
 Author: Danny Lin <danny@kdrag0n.dev>
 Date:   Mon Oct 11 19:59:51 2021 -0700
@@ -169,7 +169,7 @@ Change-Id: I774a8ffc98e329f5ccd79f07b0189b2ed19a6780
  create mode 100644 core/java/com/android/internal/gmscompat/AttestationHooks.java
 
 diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
-index db216b1af..9445bc1b5 100644
+index 93a9489849af..1f19fd277453 100644
 --- a/core/java/android/app/Instrumentation.java
 +++ b/core/java/android/app/Instrumentation.java
 @@ -63,6 +63,8 @@ import android.view.WindowManagerGlobal;
@@ -181,7 +181,7 @@ index db216b1af..9445bc1b5 100644
  import java.io.File;
  import java.lang.annotation.Retention;
  import java.lang.annotation.RetentionPolicy;
-@@ -1351,6 +1353,7 @@ public class Instrumentation {
+@@ -1353,6 +1355,7 @@ public class Instrumentation {
          Application app = getFactory(context.getPackageName())
                  .instantiateApplication(cl, className);
          app.attach(context);
@@ -189,7 +189,7 @@ index db216b1af..9445bc1b5 100644
          return app;
      }
      
-@@ -1368,6 +1371,7 @@ public class Instrumentation {
+@@ -1370,6 +1373,7 @@ public class Instrumentation {
              ClassNotFoundException {
          Application app = (Application)clazz.newInstance();
          app.attach(context);
@@ -199,7 +199,7 @@ index db216b1af..9445bc1b5 100644
  
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 new file mode 100644
-index 000000000..5ee105879
+index 000000000000..5ee10587989c
 --- /dev/null
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -0,0 +1,104 @@
@@ -308,7 +308,7 @@ index 000000000..5ee105879
 +    }
 +}
 diff --git a/keystore/java/android/security/keystore2/AndroidKeyStoreSpi.java b/keystore/java/android/security/keystore2/AndroidKeyStoreSpi.java
-index e6a63b9c4..6a80c14c9 100644
+index e6a63b9c4c17..6a80c14c9837 100644
 --- a/keystore/java/android/security/keystore2/AndroidKeyStoreSpi.java
 +++ b/keystore/java/android/security/keystore2/AndroidKeyStoreSpi.java
 @@ -48,6 +48,7 @@ import android.system.keystore2.ResponseCode;
@@ -329,5 +329,5 @@ index e6a63b9c4..6a80c14c9 100644
  
          if (response == null || response.metadata.certificate == null) {
 -- 
-2.47.0
+2.47.1
 

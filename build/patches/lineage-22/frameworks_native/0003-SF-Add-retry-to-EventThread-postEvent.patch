@@ -1,7 +1,7 @@
-From f7e07a0d858a3337d07d20eeb37bbbb93518388e Mon Sep 17 00:00:00 2001
+From af9567631fa10f0bebd2c24571ef2aa0a50689b9 Mon Sep 17 00:00:00 2001
 From: Rheygine Medel <quic_rmedel@quicinc.com>
 Date: Tue, 18 Apr 2023 09:06:33 -0700
-Subject: [PATCH 2/5] SF: Add retry to EventThread postEvent
+Subject: [PATCH 3/5] SF: Add retry to EventThread postEvent
 
 When consumer BitTube is under heavy Event load, like constantly
 updating use case providing VSYNC events, it is possible for Hotplug
@@ -17,10 +17,10 @@ CRs-Fixed: 2700045
  1 file changed, 28 insertions(+), 14 deletions(-)
 
 diff --git a/services/surfaceflinger/Scheduler/EventThread.cpp b/services/surfaceflinger/Scheduler/EventThread.cpp
-index 96eccf290f..1b68fb8ead 100644
+index 218c56ef3d..7dc248fdd7 100644
 --- a/services/surfaceflinger/Scheduler/EventThread.cpp
 +++ b/services/surfaceflinger/Scheduler/EventThread.cpp
-@@ -196,7 +196,8 @@ EventThreadConnection::EventThreadConnection(EventThread* eventThread, uid_t cal
+@@ -195,7 +195,8 @@ EventThreadConnection::EventThreadConnection(EventThread* eventThread, uid_t cal
        : mOwnerUid(callingUid),
          mEventRegistration(eventRegistration),
          mEventThread(eventThread),
@@ -30,7 +30,7 @@ index 96eccf290f..1b68fb8ead 100644
  
  EventThreadConnection::~EventThreadConnection() {
      // do nothing here -- clean-up will happen automatically
-@@ -700,6 +701,9 @@ void EventThread::generateFrameTimeline(VsyncEventData& outVsyncEventData, nsecs
+@@ -701,6 +702,9 @@ void EventThread::generateFrameTimeline(VsyncEventData& outVsyncEventData, nsecs
  
  void EventThread::dispatchEvent(const DisplayEventReceiver::Event& event,
                                  const DisplayEventConsumers& consumers) {
@@ -40,7 +40,7 @@ index 96eccf290f..1b68fb8ead 100644
      for (const auto& consumer : consumers) {
          DisplayEventReceiver::Event copy = event;
          if (event.header.type == DisplayEventReceiver::DISPLAY_EVENT_VSYNC) {
-@@ -709,20 +713,30 @@ void EventThread::dispatchEvent(const DisplayEventReceiver::Event& event,
+@@ -710,20 +714,30 @@ void EventThread::dispatchEvent(const DisplayEventReceiver::Event& event,
                                    event.vsync.vsyncData.preferredExpectedPresentationTime(),
                                    event.vsync.vsyncData.preferredDeadlineTimestamp());
          }
@@ -85,5 +85,5 @@ index 96eccf290f..1b68fb8ead 100644
      if (event.header.type == DisplayEventReceiver::DISPLAY_EVENT_VSYNC &&
          FlagManager::getInstance().vrr_config()) {
 -- 
-2.45.2
+2.47.1
 

@@ -1,4 +1,4 @@
-From e8df585fd358f90abd2a88c2f6626c6a9988ba94 Mon Sep 17 00:00:00 2001
+From 0cbc114bdb87d0bf5fe00a0b2c63998b8f4e8d14 Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Fri, 15 Jul 2022 17:47:04 +0530
 Subject: [PATCH 3/4] Launcher3: Set recents and app drawer opacity
@@ -20,7 +20,7 @@ Signed-off-by: Subhajeet Muhuri <subhajeet.muhuri@gmail.com>
  10 files changed, 38 insertions(+), 12 deletions(-)
 
 diff --git a/quickstep/src/com/android/launcher3/uioverrides/states/AllAppsState.java b/quickstep/src/com/android/launcher3/uioverrides/states/AllAppsState.java
-index fa80dc2..869b346 100644
+index 030a7acb48..d67b5e5110 100644
 --- a/quickstep/src/com/android/launcher3/uioverrides/states/AllAppsState.java
 +++ b/quickstep/src/com/android/launcher3/uioverrides/states/AllAppsState.java
 @@ -21,11 +21,14 @@ import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_ALLAP
@@ -35,10 +35,10 @@ index fa80dc2..869b346 100644
  import com.android.launcher3.LauncherState;
  import com.android.launcher3.R;
 +import com.android.launcher3.Utilities;
- import com.android.launcher3.config.FeatureFlags;
  import com.android.launcher3.util.Themes;
  import com.android.launcher3.views.ActivityContext;
-@@ -214,8 +217,8 @@ public class AllAppsState extends LauncherState {
+ import com.android.quickstep.util.BaseDepthController;
+@@ -202,8 +205,8 @@ public class AllAppsState extends LauncherState {
  
      @Override
      public int getWorkspaceScrimColor(Launcher launcher) {
@@ -50,7 +50,7 @@ index fa80dc2..869b346 100644
      }
  }
 diff --git a/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java b/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
-index 6822f1b..ed48c1e 100644
+index b165cddfb2..dbc93a34dd 100644
 --- a/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
 +++ b/quickstep/src/com/android/launcher3/uioverrides/states/OverviewState.java
 @@ -24,10 +24,13 @@ import android.content.Context;
@@ -78,7 +78,7 @@ index 6822f1b..ed48c1e 100644
  
      @Override
 diff --git a/quickstep/src/com/android/launcher3/uioverrides/states/QuickSwitchState.java b/quickstep/src/com/android/launcher3/uioverrides/states/QuickSwitchState.java
-index dfad409..56bcdf3 100644
+index dfad4096bc..56bcdf3b12 100644
 --- a/quickstep/src/com/android/launcher3/uioverrides/states/QuickSwitchState.java
 +++ b/quickstep/src/com/android/launcher3/uioverrides/states/QuickSwitchState.java
 @@ -19,9 +19,12 @@ import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_BACKG
@@ -105,7 +105,7 @@ index dfad409..56bcdf3 100644
  
      @Override
 diff --git a/quickstep/src/com/android/quickstep/fallback/RecentsState.java b/quickstep/src/com/android/quickstep/fallback/RecentsState.java
-index 07ab6ee..1399117 100644
+index 07ab6ee3c7..1399117ab4 100644
 --- a/quickstep/src/com/android/quickstep/fallback/RecentsState.java
 +++ b/quickstep/src/com/android/quickstep/fallback/RecentsState.java
 @@ -22,8 +22,11 @@ import static com.android.launcher3.uioverrides.states.OverviewModalTaskState.ge
@@ -133,7 +133,7 @@ index 07ab6ee..1399117 100644
      }
  
 diff --git a/res/color-v31/overview_scrim.xml b/res/color-v31/overview_scrim.xml
-index 212518f..b2beaf0 100644
+index 212518ff65..b2beaf0d39 100644
 --- a/res/color-v31/overview_scrim.xml
 +++ b/res/color-v31/overview_scrim.xml
 @@ -14,5 +14,5 @@
@@ -144,7 +144,7 @@ index 212518f..b2beaf0 100644
 +  <item android:color="@android:color/system_neutral2_200" android:alpha="0.4" />
  </selector>
 diff --git a/res/color-v31/overview_scrim_dark.xml b/res/color-v31/overview_scrim_dark.xml
-index 2ab8ecd..73b2f3b 100644
+index 2ab8ecdec9..73b2f3b9e4 100644
 --- a/res/color-v31/overview_scrim_dark.xml
 +++ b/res/color-v31/overview_scrim_dark.xml
 @@ -14,5 +14,5 @@
@@ -155,10 +155,10 @@ index 2ab8ecd..73b2f3b 100644
 +  <item android:color="@android:color/system_neutral1_500" android:lStar="35" android:alpha="0.4" />
  </selector>
 diff --git a/src/com/android/launcher3/Utilities.java b/src/com/android/launcher3/Utilities.java
-index 29959a3..d7b5f8c 100644
+index 460c9126da..498675377b 100644
 --- a/src/com/android/launcher3/Utilities.java
 +++ b/src/com/android/launcher3/Utilities.java
-@@ -163,6 +163,9 @@ public final class Utilities {
+@@ -157,6 +157,9 @@ public final class Utilities {
      @IntDef({TRANSLATE_UP, TRANSLATE_DOWN, TRANSLATE_LEFT, TRANSLATE_RIGHT})
      public @interface AdjustmentDirection{}
  
@@ -169,7 +169,7 @@ index 29959a3..d7b5f8c 100644
       * Returns true if theme is dark.
       */
 diff --git a/src/com/android/launcher3/states/HintState.java b/src/com/android/launcher3/states/HintState.java
-index bf2fb30..19191c3 100644
+index bf2fb30841..19191c32cd 100644
 --- a/src/com/android/launcher3/states/HintState.java
 +++ b/src/com/android/launcher3/states/HintState.java
 @@ -25,6 +25,7 @@ import androidx.core.graphics.ColorUtils;
@@ -190,7 +190,7 @@ index bf2fb30..19191c3 100644
  
      @Override
 diff --git a/src_no_quickstep/com/android/launcher3/uioverrides/states/AllAppsState.java b/src_no_quickstep/com/android/launcher3/uioverrides/states/AllAppsState.java
-index 9865516..8e4c47c 100644
+index 9865516c4c..8e4c47c965 100644
 --- a/src_no_quickstep/com/android/launcher3/uioverrides/states/AllAppsState.java
 +++ b/src_no_quickstep/com/android/launcher3/uioverrides/states/AllAppsState.java
 @@ -20,9 +20,12 @@ import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_ALLAP
@@ -218,7 +218,7 @@ index 9865516..8e4c47c 100644
      }
  }
 diff --git a/src_no_quickstep/com/android/launcher3/uioverrides/states/OverviewState.java b/src_no_quickstep/com/android/launcher3/uioverrides/states/OverviewState.java
-index 7a228c4..8aeb4ea 100644
+index 7a228c42b8..8aeb4eadd4 100644
 --- a/src_no_quickstep/com/android/launcher3/uioverrides/states/OverviewState.java
 +++ b/src_no_quickstep/com/android/launcher3/uioverrides/states/OverviewState.java
 @@ -19,9 +19,12 @@ import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_OVERV
@@ -244,5 +244,5 @@ index 7a228c4..8aeb4ea 100644
      }
  }
 -- 
-2.47.0
+2.47.1
 

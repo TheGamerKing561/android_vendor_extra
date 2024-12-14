@@ -1,7 +1,7 @@
-From 95092698d23468dbe66c8b82c4d1a9a91e15423f Mon Sep 17 00:00:00 2001
+From 7f28d41b4857c7a1a36935422373f786e0f25779 Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Thu, 8 Jun 2023 16:55:44 +0530
-Subject: [PATCH 31/36] gmscompat: Un-spoof GMS while adding google account
+Subject: [PATCH 31/34] gmscompat: Un-spoof GMS while adding google account
 
 GMS uses its DroidGuard service (the same that's used for safetynet)
 to get the device name from the build fingerprint, which from our
@@ -35,7 +35,7 @@ Signed-off-by: SamarV-121 <samar@samarv121.dev>
  2 files changed, 86 insertions(+), 14 deletions(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 98b29b7d7..db118a3cb 100644
+index 98b29b7d7898..db118a3cb2ad 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -1,6 +1,8 @@
@@ -178,10 +178,10 @@ index 98b29b7d7..db118a3cb 100644
      }
  }
 diff --git a/services/core/java/com/android/server/wm/ActivityTaskManagerService.java b/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
-index 930e1cde5..10f701ed3 100644
+index f626ce278f87..9e253b37719c 100644
 --- a/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
 +++ b/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
-@@ -291,6 +291,7 @@ import com.android.server.uri.UriGrantsManagerInternal;
+@@ -290,6 +290,7 @@ import com.android.server.uri.UriGrantsManagerInternal;
  import com.android.server.wallpaper.WallpaperManagerInternal;
  import com.android.wm.shell.Flags;
  
@@ -189,7 +189,7 @@ index 930e1cde5..10f701ed3 100644
  import org.lineageos.internal.applications.LineageActivityManager;
  
  import java.io.BufferedReader;
-@@ -2001,7 +2002,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
+@@ -1988,7 +1989,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
  
      @Override
      public RootTaskInfo getFocusedRootTaskInfo() throws RemoteException {
@@ -200,7 +200,7 @@ index 930e1cde5..10f701ed3 100644
          final long ident = Binder.clearCallingIdentity();
          try {
              synchronized (mGlobalLock) {
-@@ -3137,7 +3140,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
+@@ -3110,7 +3113,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
      /** Sets the task stack listener that gets callbacks when a task stack changes. */
      @Override
      public void registerTaskStackListener(ITaskStackListener listener) {
@@ -212,5 +212,5 @@ index 930e1cde5..10f701ed3 100644
      }
  
 -- 
-2.47.0
+2.47.1
 

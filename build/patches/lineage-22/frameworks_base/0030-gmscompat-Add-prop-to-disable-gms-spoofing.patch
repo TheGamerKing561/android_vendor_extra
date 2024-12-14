@@ -1,7 +1,7 @@
-From 7e95cfb4224d74e9aab2c984c461705e24c6536c Mon Sep 17 00:00:00 2001
+From 87439d3d7cf245a82cf28c20072ecdd37ae1d28d Mon Sep 17 00:00:00 2001
 From: SamarV-121 <samar@samarv121.dev>
 Date: Fri, 16 Feb 2024 09:32:05 +0530
-Subject: [PATCH 30/36] gmscompat: Add prop to disable gms spoofing
+Subject: [PATCH 30/34] gmscompat: Add prop to disable gms spoofing
 
 Change-Id: Ic67f0f6f720cba05a36d9d923880da93a46864f9
 ---
@@ -10,7 +10,7 @@ Change-Id: Ic67f0f6f720cba05a36d9d923880da93a46864f9
  2 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 42cd62ac7..98b29b7d7 100644
+index 42cd62ac70aa..98b29b7d7898 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -37,6 +37,9 @@ public final class AttestationHooks {
@@ -33,7 +33,7 @@ index 42cd62ac7..98b29b7d7 100644
              if (PROCESS_UNSTABLE.equals(processName)) {
                  sIsGms = true;
 diff --git a/services/core/java/com/android/server/gmscompat/AttestationService.java b/services/core/java/com/android/server/gmscompat/AttestationService.java
-index 4c5816784..4f4deb258 100644
+index 4c58167842d5..4f4deb258955 100644
 --- a/services/core/java/com/android/server/gmscompat/AttestationService.java
 +++ b/services/core/java/com/android/server/gmscompat/AttestationService.java
 @@ -40,6 +40,8 @@ public final class AttestationService extends SystemService {
@@ -55,5 +55,5 @@ index 4c5816784..4f4deb258 100644
              mScheduler.scheduleAtFixedRate(
                      new FetchGmsCertifiedProps(), INITIAL_DELAY, INTERVAL, TimeUnit.MINUTES);
 -- 
-2.47.0
+2.47.1
 

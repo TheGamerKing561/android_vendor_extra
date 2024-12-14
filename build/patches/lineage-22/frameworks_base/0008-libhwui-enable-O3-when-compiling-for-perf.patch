@@ -1,7 +1,7 @@
-From 56b6aa3318464c710376950a4d201d5672fabbdd Mon Sep 17 00:00:00 2001
+From 645a644c2a46165b73bde4254217fc094a13f2e6 Mon Sep 17 00:00:00 2001
 From: Vaisakh Murali <mvaisakh@statixos.com>
 Date: Wed, 19 Apr 2023 10:35:47 +0000
-Subject: [PATCH 10/36] libhwui: enable O3 when compiling for perf
+Subject: [PATCH 08/34] libhwui: enable O3 when compiling for perf
 
 This reduces ui jitter by a lot.
 
@@ -19,7 +19,7 @@ Signed-off-by: Vaisakh Murali <mvaisakh@statixos.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/libs/hwui/Android.bp b/libs/hwui/Android.bp
-index 8836737e0..02cc52e90 100644
+index 9623d58bfd5b..89a69df3cec1 100644
 --- a/libs/hwui/Android.bp
 +++ b/libs/hwui/Android.bp
 @@ -176,6 +176,7 @@ cc_defaults {
@@ -31,5 +31,5 @@ index 8836737e0..02cc52e90 100644
  }
  
 -- 
-2.47.0
+2.47.1
 
