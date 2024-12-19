@@ -51,20 +51,18 @@ def upload_asset(GH_OWNER, GH_REPO, release_id, asset_path):
             total=file_size,
             unit='B',
             unit_scale=True,
-            colour='#f38ba8',
+            colour='RED',
             bar_format='{percentage:3.0f}%|{bar:25}| {n_fmt}/{total_fmt} [{rate_fmt}]',
             ascii='-#',
         )
 
         def get_colour(percentage):
-            if percentage < 25:
-                return '#f38ba8'  # Red
-            elif percentage < 50:
-                return '#fab387'  # Peach
-            elif percentage < 75:
-                return '#f9e2af'  # Yellow
+            if percentage < 50:
+                return 'RED'  # Red
+            elif percentage < 90:
+                return 'YELLOW'  # Yellow
             else:
-                return '#a6e3a1'  # Green
+                return 'GREEN'  # Green
 
         def update_progress_bar(chunk_size):
             pbar.update(chunk_size)
