@@ -2,8 +2,13 @@
 # Copyright (C) 2024 Giovanni Ricca
 # SPDX-License-Identifier: Apache-2.0
 
-import os
 import sys
+
+sys.dont_write_bytecode = True
+
+import argparse
+import pathlib
+import subprocess
 from datetime import datetime as dt
 from glob import glob
 from hashlib import md5
@@ -11,13 +16,24 @@ from re import search, sub
 
 from config import GH_TOKEN
 
-# Release build
-is_release_build = os.environ.get('RELEASE_BUILD', 'false') == 'true'
+# Argument parser setup
+parser = argparse.ArgumentParser(
+    description='Generate OTA JSON for LineageOS builds.'
+)
+parser.add_argument(
+    '-r',
+    '--release',
+    action='store_true',
+    default=False,
+    help='Flag to mark as release build',
+)
+args = parser.parse_args()
 
 
 def getprop(prop):
     return search(
-        r''.join(['(?<=', prop, '=).*']), open('system/build.prop').read()
+        r''.join(['(?<=', prop, '=).*']),
+        pathlib.Path('system/build.prop').read_text(),
     ).group(0)
 
 
@@ -35,10 +51,10 @@ else:
 
 filename = max(
     glob(''.join(['lineage-', version, '*', '.zip'])),
-    key=os.path.getctime,
+    key=pathlib.Path().stat().st_ctime,
 )
-id = md5(open(filename, 'rb').read()).hexdigest()
-size = os.stat(filename).st_size
+id = md5(pathlib.Path(filename).read_bytes()).hexdigest()
+size = pathlib.Path(filename).stat().st_size
 url = ''.join(
     [
         'https://github.com/ItsVixano-releases/LineageOS_',
@@ -50,8 +66,10 @@ url = ''.join(
     ]
 )
 
-# Write the ota json to every file presen
-ota_path = f'../../../../vendor/extra/tools/releases/LineageOS_{codename}/lineage-{version[:-2]}/'
+# Write the ota json to every file present
+ota_path = pathlib.Path(
+    f'../../../../vendor/extra/tools/releases/LineageOS_{codename}/lineage-{version[:-2]}/'
+)
 ota = f"""{{
   "response": [
     {{
@@ -67,28 +85,37 @@ ota = f"""{{
 }}
 """
 
-for ota_json_file in glob(os.path.join(ota_path, '*.json')):
-    ota_json = open(ota_json_file, 'w')
-    ota_json.write(ota)
-    ota_json.close()
+for ota_json_file in ota_path.glob('*.json'):
+    ota_json_file.write_text(ota)
 
 # Write a dummy ota
 dummy_ota = """{
   "response": []
 }
 """
-dummy_ota_json = open(ota_path + f'{incremental}.json', 'w')
-dummy_ota_json.write(dummy_ota)
-dummy_ota_json.close()
+dummy_ota_json = ota_path / f'{incremental}.json'
+dummy_ota_json.write_text(dummy_ota)
 
 # Commit everything
-GH_DATE = sys.argv[1].replace('-', '')
-os.chdir(ota_path)
-os.system(
-    f'git add . && git commit -m "LineageOS_{codename}: lineage-{version[:-2]}: {GH_DATE}" --no-gpg-sign'
+subprocess.run(['git', 'add', '.'], cwd=ota_path)
+subprocess.run(
+    [
+        'git',
+        'commit',
+        '-m',
+        f'LineageOS_{codename}: lineage-{version[:-2]}: {incremental_json}',
+        '--no-gpg-sign',
+    ],
+    cwd=ota_path,
 )
 
-if is_release_build:
-    os.system(
-        f'git push https://{GH_TOKEN}@github.com/ItsVixano-releases/LineageOS_{codename}.git HEAD:main'
+if args.release:
+    subprocess.run(
+        [
+            'git',
+            'push',
+            f'https://{GH_TOKEN}@github.com/ItsVixano-releases/LineageOS_{codename}.git',
+            'HEAD:main',
+        ],
+        cwd=ota_path,
     )

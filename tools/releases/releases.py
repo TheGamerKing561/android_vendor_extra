@@ -2,36 +2,62 @@
 # Copyright (C) 2024 Giovanni Ricca
 # SPDX-License-Identifier: Apache-2.0
 
-import hashlib
-import os
 import sys
+
+sys.dont_write_bytecode = True
+
+import argparse
+import hashlib
+import pathlib
 from time import sleep
 
 import github_py as github
 
-# Release build
-is_release_build = os.environ.get('RELEASE_BUILD', 'false') == 'true'
-is_beta_build = os.environ.get('BETA_BUILD', 'false') == 'true'
+# Argument parser setup
+parser = argparse.ArgumentParser(
+    description='Create a GitHub release and upload assets.'
+)
+parser.add_argument(
+    '-r',
+    '--release',
+    action='store_true',
+    default=False,
+    help='Flag to mark as release build',
+)
+parser.add_argument(
+    '-b',
+    '--beta',
+    action='store_true',
+    default=False,
+    help='Flag to mark as beta release',
+)
+parser.add_argument('device', help='Device codename (test)')
+parser.add_argument('release_spl', help='SPL Version (YYYY-MM-DD)')
+parser.add_argument('release_build_date', help='Build date (YYYYMMDD)')
+args = parser.parse_args()
 
 # Pre-checks
-if len(sys.argv) < 3:
+assets_dir = pathlib.Path('assets')
+if not assets_dir.exists():
     print(
-        '\nPlease mention for which device you want to create the releaase\n\n    ex: ./releases.py lisa 2022-07-05 20220713\n'
+        f'\nError: The directory `{assets_dir}` does not exist.\n'
+        'Please create a folder named `assets` with all the assets you want to upload inside it.'
     )
-    exit()
+    sys.exit(1)
 
-try:
-    if len(os.listdir('assets')) == 0:
-        print(
-            '\nPlease make sure to create a folder named `assets` with all the assets you want to upload inside it\n'
-        )
-        exit()
-except FileNotFoundError:
-    # Print out the same error
+if not assets_dir.is_dir():
     print(
-        '\nPlease make sure to create a folder named `assets` with all the assets you want to upload inside it\n'
+        f'\nError: `{assets_dir}` is not a directory.\n'
+        'Please create a folder named `assets` with all the assets you want to upload inside it.'
     )
-    exit()
+    sys.exit(1)
+
+if not any(assets_dir.iterdir()):
+    print(
+        f'\nError: The directory `{assets_dir}` is empty.\n'
+        'Please add the assets you want to upload inside the `assets` folder.'
+    )
+    sys.exit(1)
 
 
 # defs
@@ -52,42 +78,41 @@ def get_device(var):
         'stanford': {1: 'Honor 9', 2: '20.0', 3: 'LineageOS_stanford'},
         # Test
         'test': {1: 'Test Device', 2: '12.3', 3: 'LineageOS_test'},
+        'test_priv': {1: 'Test Device', 2: '12.3', 3: 'LineageOS_test_priv'},
     }.get(var)  # fmt: skip
 
 
 def sha1sum(var):
     file_hash = hashlib.sha1()
-    BLOCK_SIZE = 15728640  # 15mb
+    BLOCK_SIZE = 67108864  # 64MB
     with open('assets/' + var, 'rb') as f:
-        fb = f.read(BLOCK_SIZE)
-        while len(fb) > 0:
-            file_hash.update(fb)
-            fb = f.read(BLOCK_SIZE)
+        for chunk in iter(lambda: f.read(BLOCK_SIZE), b''):
+            file_hash.update(chunk)
 
     return file_hash.hexdigest()
 
 
 # Vars
-GH_ASSETS = os.listdir('assets')
+GH_ASSETS = list(assets_dir.iterdir())
 GH_OWNER = 'ItsVixano-releases'  # Github profile name
-GH_REPO = get_device(sys.argv[1])[3]  # Github repo name
-GH_SECPATCH = sys.argv[2]  # LineageOS Security patch level
-GH_TAG = sys.argv[3]  # Github release tag name
-GH_LINEAGE = get_device(sys.argv[1])[2]  # LineageOS Release
-GH_NAME = f"LineageOS {GH_LINEAGE} for {get_device(sys.argv[1])[1]} ({GH_TAG.replace('-', '')})"
+GH_REPO = get_device(args.device)[3]  # Github repo name
+GH_SECPATCH = args.release_spl  # LineageOS Security patch level
+GH_TAG = args.release_build_date  # Github release tag name
+GH_LINEAGE = get_device(args.device)[2]  # LineageOS Release
+GH_NAME = f"LineageOS {GH_LINEAGE} for {get_device(args.device)[1]} ({GH_TAG.replace('-', '')})"
 GH_MESSAGE = f"""📅 Build date: `{GH_TAG}`
 
 🔒 Security patches: `{GH_SECPATCH}`
 
 📔 [Changelog](https://raw.githubusercontent.com/ItsVixano-releases/{GH_REPO}/main/lineage-{GH_LINEAGE[:-2]}/changelog_{GH_TAG.replace('-', '')}.txt)
-📕 [Wiki & Instructions](https://wiki.itsvixano.me/devices/{sys.argv[1]}/)
+📕 [Wiki & Instructions](https://wiki.itsvixano.me/devices/{args.device}/)
 🔧 [Bug reporting](https://wiki.itsvixano.me/troubleshooting/)"""
 
 # Calculate the sha1sums of the assets
 GH_MESSAGE += '\n\n🔗 Sha1sums'
 for asset in GH_ASSETS:
-    print(f'\nCalculating sha1sum for `{asset}`')
-    GH_MESSAGE += f'\n`{sha1sum(asset)} {asset}`'
+    print(f'\nCalculating sha1sum for `{asset.name}`')
+    GH_MESSAGE += f'\n`{sha1sum(asset.name)} {asset.name}`'
 
 # Create release
 print('\nCreating a release page ...')
@@ -95,18 +120,18 @@ release_data = {
     'tag_name': GH_TAG.replace('-', ''),
     'name': GH_NAME,
     'body': GH_MESSAGE,
-    'draft': not is_release_build,
-    'prerelease': is_beta_build,
+    'draft': not args.release,
+    'prerelease': args.beta,
 }
-release = github.create_git_release(GH_OWNER, GH_REPO, release_data)
-release_id = release.json()['id']
+release = github.create_git_release(GH_OWNER, GH_REPO, release_data).json()
+release_id = release['id']
 
 # Upload assets
 for asset in GH_ASSETS:
-    print(f'\nUploading `{asset}`')
-    with open(f'assets/{asset}', 'rb') as asset_data:
-        github.upload_asset(GH_OWNER, GH_REPO, release_id, asset, asset_data)
+    print(f'\nUploading `{asset.name}`')
+    github.upload_asset(GH_OWNER, GH_REPO, release_id, str(asset))
 
 print(
-    f'\nDone!\nYou can find the uploaded assets on https://github.com/{GH_OWNER}/{GH_REPO}/releases'
+    '\nDone! '
+    f'You can find the uploaded assets on https://github.com/{GH_OWNER}/{GH_REPO}/releases'
 )

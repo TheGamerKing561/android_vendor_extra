@@ -140,7 +140,13 @@ upload_assets() {
         cp ${file} "${VENDOR_EXTRA_PATH}"/tools/releases/assets &>/dev/null
     done
     cd "${VENDOR_EXTRA_PATH}"/tools/releases/
-    ./releases.py "${DEVICE}" ${secpatch} ${datetime}
+
+    if [[ "${RELEASE_BUILD}" == "true" ]]; then
+        [[ "${BETA_BUILD}" == "true" ]] && ./releases.py "${DEVICE}" -r -b ${secpatch} ${datetime}
+        [[ "${BETA_BUILD}" == "false" ]] && ./releases.py "${DEVICE}" -r ${secpatch} ${datetime}
+    else
+        ./releases.py "${DEVICE}" ${secpatch} ${datetime}
+    fi
 
     # Return to the root dir
     croot
@@ -151,7 +157,7 @@ upload_assets() {
 
         # Generate the OTA Json
         cd out/target/product/"${DEVICE}"/ &>/dev/null
-        "${VENDOR_EXTRA_PATH}"/tools/releases/los_ota_json.py ${datetime}
+        "${VENDOR_EXTRA_PATH}"/tools/releases/los_ota_json.py -r
 
         # Return to the root dir
         croot
@@ -161,8 +167,8 @@ upload_assets() {
 manual_upload_assets() {
     # Defs
     DEVICE=""
-    export RELEASE_BUILD="false"
-    export BETA_BUILD="false"
+    RELEASE_BUILD="false"
+    BETA_BUILD="false"
 
     while [ "$#" -gt 0 ]; do
         case "${1}" in
@@ -170,10 +176,10 @@ manual_upload_assets() {
                 DEVICE="${2}"
                 ;;
             -r | --release-build)
-                export RELEASE_BUILD="true"
+                RELEASE_BUILD="true"
                 ;;
             -b | --beta)
-                export BETA_BUILD="true"
+                BETA_BUILD="true"
                 ;;
         esac
         shift
@@ -194,8 +200,8 @@ manual_upload_assets() {
 mka_build() {
     # Defs
     DEVICE=""
-    export RELEASE_BUILD="false"
-    export BETA_BUILD="false"
+    RELEASE_BUILD="false"
+    BETA_BUILD="false"
     local DIRTY_BUILD="false"
     local BUILD_TYPE="userdebug"
     local LOCAL_BUILD="false"
@@ -206,10 +212,10 @@ mka_build() {
                 DEVICE="${2}"
                 ;;
             -r | --release-build)
-                export RELEASE_BUILD="true"
+                RELEASE_BUILD="true"
                 ;;
             -b | --beta)
-                export BETA_BUILD="true"
+                BETA_BUILD="true"
                 ;;
             -d | --dirty)
                 local DIRTY_BUILD="true"
@@ -254,8 +260,8 @@ mka_build() {
 mka_kernel() {
     # Defs
     DEVICE=""
-    export RELEASE_BUILD="false"
-    export BETA_BUILD="false"
+    RELEASE_BUILD="false"
+    BETA_BUILD="false"
     local BUILD_TYPE="userdebug"
     local LOCAL_BUILD="false"
 

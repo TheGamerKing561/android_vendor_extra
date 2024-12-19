@@ -2,27 +2,68 @@
 # Copyright (C) 2024 Giovanni Ricca
 # SPDX-License-Identifier: Apache-2.0
 
+import sys
+
+sys.dont_write_bytecode = True
+
 import json
+import pathlib
 
 import requests
+from tqdm import tqdm
 
 from config import GH_TOKEN
 
+# Configure GitHub
+session = requests.Session()
+session.headers.update({'Authorization': f'token {GH_TOKEN}'})
+
+
+class FileWithCallback:
+    def __init__(self, fd, callback):
+        self.fd = fd
+        self.callback = callback
+
+    def read(self, size):
+        chunk = self.fd.read(size)
+        if chunk:
+            self.callback(len(chunk))
+        return chunk
+
 
 def create_git_release(GH_OWNER, GH_REPO, data):
-    return requests.post(
+    response = session.post(
         f'https://api.github.com/repos/{GH_OWNER}/{GH_REPO}/releases',
-        headers={'Authorization': f'token {GH_TOKEN}'},
+        headers={'Content-Type': 'application/json'},
         data=json.dumps(data),
     )
+    response.raise_for_status()
+    return response
 
 
-def upload_asset(GH_OWNER, GH_REPO, release_id, asset, asset_data):
-    return requests.post(
-        f'https://uploads.github.com/repos/{GH_OWNER}/{GH_REPO}/releases/{release_id}/assets?name={asset}',
-        headers={
-            'Authorization': f'token {GH_TOKEN}',
-            'Content-Type': 'application/octet-stream',
-        },
-        data=asset_data,
-    )
+def upload_asset(GH_OWNER, GH_REPO, release_id, asset_path):
+    path = pathlib.Path(asset_path)
+    file_size = path.stat().st_size
+    asset_name = path.name
+
+    with path.open('rb') as f:
+        pbar = tqdm(
+            total=file_size,
+            unit='B',
+            unit_scale=True,
+            colour='green',
+            bar_format='{percentage:3.0f}%|{bar:25}| {n_fmt}/{total_fmt} [{rate_fmt}]',
+        )
+
+        response = session.post(
+            f'https://uploads.github.com/repos/{GH_OWNER}/{GH_REPO}/releases/{release_id}/assets?name={asset_name}',
+            headers={
+                'Content-Type': 'application/octet-stream',
+                'Content-Length': str(file_size),
+            },
+            data=FileWithCallback(f, pbar.update),
+        )
+
+        pbar.close()
+        response.raise_for_status()
+        return response
