@@ -51,9 +51,24 @@ def upload_asset(GH_OWNER, GH_REPO, release_id, asset_path):
             total=file_size,
             unit='B',
             unit_scale=True,
-            colour='green',
+            colour='#f38ba8',
             bar_format='{percentage:3.0f}%|{bar:25}| {n_fmt}/{total_fmt} [{rate_fmt}]',
+            ascii='-#',
         )
+
+        def get_colour(percentage):
+            if percentage < 25:
+                return '#f38ba8'  # Red
+            elif percentage < 50:
+                return '#fab387'  # Peach
+            elif percentage < 75:
+                return '#f9e2af'  # Yellow
+            else:
+                return '#a6e3a1'  # Green
+
+        def update_progress_bar(chunk_size):
+            pbar.update(chunk_size)
+            pbar.colour = get_colour(pbar.n / pbar.total * 100)
 
         response = session.post(
             f'https://uploads.github.com/repos/{GH_OWNER}/{GH_REPO}/releases/{release_id}/assets?name={asset_name}',
@@ -61,7 +76,7 @@ def upload_asset(GH_OWNER, GH_REPO, release_id, asset_path):
                 'Content-Type': 'application/octet-stream',
                 'Content-Length': str(file_size),
             },
-            data=FileWithCallback(f, pbar.update),
+            data=FileWithCallback(f, update_progress_bar),
         )
 
         pbar.close()
