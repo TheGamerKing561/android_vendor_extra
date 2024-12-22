@@ -1,7 +1,7 @@
-From af9567631fa10f0bebd2c24571ef2aa0a50689b9 Mon Sep 17 00:00:00 2001
+From 1cba2ec297b9c33347eecc714d05146483d77e8a Mon Sep 17 00:00:00 2001
 From: Rheygine Medel <quic_rmedel@quicinc.com>
 Date: Tue, 18 Apr 2023 09:06:33 -0700
-Subject: [PATCH 3/5] SF: Add retry to EventThread postEvent
+Subject: [PATCH 3/9] SF: Add retry to EventThread postEvent
 
 When consumer BitTube is under heavy Event load, like constantly
 updating use case providing VSYNC events, it is possible for Hotplug

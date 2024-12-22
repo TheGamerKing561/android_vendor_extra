@@ -1,0 +1,208 @@
+From f89fdede404a4d7f8d348990d2ed262244c71c15 Mon Sep 17 00:00:00 2001
+From: Jisun Lee <jisunnie.lee@samsung.com>
+Date: Thu, 17 Oct 2024 20:12:29 +0900
+Subject: [PATCH 9/9] EGL Multifile Blobcache: Make use of crc32_z algorithm
+ instead of crc32c
+
+To improve the performance in generating crc. Using crc32_z would reduce
+the function duration by 98 ~ 99 % as follows.
+
+Test: Genshin Impact Loading
+      Algorithm    Num calls    Total Duration (millisec)
+      crc32_z      3678         9909.88
+      crc32c       3596         1260876.81
+
+Bug: b/373718861
+Change-Id: I0b67265c4bcf199d4433b953a5a399629c9508f9
+Signed-off-by: Jisun Lee <jisunnie.lee@samsung.com>
+---
+ opengl/libs/Android.bp                 |  5 +++++
+ opengl/libs/EGL/FileBlobCache.cpp      | 23 +++++++----------------
+ opengl/libs/EGL/FileBlobCache.h        |  2 +-
+ opengl/libs/EGL/MultifileBlobCache.cpp | 21 ++++++++++-----------
+ opengl/libs/EGL/MultifileBlobCache.h   |  2 +-
+ opengl/libs/EGL/fuzzer/Android.bp      |  4 ++++
+ 6 files changed, 28 insertions(+), 29 deletions(-)
+
+diff --git a/opengl/libs/Android.bp b/opengl/libs/Android.bp
+index e4616a8e64..f5653fb5df 100644
+--- a/opengl/libs/Android.bp
++++ b/opengl/libs/Android.bp
+@@ -135,6 +135,9 @@ cc_library_static {
+         "EGL/MultifileBlobCache.cpp",
+     ],
+     export_include_dirs: ["EGL"],
++    shared_libs: [
++        "libz",
++    ],
+ }
+ 
+ cc_library_shared {
+@@ -173,6 +176,7 @@ cc_library_shared {
+         "libutils",
+         "libSurfaceFlingerProp",
+         "libunwindstack",
++        "libz",
+     ],
+     static_libs: [
+         "libEGL_getProcAddress",
+@@ -203,6 +207,7 @@ cc_test {
+     ],
+     shared_libs: [
+         "libutils",
++        "libz",
+     ],
+ }
+ 
+diff --git a/opengl/libs/EGL/FileBlobCache.cpp b/opengl/libs/EGL/FileBlobCache.cpp
+index 4a0fac4ce5..573ca5411a 100644
+--- a/opengl/libs/EGL/FileBlobCache.cpp
++++ b/opengl/libs/EGL/FileBlobCache.cpp
+@@ -27,6 +27,7 @@
+ 
+ #include <log/log.h>
+ #include <utils/Trace.h>
++#include <zlib.h>
+ 
+ // Cache file header
+ static const char* cacheFileMagic = "EGL$";
+@@ -34,20 +35,10 @@ static const size_t cacheFileHeaderSize = 8;
+ 
+ namespace android {
+ 
+-uint32_t crc32c(const uint8_t* buf, size_t len) {
+-    const uint32_t polyBits = 0x82F63B78;
+-    uint32_t r = 0;
+-    for (size_t i = 0; i < len; i++) {
+-        r ^= buf[i];
+-        for (int j = 0; j < 8; j++) {
+-            if (r & 1) {
+-                r = (r >> 1) ^ polyBits;
+-            } else {
+-                r >>= 1;
+-            }
+-        }
+-    }
+-    return r;
++uint32_t GenerateCRC32(const uint8_t *data, size_t size)
++{
++    const unsigned long initialValue = crc32_z(0u, nullptr, 0u);
++    return static_cast<uint32_t>(crc32_z(initialValue, data, size));
+ }
+ 
+ FileBlobCache::FileBlobCache(size_t maxKeySize, size_t maxValueSize, size_t maxTotalSize,
+@@ -101,7 +92,7 @@ FileBlobCache::FileBlobCache(size_t maxKeySize, size_t maxValueSize, size_t maxT
+             return;
+         }
+         uint32_t* crc = reinterpret_cast<uint32_t*>(buf + 4);
+-        if (crc32c(buf + headerSize, cacheSize) != *crc) {
++        if (GenerateCRC32(buf + headerSize, cacheSize) != *crc) {
+             ALOGE("cache file failed CRC check");
+             close(fd);
+             return;
+@@ -175,7 +166,7 @@ void FileBlobCache::writeToFile() {
+         // Write the file magic and CRC
+         memcpy(buf, cacheFileMagic, 4);
+         uint32_t* crc = reinterpret_cast<uint32_t*>(buf + 4);
+-        *crc = crc32c(buf + headerSize, cacheSize);
++        *crc = GenerateCRC32(buf + headerSize, cacheSize);
+ 
+         if (write(fd, buf, fileSize) == -1) {
+             ALOGE("error writing cache file: %s (%d)", strerror(errno),
+diff --git a/opengl/libs/EGL/FileBlobCache.h b/opengl/libs/EGL/FileBlobCache.h
+index f083b0d6ca..224444da65 100644
+--- a/opengl/libs/EGL/FileBlobCache.h
++++ b/opengl/libs/EGL/FileBlobCache.h
+@@ -22,7 +22,7 @@
+ 
+ namespace android {
+ 
+-uint32_t crc32c(const uint8_t* buf, size_t len);
++uint32_t GenerateCRC32(const uint8_t *data, size_t size);
+ 
+ class FileBlobCache : public BlobCache {
+ public:
+diff --git a/opengl/libs/EGL/MultifileBlobCache.cpp b/opengl/libs/EGL/MultifileBlobCache.cpp
+index 9905210014..f7e33b383f 100644
+--- a/opengl/libs/EGL/MultifileBlobCache.cpp
++++ b/opengl/libs/EGL/MultifileBlobCache.cpp
+@@ -214,9 +214,8 @@ MultifileBlobCache::MultifileBlobCache(size_t maxKeySize, size_t maxValueSize, s
+                 }
+ 
+                 // Ensure we have a good CRC
+-                if (header.crc !=
+-                    crc32c(mappedEntry + sizeof(MultifileHeader),
+-                           fileSize - sizeof(MultifileHeader))) {
++                if (header.crc != GenerateCRC32(mappedEntry + sizeof(MultifileHeader),
++                                                fileSize - sizeof(MultifileHeader))) {
+                     ALOGV("INIT: Entry %u failed CRC check! Removing.", entryHash);
+                     if (remove(fullPath.c_str()) != 0) {
+                         ALOGE("Error removing %s: %s", fullPath.c_str(), std::strerror(errno));
+@@ -532,9 +531,9 @@ bool MultifileBlobCache::createStatus(const std::string& baseDir) {
+             mBuildId.length() > PROP_VALUE_MAX ? PROP_VALUE_MAX : mBuildId.length());
+ 
+     // Finally update the crc, using cacheVersion and everything the follows
+-    status.crc =
+-            crc32c(reinterpret_cast<uint8_t*>(&status) + offsetof(MultifileStatus, cacheVersion),
+-                   sizeof(status) - offsetof(MultifileStatus, cacheVersion));
++    status.crc = GenerateCRC32(
++        reinterpret_cast<uint8_t *>(&status) + offsetof(MultifileStatus, cacheVersion),
++        sizeof(status) - offsetof(MultifileStatus, cacheVersion));
+ 
+     // Create the status file
+     std::string cacheStatus = baseDir + "/" + kMultifileBlobCacheStatusFile;
+@@ -599,9 +598,9 @@ bool MultifileBlobCache::checkStatus(const std::string& baseDir) {
+     }
+ 
+     // Ensure we have a good CRC
+-    if (status.crc !=
+-        crc32c(reinterpret_cast<uint8_t*>(&status) + offsetof(MultifileStatus, cacheVersion),
+-               sizeof(status) - offsetof(MultifileStatus, cacheVersion))) {
++    if (status.crc != GenerateCRC32(reinterpret_cast<uint8_t *>(&status) +
++                                        offsetof(MultifileStatus, cacheVersion),
++                                    sizeof(status) - offsetof(MultifileStatus, cacheVersion))) {
+         ALOGE("STATUS(CHECK): Cache status failed CRC check!");
+         return false;
+     }
+@@ -840,8 +839,8 @@ void MultifileBlobCache::processTask(DeferredTask& task) {
+ 
+             // Add CRC check to the header (always do this last!)
+             MultifileHeader* header = reinterpret_cast<MultifileHeader*>(buffer);
+-            header->crc =
+-                    crc32c(buffer + sizeof(MultifileHeader), bufferSize - sizeof(MultifileHeader));
++            header->crc             = GenerateCRC32(buffer + sizeof(MultifileHeader),
++                                                    bufferSize - sizeof(MultifileHeader));
+ 
+             ssize_t result = write(fd, buffer, bufferSize);
+             if (result != bufferSize) {
+diff --git a/opengl/libs/EGL/MultifileBlobCache.h b/opengl/libs/EGL/MultifileBlobCache.h
+index 18566c2892..65aa2db344 100644
+--- a/opengl/libs/EGL/MultifileBlobCache.h
++++ b/opengl/libs/EGL/MultifileBlobCache.h
+@@ -34,7 +34,7 @@
+ 
+ namespace android {
+ 
+-constexpr uint32_t kMultifileBlobCacheVersion = 1;
++constexpr uint32_t kMultifileBlobCacheVersion = 2;
+ constexpr char kMultifileBlobCacheStatusFile[] = "cache.status";
+ 
+ struct MultifileHeader {
+diff --git a/opengl/libs/EGL/fuzzer/Android.bp b/opengl/libs/EGL/fuzzer/Android.bp
+index 022a2a3f06..4947e5ff6c 100644
+--- a/opengl/libs/EGL/fuzzer/Android.bp
++++ b/opengl/libs/EGL/fuzzer/Android.bp
+@@ -36,6 +36,10 @@ cc_fuzz {
+         "libutils",
+     ],
+ 
++    shared_libs: [
++        "libz",
++    ],
++
+     srcs: [
+         "MultifileBlobCache_fuzzer.cpp",
+     ],
+-- 
+2.47.1
+
