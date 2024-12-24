@@ -51,7 +51,7 @@ else:
 
 filename = max(
     glob(''.join(['lineage-', version, '*', '.zip'])),
-    key=pathlib.Path().stat().st_ctime,
+    key=lambda f: pathlib.Path(f).stat().st_ctime,
 )
 id = md5(pathlib.Path(filename).read_bytes()).hexdigest()
 size = pathlib.Path(filename).stat().st_size
