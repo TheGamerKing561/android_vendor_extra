@@ -15,10 +15,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     tombstoned.max_tombstone_count=10
 
-# Lineage Updater
-PRODUCT_PRODUCT_PROPERTIES += \
-    lineage.updater.allow_major_update=true
-
 ifneq ($(filter daisy prague stanford ysl,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 # Set lowram options
 PRODUCT_PRODUCT_PROPERTIES += \
