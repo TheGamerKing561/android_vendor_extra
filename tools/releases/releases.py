@@ -71,11 +71,6 @@ def get_device(var):
         'sakura': {1: 'Redmi 6 Pro', 2: '22.1', 3: 'LineageOS_sakura'},
         'xaga': {1: 'POCO X4 GT', 2: '22.1', 3: 'LineageOS_xaga'},
         'ysl': {1: 'Redmi S2/Y2', 2: '22.1', 3: 'LineageOS_ysl'},
-        # LineageOS 21.0
-        # - None
-        # LineageOS 20.0
-        'prague': {1: 'Huawei P8 Lite 2017', 2: '20.0', 3: 'LineageOS_prague'},
-        'stanford': {1: 'Honor 9', 2: '20.0', 3: 'LineageOS_stanford'},
         # Test
         'test': {1: 'Test Device', 2: '12.3', 3: 'LineageOS_test'},
         'test_priv': {1: 'Test Device', 2: '12.3', 3: 'LineageOS_test_priv'},

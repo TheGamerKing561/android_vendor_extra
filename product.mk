@@ -13,11 +13,11 @@ $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/go.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/properties.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/security.mk)
 
+# Inherit Pixel clocks Makefile
+$(call inherit-product, vendor/pixel_clocks/product.mk)
+
 # Inherit MiuiCamera Makefile
 $(call inherit-product-if-exists, vendor/xiaomi/miuicamera-$(VENDOR_EXTRA_TARGET_DEVICE)/device.mk)
-
-# Inherit Pixel clocks Makefile
-$(call inherit-product-if-exists, vendor/pixel_clocks/product.mk)
 
 # Updater
 $(call soong_config_set,lineage_extra,product_version_major,$(PRODUCT_VERSION_MAJOR))
