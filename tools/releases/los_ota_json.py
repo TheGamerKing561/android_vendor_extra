@@ -44,10 +44,7 @@ version, datetime, incremental, codename = (
     getprop('ro.lineage.device'),  # codename
 )
 
-if int(float(version)) >= 22:
-    incremental_json = dt.fromtimestamp(int(incremental)).strftime('%Y%m%d')
-else:
-    incremental_json = sub('[^0-9]', '', incremental)[:-6]
+incremental_json = dt.fromtimestamp(int(incremental)).strftime('%Y%m%d')
 
 filename = max(
     glob(''.join(['lineage-', version, '*', '.zip'])),
