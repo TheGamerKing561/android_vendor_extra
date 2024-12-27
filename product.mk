@@ -36,9 +36,6 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
-    init.safailnet.rc
-
-PRODUCT_PACKAGES += \
     neofetch
 
 # Iperf3

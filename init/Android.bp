@@ -12,10 +12,3 @@ prebuilt_etc {
     sub_dir: "init",
     product_specific: true,
 }
-
-prebuilt_etc {
-    name: "init.safailnet.rc",
-    src: "init.safailnet.rc",
-    sub_dir: "init",
-    product_specific: true,
-}
