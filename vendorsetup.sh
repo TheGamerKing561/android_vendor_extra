@@ -13,9 +13,6 @@ fi
 export BUILD_USERNAME=itsvixano
 export BUILD_HOSTNAME=android-build
 
-# Disable ART debugging
-export USE_DEX2OAT_DEBUG=false
-
 # Hardcode High Memory Parallel Process
 export NINJA_HIGHMEM_NUM_JOBS=1
 

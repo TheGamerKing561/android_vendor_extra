@@ -12,9 +12,7 @@ FULL_SYSTEM_OPTIMIZE_JAVA := true
 
 # Reduce system server verbosity
 PRODUCT_SYSTEM_SERVER_DEBUG_INFO := false
+PRODUCT_OTHER_JAVA_DEBUG_INFO := false
 
 # Use the low memory allocator to save RSS.
 MALLOC_LOW_MEMORY := true
-
-# Dexpreopt
-WITH_DEXPREOPT_DEBUG_INFO := false
