@@ -11,7 +11,6 @@ import pathlib
 import subprocess
 from datetime import datetime as dt
 from glob import glob
-from hashlib import md5
 from re import search, sub
 
 from config import GH_TOKEN
@@ -50,7 +49,7 @@ filename = max(
     glob(''.join(['lineage-', version, '*', '.zip'])),
     key=lambda f: pathlib.Path(f).stat().st_ctime,
 )
-id = md5(pathlib.Path(filename).read_bytes()).hexdigest()
+id = open(filename + '.sha256sum').read().split()[0]
 size = pathlib.Path(filename).stat().st_size
 url = ''.join(
     [

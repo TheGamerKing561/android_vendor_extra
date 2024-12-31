@@ -10,9 +10,8 @@ import json
 import pathlib
 
 import requests
-from tqdm import tqdm
-
 from config import GH_TOKEN
+from tqdm import tqdm
 
 # Configure GitHub
 session = requests.Session()
