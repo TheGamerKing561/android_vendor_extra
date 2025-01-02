@@ -12,3 +12,10 @@ prebuilt_etc {
     sub_dir: "init",
     product_specific: true,
 }
+
+prebuilt_etc {
+    name: "init.nfc_extra.rc",
+    src: "init.nfc_extra.rc",
+    sub_dir: "init",
+    product_specific: true,
+}

@@ -1,0 +1,15 @@
+#
+# Copyright (C) 2025 The LineageOS Project
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Xiaomi sm6250
+on early-init && property:ro.boot.hwname=joyeuse
+    setprop ro.boot.hardware.sku joyeuse
+
+# Xiaomi sm6375
+on early-init && property:ro.boot.product.hardware.sku=moonstone_p_global
+    setprop ro.boot.hardware.sku moonstone_p_global
+
+on early-init && property:ro.boot.product.hardware.sku=sunstone_global
+    setprop ro.boot.hardware.sku sunstone_global
