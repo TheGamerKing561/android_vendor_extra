@@ -241,7 +241,7 @@ mka_build() {
 
     [[ "${DIRTY_BUILD}" != "true" ]] && mka installclean
 
-    while ! mka bacon -j$(($(nproc) / 2 + 4)); do
+    while ! mka bacon -j$(($(nproc) - 5)); do
         LOGE "bacon failed!"
         return 0
     done
@@ -291,7 +291,7 @@ mka_kernel() {
 
     kernel_targets=${device_kernel_targets[$DEVICE]:-"bootimage"}
 
-    while ! mka ${kernel_targets} -j$(($(nproc) / 2 + 4)); do
+    while ! mka ${kernel_targets} -j$(($(nproc) - 5)); do
         LOGE "${kernel_targets} failed!"
         return 0
     done
