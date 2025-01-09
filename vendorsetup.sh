@@ -201,7 +201,7 @@ mka_build() {
     BETA_BUILD="false"
     local DIRTY_BUILD="false"
     local BUILD_TYPE="userdebug"
-    local LOCAL_BUILD="false"
+    local LOCAL_BUILD=$([ "$(cat /etc/hostname)" = "asus" ] && echo "true" || echo "false")
 
     while [ "$#" -gt 0 ]; do
         case "${1}" in
@@ -260,7 +260,7 @@ mka_kernel() {
     RELEASE_BUILD="false"
     BETA_BUILD="false"
     local BUILD_TYPE="userdebug"
-    local LOCAL_BUILD="false"
+    local LOCAL_BUILD=$([ "$(cat /etc/hostname)" = "asus" ] && echo "true" || echo "false")
 
     while [ "$#" -gt 0 ]; do
         case "${1}" in
