@@ -13,6 +13,9 @@ export NINJA_HIGHMEM_NUM_JOBS=1
 # Defs
 LOS_VERSION=$(grep "PRODUCT_VERSION_MAJOR" $(gettop)/vendor/lineage/config/version.mk | sed 's/PRODUCT_VERSION_MAJOR = //g' | head -1)
 VENDOR_EXTRA_PATH=$(gettop)/vendor/extra
+MKA_JOBS=$(($(nproc) - 5))
+[[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=15
+[[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=40
 
 # Logging defs
 LOGI() {
@@ -235,7 +238,7 @@ mka_build() {
 
     [[ "${DIRTY_BUILD}" != "true" ]] && mka installclean
 
-    while ! mka bacon -j$(($(nproc) - 5)); do
+    while ! mka bacon -j${MKA_JOBS}; do
         LOGE "bacon failed!"
         return 0
     done
@@ -285,7 +288,7 @@ mka_kernel() {
 
     kernel_targets=${device_kernel_targets[$DEVICE]:-"bootimage"}
 
-    while ! mka ${kernel_targets} -j$(($(nproc) - 5)); do
+    while ! mka ${kernel_targets} -j${MKA_JOBS}; do
         LOGE "${kernel_targets} failed!"
         return 0
     done
