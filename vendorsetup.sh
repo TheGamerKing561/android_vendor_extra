@@ -7,6 +7,13 @@
 export BUILD_USERNAME=itsvixano
 export BUILD_HOSTNAME=android-build
 
+# Make smaller .tar.gz files by excluding debug targets.
+export ART_BUILD_TARGET_NDEBUG=false
+export ART_BUILD_TARGET_DEBUG=false
+export ART_BUILD_HOST_NDEBUG=false
+export ART_BUILD_HOST_DEBUG=false
+export USE_DEX2OAT_DEBUG=false
+
 # Hardcode High Memory Parallel Process
 export NINJA_HIGHMEM_NUM_JOBS=1
 
