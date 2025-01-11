@@ -22,7 +22,7 @@ LOS_VERSION=$(grep "PRODUCT_VERSION_MAJOR" $(gettop)/vendor/lineage/config/versi
 VENDOR_EXTRA_PATH=$(gettop)/vendor/extra
 MKA_JOBS=$(($(nproc) - 5))
 [[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=15
-[[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=40
+[[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=20
 
 # Logging defs
 LOGI() {
