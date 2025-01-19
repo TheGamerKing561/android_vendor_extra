@@ -14,8 +14,8 @@ prebuilt_etc {
 }
 
 prebuilt_etc {
-    name: "init.nfc_extra.rc",
-    src: "init.nfc_extra.rc",
+    name: "init.extra.rc",
+    src: "init.extra.rc",
     sub_dir: "init",
     product_specific: true,
 }

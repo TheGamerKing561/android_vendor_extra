@@ -39,7 +39,7 @@ PRODUCT_PACKAGES += \
     neofetch
 
 PRODUCT_PACKAGES += \
-    init.nfc_extra.rc
+    init.extra.rc
 
 # Iperf3
 PRODUCT_PACKAGES += \
