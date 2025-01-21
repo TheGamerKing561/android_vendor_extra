@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Override host metadata to make builds more reproducible and avoid leaking info
-export BUILD_USERNAME=itsvixano
-export BUILD_HOSTNAME=android-build
+export BUILD_USERNAME=android-user
+export BUILD_HOSTNAME=r-0123456789abcdef-0123
 
 # Make smaller .tar.gz files by excluding debug targets.
 export ART_BUILD_TARGET_NDEBUG=false
