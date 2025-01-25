@@ -1,7 +1,7 @@
 From 6762ea34482f60365b7f3005d491bb46e2c43395 Mon Sep 17 00:00:00 2001
 From: Alexander Koskovich <akoskovich@pm.me>
 Date: Wed, 8 Jun 2022 12:59:31 -0700
-Subject: [PATCH 4/5] sm8350-common: Define boot image security patch
+Subject: [PATCH 3/3] sm8350-common: Define boot image security patch
 
 Change-Id: I2471d3412577fee8e7bca40743b38a2fc765884c
 ---

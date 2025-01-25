@@ -1,7 +1,7 @@
 From 2f81a905c2076fc17c43ddd7f46ab5886174ef9d Mon Sep 17 00:00:00 2001
 From: Chris Fries <cfries@google.com>
 Date: Tue, 26 Feb 2019 17:37:41 +0000
-Subject: [PATCH 3/5] sm8350-common: Set VENDOR_SECURITY_PATCH to platform
+Subject: [PATCH 2/3] sm8350-common: Set VENDOR_SECURITY_PATCH to platform
 
 Set the VENDOR_SECURITY_PATCH level to match the platform
 security patch level.  These are functionally the same.

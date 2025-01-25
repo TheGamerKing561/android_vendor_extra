@@ -1,7 +1,7 @@
 From 24ca91fee466ffaadc3a1d10211088e037257ef4 Mon Sep 17 00:00:00 2001
 From: Alexander Koskovich <akoskovich@pm.me>
 Date: Wed, 8 Jun 2022 12:59:31 -0700
-Subject: [PATCH 2/5] sm6250-common: Define boot image security patch
+Subject: [PATCH 2/2] sm6250-common: Define boot image security patch
 
 Change-Id: I2471d3412577fee8e7bca40743b38a2fc765884c
 ---

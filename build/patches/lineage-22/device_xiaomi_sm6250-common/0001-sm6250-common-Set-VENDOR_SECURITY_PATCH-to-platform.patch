@@ -1,7 +1,7 @@
 From 1eadf73adff3b785b0998db71225a1a5c2a7ba93 Mon Sep 17 00:00:00 2001
 From: Chris Fries <cfries@google.com>
 Date: Tue, 26 Feb 2019 17:37:41 +0000
-Subject: [PATCH 1/5] sm6250-common: Set VENDOR_SECURITY_PATCH to platform
+Subject: [PATCH 1/2] sm6250-common: Set VENDOR_SECURITY_PATCH to platform
 
 Set the VENDOR_SECURITY_PATCH level to match the platform
 security patch level.  These are functionally the same.
