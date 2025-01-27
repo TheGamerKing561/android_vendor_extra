@@ -7,8 +7,9 @@
 # Speed profile services and wifi-service to reduce RAM and storage.
 PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile
 
-# Enable whole-program R8 Java optimizations for system_server.
-FULL_SYSTEM_OPTIMIZE_JAVA := true
+# Enable whole-program R8 Java optimizations for SystemUI and system_server,
+SYSTEM_OPTIMIZE_JAVA := true
+SYSTEMUI_OPTIMIZE_JAVA := true
 
 # Reduce system server verbosity
 PRODUCT_SYSTEM_SERVER_DEBUG_INFO := false
