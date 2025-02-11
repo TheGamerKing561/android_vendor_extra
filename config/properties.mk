@@ -30,7 +30,8 @@ PRODUCT_PRODUCT_PROPERTIES += \
 
 # hwui
 PRODUCT_PRODUCT_PROPERTIES += \
-    debug.hwui.skia_atrace_enabled=false
+    debug.hwui.skia_tracing_enabled=false \
+    debug.hwui.skia_use_perfetto_track_events=false
 
 # Display
 ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
