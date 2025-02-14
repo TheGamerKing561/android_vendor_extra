@@ -12,13 +12,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
     tombstoned.max_tombstone_count=10
 
 ifneq ($(filter daisy prague stanford ysl,$(VENDOR_EXTRA_TARGET_DEVICE)),)
-# Set lowram options
-PRODUCT_PRODUCT_PROPERTIES += \
-    ro.lmk.critical_upgrade=true \
-    ro.lmk.upgrade_pressure=40 \
-    ro.lmk.downgrade_pressure=60 \
-    ro.lmk.kill_heaviest_task=false
-
 # set threshold to filter unused apps
 PRODUCT_PRODUCT_PROPERTIES += \
     pm.dexopt.downgrade_after_inactive_days=10
