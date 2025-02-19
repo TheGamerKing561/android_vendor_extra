@@ -6,9 +6,12 @@
 <resources>
     <!-- List of SKUs where Secure NFC functionality is supported -->
     <string-array name="config_skuSupportsSecureNfc" translatable="false">
+        <!-- Xiaomi SM6250 -->
         <item>joyeuse</item>
-        <item>lisa</item>
+        <!-- Xiaomi SM6375 -->
         <item>moonstone_p_global</item>
         <item>sunstone_global</item>
+        <!-- Xiaomi SM8350 -->
+        <item>lisa</item>
     </string-array>
 </resources>
