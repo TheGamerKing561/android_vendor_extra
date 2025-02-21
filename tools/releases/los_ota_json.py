@@ -11,7 +11,7 @@ import pathlib
 import subprocess
 from datetime import datetime as dt
 from glob import glob
-from re import search, sub
+from re import search
 
 from config import GH_TOKEN
 

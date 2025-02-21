@@ -9,7 +9,6 @@ sys.dont_write_bytecode = True
 import argparse
 import hashlib
 import pathlib
-from time import sleep
 
 import github_py as github
 
