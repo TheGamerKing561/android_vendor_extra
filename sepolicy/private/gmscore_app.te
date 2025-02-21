@@ -1,1 +1,2 @@
+# Allow access to /data/system/gms_certified_props.json
 allow gmscore_app system_data_file:file r_file_perms;
