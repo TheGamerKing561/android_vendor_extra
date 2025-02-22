@@ -1,7 +1,7 @@
-From 440126b4051b08c9a5feb832716613f05164406f Mon Sep 17 00:00:00 2001
+From 5c5b883caaad5b723cc74604a98a9ce4f3d487ee Mon Sep 17 00:00:00 2001
 From: jhonboy121 <alfredmathew05@gmail.com>
 Date: Fri, 29 Oct 2021 17:54:49 +0530
-Subject: [PATCH 20/34] core: PinSet: Fixup and improve algorithms caching
+Subject: [PATCH 20/35] core: PinSet: Fixup and improve algorithms caching
 
 * algorithms shouldn't be a static field since pins is an instance variable
 * use stream API's to map and collect pin algorithms to an ArraySet
@@ -14,7 +14,7 @@ Change-Id: I8a0cd85a350901b9900044cb536bd32b7cb40e02
  1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/core/java/android/security/net/config/PinSet.java b/core/java/android/security/net/config/PinSet.java
-index 87fcde943dbc..ff66b6c3be49 100644
+index 87fcde943..ff66b6c3b 100644
 --- a/core/java/android/security/net/config/PinSet.java
 +++ b/core/java/android/security/net/config/PinSet.java
 @@ -17,16 +17,18 @@
@@ -57,5 +57,5 @@ index 87fcde943dbc..ff66b6c3be49 100644
      }
  }
 -- 
-2.47.1
+2.48.1
 

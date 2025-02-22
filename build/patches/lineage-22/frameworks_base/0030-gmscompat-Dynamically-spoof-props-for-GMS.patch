@@ -1,7 +1,7 @@
-From 68a2510bf3f27f163a4b24e4ddb87c216f5f2c97 Mon Sep 17 00:00:00 2001
+From 68dc3a13f989232e3aa062aa57b78461feea877b Mon Sep 17 00:00:00 2001
 From: SamarV-121 <samar@samarv121.dev>
 Date: Thu, 30 Nov 2023 15:41:12 +0530
-Subject: [PATCH 29/34] gmscompat: Dynamically spoof props for GMS
+Subject: [PATCH 30/35] gmscompat: Dynamically spoof props for GMS
 
  * since goolag is on rampage of killing working build FPs
 
@@ -14,7 +14,7 @@ Change-Id: Ib920ba0b404382344e23b9763251b33ba275634b
  create mode 100644 services/core/java/com/android/server/gmscompat/AttestationService.java
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 314264a7ac01..42cd62ac70aa 100644
+index 314264a7a..42cd62ac7 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -1,17 +1,9 @@
@@ -154,7 +154,7 @@ index 314264a7ac01..42cd62ac70aa 100644
  }
 diff --git a/services/core/java/com/android/server/gmscompat/AttestationService.java b/services/core/java/com/android/server/gmscompat/AttestationService.java
 new file mode 100644
-index 000000000000..4c58167842d5
+index 000000000..4c5816784
 --- /dev/null
 +++ b/services/core/java/com/android/server/gmscompat/AttestationService.java
 @@ -0,0 +1,166 @@
@@ -325,7 +325,7 @@ index 000000000000..4c58167842d5
 +    }
 +}
 diff --git a/services/java/com/android/server/SystemServer.java b/services/java/com/android/server/SystemServer.java
-index b5715482fb2f..521199d8f26c 100644
+index b5715482f..521199d8f 100644
 --- a/services/java/com/android/server/SystemServer.java
 +++ b/services/java/com/android/server/SystemServer.java
 @@ -168,6 +168,7 @@ import com.android.server.display.color.ColorDisplayService;
@@ -348,5 +348,5 @@ index b5715482fb2f..521199d8f26c 100644
      }
  
 -- 
-2.47.1
+2.48.1
 

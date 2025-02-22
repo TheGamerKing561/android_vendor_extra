@@ -1,7 +1,7 @@
-From 7bf8587e7086179766269071d666152321daeb1d Mon Sep 17 00:00:00 2001
+From e676540632625312ec603d2cc2b4e8a0a1e69af5 Mon Sep 17 00:00:00 2001
 From: Dmitry Muhomor <muhomor.dmitry@gmail.com>
 Date: Mon, 11 Mar 2024 19:40:18 +0200
-Subject: [PATCH 23/34] SystemUI: require unlocking to use QS tiles by default
+Subject: [PATCH 23/35] SystemUI: require unlocking to use QS tiles by default
 
 ---
  .../src/com/android/systemui/qs/QSHost.java   |  1 +
@@ -10,7 +10,7 @@ Subject: [PATCH 23/34] SystemUI: require unlocking to use QS tiles by default
  3 files changed, 38 insertions(+), 3 deletions(-)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSHost.java b/packages/SystemUI/src/com/android/systemui/qs/QSHost.java
-index ba3357c8b591..57c6966da8ab 100644
+index ba3357c8b..57c6966da 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/QSHost.java
 +++ b/packages/SystemUI/src/com/android/systemui/qs/QSHost.java
 @@ -49,6 +49,7 @@ public interface QSHost {
@@ -22,7 +22,7 @@ index ba3357c8b591..57c6966da8ab 100644
      void removeCallback(Callback callback);
      void removeTile(String tileSpec);
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSHostAdapter.kt b/packages/SystemUI/src/com/android/systemui/qs/QSHostAdapter.kt
-index 4323b3199d57..23ec7008ee90 100644
+index 4323b3199..23ec7008e 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/QSHostAdapter.kt
 +++ b/packages/SystemUI/src/com/android/systemui/qs/QSHostAdapter.kt
 @@ -28,6 +28,7 @@ import com.android.systemui.qs.pipeline.data.repository.TileSpecRepository.Compa
@@ -51,7 +51,7 @@ index 4323b3199d57..23ec7008ee90 100644
          return interactor.currentTilesSpecs.map { it.spec }
      }
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java
-index 9abc494e56e6..ab154a717c6d 100644
+index 9abc494e5..ab154a717 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java
 +++ b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java
 @@ -69,6 +69,7 @@ import com.android.systemui.qs.QSHost;
@@ -119,5 +119,5 @@ index 9abc494e56e6..ab154a717c6d 100644
                      name = "handleRefreshState";
                      handleRefreshState(msg.obj);
 -- 
-2.47.1
+2.48.1
 

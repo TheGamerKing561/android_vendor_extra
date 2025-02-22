@@ -1,7 +1,7 @@
-From 24969d0cbd4d73491bf9b665626604a2c37f4b26 Mon Sep 17 00:00:00 2001
+From 11b0f125308526d41d14335320adcde13b829050 Mon Sep 17 00:00:00 2001
 From: Alex Naidis <alex.naidis@linux.com>
 Date: Thu, 16 Mar 2017 14:59:53 +0100
-Subject: [PATCH 22/34] ViewConfiguration: Set scroll friction to 0.009
+Subject: [PATCH 22/35] ViewConfiguration: Set scroll friction to 0.009
 
 Reduce scroll friction to a better default
 value which is used in Scroller and Overscroller.
@@ -14,7 +14,7 @@ Signed-off-by: Adithya R <gh0strider.2k18.reborn@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/core/java/android/view/ViewConfiguration.java b/core/java/android/view/ViewConfiguration.java
-index 63bf392b5ef1..adc0f570826d 100644
+index 63bf392b5..adc0f5708 100644
 --- a/core/java/android/view/ViewConfiguration.java
 +++ b/core/java/android/view/ViewConfiguration.java
 @@ -272,7 +272,7 @@ public class ViewConfiguration {
@@ -27,5 +27,5 @@ index 63bf392b5ef1..adc0f570826d 100644
      /**
       * Max distance in dips to overscroll for edge effects
 -- 
-2.47.1
+2.48.1
 

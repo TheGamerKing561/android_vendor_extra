@@ -1,7 +1,7 @@
-From 526eac72b6f79fe92014d12b97ceeba22309ec91 Mon Sep 17 00:00:00 2001
+From 5c81dd67cc0a235089095ffef8436678d621af5f Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Wed, 24 Mar 2021 18:56:33 -0700
-Subject: [PATCH 13/34] ThemedResourceCache: Replace ArrayMap with HashMap for
+Subject: [PATCH 13/35] ThemedResourceCache: Replace ArrayMap with HashMap for
  performance
 
 When opening and closing activities in Settings, a significant amount of
@@ -100,7 +100,7 @@ Change-Id: I39e1c4b03fe0e60f933f02e253d2d3c4a483146f
  1 file changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/core/java/android/content/res/ThemedResourceCache.java b/core/java/android/content/res/ThemedResourceCache.java
-index c7fcc1a38244..b756a2628fce 100644
+index c7fcc1a38..b756a2628 100644
 --- a/core/java/android/content/res/ThemedResourceCache.java
 +++ b/core/java/android/content/res/ThemedResourceCache.java
 @@ -23,10 +23,10 @@ import android.content.pm.ActivityInfo.Config;
@@ -148,5 +148,5 @@ index c7fcc1a38244..b756a2628fce 100644
  
          pruneEntriesLocked(mNullThemedEntries, configChanges);
 -- 
-2.47.1
+2.48.1
 

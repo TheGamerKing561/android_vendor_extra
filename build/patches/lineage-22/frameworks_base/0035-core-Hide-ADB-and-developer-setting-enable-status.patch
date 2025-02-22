@@ -1,7 +1,7 @@
-From 02c83f02a39c07786bbd9d6111747735e28f198d Mon Sep 17 00:00:00 2001
+From c8bbe1b793cec890ab2f7819c2943e70aaab8bdb Mon Sep 17 00:00:00 2001
 From: someone5678 <nemui3353@gmail.com>
 Date: Sat, 12 Aug 2023 17:01:41 +0800
-Subject: [PATCH 34/34] core: Hide ADB and developer setting enable status
+Subject: [PATCH 35/35] core: Hide ADB and developer setting enable status
 
 * Some apps check whether ADB or developer setting is enabled
 * Return 0 to selected apps when those apps getInt
@@ -17,7 +17,7 @@ Signed-off-by: Alexander Winkowski <dereference23@outlook.com>
  1 file changed, 41 insertions(+)
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index f7e992f54f38..457a57843099 100644
+index 670ceaaf5..91ec5fdca 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
 @@ -4411,6 +4411,9 @@ public final class Settings {
@@ -60,7 +60,7 @@ index f7e992f54f38..457a57843099 100644
              String v = getStringForUser(cr, name, userHandle);
              return parseIntSetting(v, name);
          }
-@@ -18386,6 +18398,9 @@ public final class Settings {
+@@ -18397,6 +18409,9 @@ public final class Settings {
           * or not a valid integer.
           */
          public static int getInt(ContentResolver cr, String name, int def) {
@@ -70,7 +70,7 @@ index f7e992f54f38..457a57843099 100644
              String v = getString(cr, name);
              return parseIntSettingWithDefault(v, def);
          }
-@@ -18410,6 +18425,9 @@ public final class Settings {
+@@ -18421,6 +18436,9 @@ public final class Settings {
           */
          public static int getInt(ContentResolver cr, String name)
                  throws SettingNotFoundException {
@@ -80,7 +80,7 @@ index f7e992f54f38..457a57843099 100644
              String v = getString(cr, name);
              return parseIntSetting(v, name);
          }
-@@ -21586,4 +21604,27 @@ public final class Settings {
+@@ -21597,4 +21615,27 @@ public final class Settings {
          }
          return packages[0];
      }
@@ -109,5 +109,5 @@ index f7e992f54f38..457a57843099 100644
 +    }
  }
 -- 
-2.47.1
+2.48.1
 

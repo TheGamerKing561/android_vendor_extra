@@ -1,7 +1,7 @@
-From 45ac4075e32056d18fc1c70c4909b6e5ba83c221 Mon Sep 17 00:00:00 2001
+From de56199fc9a43401602ece0abff2d94f4897b370 Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sat, 18 Nov 2023 20:08:08 +0530
-Subject: [PATCH 28/34] gmscompat: Allow setting any field in certified build
+Subject: [PATCH 29/35] gmscompat: Allow setting any field in certified build
  props
 
 Brand and manufacturer may also be used for attestation checks, as seen
@@ -18,7 +18,7 @@ Signed-off-by: SamarV-121 <samar@samarv121.dev>
  1 file changed, 16 insertions(+), 5 deletions(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index a331c4aa77a1..314264a7ac01 100644
+index a331c4aa7..314264a7a 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -36,18 +36,29 @@ public final class AttestationHooks {
@@ -65,5 +65,5 @@ index a331c4aa77a1..314264a7ac01 100644
                sIsGms = true;
                setBuildField("FINGERPRINT", "google/marlin/marlin:7.1.2/NJH47F/4146041:user/release-keys");
 -- 
-2.47.1
+2.48.1
 

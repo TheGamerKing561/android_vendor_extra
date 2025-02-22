@@ -1,7 +1,7 @@
-From c03e88b8363ffb94f7266e4ec9a2b821ac8f9568 Mon Sep 17 00:00:00 2001
+From 9e5fa168a50426aa6677aa953cf7e7dc2693bb6d Mon Sep 17 00:00:00 2001
 From: SamarV-121 <samar@samarv121.dev>
 Date: Wed, 28 Feb 2024 16:23:53 +0530
-Subject: [PATCH 32/34] gmscompat: AttestationService: Schedule only when GMS
+Subject: [PATCH 33/35] gmscompat: AttestationService: Schedule only when GMS
  is installed
 
 Change-Id: I2852e8f4ffc95f535d7aeca5d78e29426e5902d7
@@ -10,7 +10,7 @@ Change-Id: I2852e8f4ffc95f535d7aeca5d78e29426e5902d7
  1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/services/core/java/com/android/server/gmscompat/AttestationService.java b/services/core/java/com/android/server/gmscompat/AttestationService.java
-index 4f4deb258955..37b926837436 100644
+index 4f4deb258..37b926837 100644
 --- a/services/core/java/com/android/server/gmscompat/AttestationService.java
 +++ b/services/core/java/com/android/server/gmscompat/AttestationService.java
 @@ -8,6 +8,7 @@
@@ -51,5 +51,5 @@ index 4f4deb258955..37b926837436 100644
          if (DEBUG) Log.d(TAG, message);
      }
 -- 
-2.47.1
+2.48.1
 

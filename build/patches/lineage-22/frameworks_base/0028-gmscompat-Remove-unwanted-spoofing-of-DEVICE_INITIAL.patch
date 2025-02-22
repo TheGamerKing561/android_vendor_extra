@@ -1,7 +1,7 @@
-From 3e877cd50de643c0069e3d49170305a47899c650 Mon Sep 17 00:00:00 2001
+From d2f82f5475debc022af944e39278ae9c0f10b92d Mon Sep 17 00:00:00 2001
 From: SamarV-121 <samar@samarv121.dev>
 Date: Thu, 30 Nov 2023 15:36:40 +0530
-Subject: [PATCH 27/34] gmscompat: Remove unwanted spoofing of
+Subject: [PATCH 28/35] gmscompat: Remove unwanted spoofing of
  DEVICE_INITIAL_SDK_INT
 
 Change-Id: I902311e48ec5d214cf9768684a8d1d8bfe27d208
@@ -10,7 +10,7 @@ Change-Id: I902311e48ec5d214cf9768684a8d1d8bfe27d208
  1 file changed, 18 deletions(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 8996ca8c7d76..a331c4aa77a1 100644
+index 8996ca8c7..a331c4aa7 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -19,7 +19,6 @@ package com.android.internal.gmscompat;
@@ -53,5 +53,5 @@ index 8996ca8c7d76..a331c4aa77a1 100644
          }
  
 -- 
-2.47.1
+2.48.1
 

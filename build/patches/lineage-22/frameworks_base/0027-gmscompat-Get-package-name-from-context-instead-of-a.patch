@@ -1,7 +1,7 @@
-From 8e47a5527b13e31239160e5d78ee8f32164abbf0 Mon Sep 17 00:00:00 2001
+From c2a23b4c795c02201799f2a1378c71c4846336e8 Mon Sep 17 00:00:00 2001
 From: jhenrique09 <jhsv09@gmail.com>
 Date: Fri, 4 Nov 2022 15:40:04 -0300
-Subject: [PATCH 26/34] gmscompat: Get package name from context instead of app
+Subject: [PATCH 27/35] gmscompat: Get package name from context instead of app
 
 11-04 08:48:39.039 11637 11637 E AndroidRuntime: FATAL EXCEPTION: main
 11-04 08:48:39.039 11637 11637 E AndroidRuntime: Process: com.NextFloor.DestinyChild, PID: 11637
@@ -16,7 +16,7 @@ Signed-off-by: SJD Ayy <3xp1r4t3d@gmail.com>
  2 files changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
-index 1f19fd277453..df9cbdc3353a 100644
+index 1f19fd277..df9cbdc33 100644
 --- a/core/java/android/app/Instrumentation.java
 +++ b/core/java/android/app/Instrumentation.java
 @@ -1355,7 +1355,7 @@ public class Instrumentation {
@@ -38,7 +38,7 @@ index 1f19fd277453..df9cbdc3353a 100644
      }
  
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 5ee10587989c..8996ca8c7d76 100644
+index 5ee105879..8996ca8c7 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -17,8 +17,10 @@
@@ -71,5 +71,5 @@ index 5ee10587989c..8996ca8c7d76 100644
          if (PACKAGE_GMS.equals(packageName)) {
              setBuildField("TIME", System.currentTimeMillis());
 -- 
-2.47.1
+2.48.1
 

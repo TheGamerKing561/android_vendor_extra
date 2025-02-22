@@ -1,7 +1,7 @@
-From 7f28d41b4857c7a1a36935422373f786e0f25779 Mon Sep 17 00:00:00 2001
+From 6cc994d6bc34d7ea674afb7bf1cc49a2848a6ce1 Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Thu, 8 Jun 2023 16:55:44 +0530
-Subject: [PATCH 31/34] gmscompat: Un-spoof GMS while adding google account
+Subject: [PATCH 32/35] gmscompat: Un-spoof GMS while adding google account
 
 GMS uses its DroidGuard service (the same that's used for safetynet)
 to get the device name from the build fingerprint, which from our
@@ -35,7 +35,7 @@ Signed-off-by: SamarV-121 <samar@samarv121.dev>
  2 files changed, 86 insertions(+), 14 deletions(-)
 
 diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
-index 98b29b7d7898..db118a3cb2ad 100644
+index 98b29b7d7..db118a3cb 100644
 --- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
 +++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
 @@ -1,6 +1,8 @@
@@ -178,7 +178,7 @@ index 98b29b7d7898..db118a3cb2ad 100644
      }
  }
 diff --git a/services/core/java/com/android/server/wm/ActivityTaskManagerService.java b/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
-index f626ce278f87..9e253b37719c 100644
+index f626ce278..9e253b377 100644
 --- a/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
 +++ b/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
 @@ -290,6 +290,7 @@ import com.android.server.uri.UriGrantsManagerInternal;
@@ -212,5 +212,5 @@ index f626ce278f87..9e253b37719c 100644
      }
  
 -- 
-2.47.1
+2.48.1
 

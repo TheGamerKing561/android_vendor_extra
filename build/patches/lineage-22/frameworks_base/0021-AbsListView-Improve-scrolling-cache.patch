@@ -1,7 +1,7 @@
-From 041605c4f3014d5c5f18b91186d27a8e13ac33b2 Mon Sep 17 00:00:00 2001
+From f6fc309aae2d95d9c069ef3be50a255b434fc6ad Mon Sep 17 00:00:00 2001
 From: Pawit Pornkitprasan <p.pawit@gmail.com>
 Date: Mon, 17 Nov 2014 18:59:57 +0100
-Subject: [PATCH 21/34] AbsListView: Improve scrolling cache
+Subject: [PATCH 21/35] AbsListView: Improve scrolling cache
 
 Scrolling cache helps make short scrolls/flings smooth but will
 cause stutter when long flings are made. This patch disables
@@ -19,7 +19,7 @@ Signed-off-by: Alex Naidis <alex.naidis@linux.com>
  1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/core/java/android/widget/AbsListView.java b/core/java/android/widget/AbsListView.java
-index 3c854ea4fad4..1e7543942dcc 100644
+index 3c854ea4f..1e7543942 100644
 --- a/core/java/android/widget/AbsListView.java
 +++ b/core/java/android/widget/AbsListView.java
 @@ -697,6 +697,7 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
@@ -81,5 +81,5 @@ index 3c854ea4fad4..1e7543942dcc 100644
  
              if (mFlingStrictSpan != null) {
 -- 
-2.47.1
+2.48.1
 
