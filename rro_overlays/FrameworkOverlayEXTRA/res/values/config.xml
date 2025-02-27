@@ -40,5 +40,7 @@
         <item>com.android.networkstack.tethering</item>
         <!-- GMS location history -->
         <item>com.google.android.gms.location.history</item>
+        <!-- Google -->
+        <item>com.google.android.googlequicksearchbox</item>
     </string-array>
 </resources>
