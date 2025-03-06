@@ -13,5 +13,9 @@
 
         <!-- Keep up to 7 days of permission usage history -->
         <item>privacy/discrete_history_cutoff_millis=604800000</item>
+
+        <!-- Nearby -->
+	<item>nearby/nearby_enable_presence_broadcast_legacy=false</item>
+	<item>nearby/nearby_support_test_app=false</item>
     </string-array>
 </resources>
