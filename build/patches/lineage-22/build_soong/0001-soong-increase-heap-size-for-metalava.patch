@@ -1,11 +1,10 @@
-From f4e0b6ddc1b9461da1d4a895c5adb63d54c4e49a Mon Sep 17 00:00:00 2001
+From 9e03c95219fd7cc21ca3f5fd57caee8f08beed49 Mon Sep 17 00:00:00 2001
 From: LeddaZ <leonardoledda@gmail.com>
 Date: Fri, 29 Oct 2021 16:54:04 +0200
-Subject: [PATCH 1/5] soong: increase heap size for metalava
+Subject: [PATCH 1/6] soong: increase heap size for metalava
 
 * Fixes building on systems with < 16GB RAM
 
-Change-Id: Ie194c0894a32e1f9b65c67ff5b7119e6bbff851f
 Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
 ---
  java/droidstubs.go | 1 +

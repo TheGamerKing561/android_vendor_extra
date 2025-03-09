@@ -1,7 +1,7 @@
-From c0e9c251a42eac86f53930a3d060477ac013f698 Mon Sep 17 00:00:00 2001
+From cc75f9c1f2ca10e59453f72c488e395614cb6143 Mon Sep 17 00:00:00 2001
 From: Jason Edson <jaysonedson@gmail.com>
 Date: Thu, 26 Sep 2019 22:03:37 -0700
-Subject: [PATCH 5/5] cleanbuild: Remove obj/{DTB,DTBO,KERNEL}_OBJ on
+Subject: [PATCH 2/6] cleanbuild: Remove obj/{DTB,DTBO,KERNEL}_OBJ on
  installclean
 
 Change-Id: I9b505803bb6c0d604c22fa5a0ab9046b76136278

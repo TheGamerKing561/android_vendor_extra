@@ -1,7 +1,7 @@
-From 0bfa8916372195f578e48a82f696140dab635246 Mon Sep 17 00:00:00 2001
+From e12528d7adf8b8788fa310ed629dd3ca1ae00bf8 Mon Sep 17 00:00:00 2001
 From: Park Ju Hyung <qkrwngud825@gmail.com>
 Date: Sat, 31 Oct 2020 19:15:24 +0900
-Subject: [PATCH 3/5] ui: Pass the exact CPU thread count to -j
+Subject: [PATCH 5/6] ui: Pass the exact CPU thread count to -j
 
 Once the number of jobs exceeds the total CPU thread count,
 the task scheduler starts to inflict excessive context switches,

@@ -1,7 +1,7 @@
-From 141994824444ff83539687dd0df0c3855768aeeb Mon Sep 17 00:00:00 2001
+From b8af4104d95964a3f3d9d27c5bdaba1ec0fcc16e Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 23 Apr 2020 16:34:04 -0400
-Subject: [PATCH 4/5] use SCHED_BATCH for the build
+Subject: [PATCH 4/6] use SCHED_BATCH for the build
 
 Signed-off-by: anupritaisno1 <www.anuprita804@gmail.com>
 ---
