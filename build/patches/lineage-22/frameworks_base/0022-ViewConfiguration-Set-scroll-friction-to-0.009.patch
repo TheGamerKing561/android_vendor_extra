@@ -1,4 +1,4 @@
-From 11b0f125308526d41d14335320adcde13b829050 Mon Sep 17 00:00:00 2001
+From 30eff7ce88d22b27661d9eca9c0e46411020a9b8 Mon Sep 17 00:00:00 2001
 From: Alex Naidis <alex.naidis@linux.com>
 Date: Thu, 16 Mar 2017 14:59:53 +0100
 Subject: [PATCH 22/35] ViewConfiguration: Set scroll friction to 0.009
@@ -14,7 +14,7 @@ Signed-off-by: Adithya R <gh0strider.2k18.reborn@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/core/java/android/view/ViewConfiguration.java b/core/java/android/view/ViewConfiguration.java
-index 63bf392b5..adc0f5708 100644
+index 9e97a8eb5..05f6f82ac 100644
 --- a/core/java/android/view/ViewConfiguration.java
 +++ b/core/java/android/view/ViewConfiguration.java
 @@ -272,7 +272,7 @@ public class ViewConfiguration {

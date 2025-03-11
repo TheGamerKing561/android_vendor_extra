@@ -1,4 +1,4 @@
-From 5c81dd67cc0a235089095ffef8436678d621af5f Mon Sep 17 00:00:00 2001
+From a8a1b4dbc07e1d15834783fb695df3d08e5a9977 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Wed, 24 Mar 2021 18:56:33 -0700
 Subject: [PATCH 13/35] ThemedResourceCache: Replace ArrayMap with HashMap for

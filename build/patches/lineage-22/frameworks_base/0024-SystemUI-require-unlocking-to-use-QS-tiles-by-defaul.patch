@@ -1,7 +1,7 @@
-From e676540632625312ec603d2cc2b4e8a0a1e69af5 Mon Sep 17 00:00:00 2001
+From 22ed3976ff68f6067555c10e4ad0569fcbbea016 Mon Sep 17 00:00:00 2001
 From: Dmitry Muhomor <muhomor.dmitry@gmail.com>
 Date: Mon, 11 Mar 2024 19:40:18 +0200
-Subject: [PATCH 23/35] SystemUI: require unlocking to use QS tiles by default
+Subject: [PATCH 24/35] SystemUI: require unlocking to use QS tiles by default
 
 ---
  .../src/com/android/systemui/qs/QSHost.java   |  1 +
@@ -10,10 +10,10 @@ Subject: [PATCH 23/35] SystemUI: require unlocking to use QS tiles by default
  3 files changed, 38 insertions(+), 3 deletions(-)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSHost.java b/packages/SystemUI/src/com/android/systemui/qs/QSHost.java
-index ba3357c8b..57c6966da 100644
+index 7c7f48e0d..87e87348d 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/QSHost.java
 +++ b/packages/SystemUI/src/com/android/systemui/qs/QSHost.java
-@@ -49,6 +49,7 @@ public interface QSHost {
+@@ -51,6 +51,7 @@ public interface QSHost {
      Context getUserContext();
      int getUserId();
      Collection<QSTile> getTiles();
@@ -22,26 +22,26 @@ index ba3357c8b..57c6966da 100644
      void removeCallback(Callback callback);
      void removeTile(String tileSpec);
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSHostAdapter.kt b/packages/SystemUI/src/com/android/systemui/qs/QSHostAdapter.kt
-index 4323b3199..23ec7008e 100644
+index dc3b58247..08f3fc9d7 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/QSHostAdapter.kt
 +++ b/packages/SystemUI/src/com/android/systemui/qs/QSHostAdapter.kt
-@@ -28,6 +28,7 @@ import com.android.systemui.qs.pipeline.data.repository.TileSpecRepository.Compa
- import com.android.systemui.qs.pipeline.domain.interactor.CurrentTilesInteractor
+@@ -31,6 +31,7 @@ import com.android.systemui.qs.pipeline.domain.interactor.CurrentTilesInteractor
  import com.android.systemui.qs.pipeline.shared.QSPipelineFlagsRepository
  import com.android.systemui.qs.pipeline.shared.TileSpec
+ import com.android.systemui.shade.ShadeDisplayAware
 +import com.android.systemui.statusbar.policy.KeyguardStateController
  import javax.inject.Inject
  import kotlinx.coroutines.CoroutineScope
  import kotlinx.coroutines.Job
-@@ -51,6 +52,7 @@ constructor(
-     private val context: Context,
+@@ -53,6 +54,7 @@ constructor(
+     @ShadeDisplayAware private val context: Context,
      private val tileServiceRequestControllerBuilder: TileServiceRequestController.Builder,
      @Application private val scope: CoroutineScope,
 +    private val keyguardStateController_: KeyguardStateController,
      dumpManager: DumpManager,
  ) : QSHost {
  
-@@ -70,6 +72,8 @@ constructor(
+@@ -72,6 +74,8 @@ constructor(
          return interactor.currentQSTiles
      }
  
@@ -51,18 +51,18 @@ index 4323b3199..23ec7008e 100644
          return interactor.currentTilesSpecs.map { it.spec }
      }
 diff --git a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java
-index 9abc494e5..ab154a717 100644
+index 1d1e99118..e9dc57e4c 100644
 --- a/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java
 +++ b/packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java
-@@ -69,6 +69,7 @@ import com.android.systemui.qs.QSHost;
- import com.android.systemui.qs.QsEventLogger;
+@@ -71,6 +71,7 @@ import com.android.systemui.qs.QsEventLogger;
  import com.android.systemui.qs.SideLabelTileLayout;
+ import com.android.systemui.qs.flags.QsInCompose;
  import com.android.systemui.qs.logging.QSLogger;
 +import com.android.systemui.statusbar.policy.KeyguardStateController;
  
  import java.io.PrintWriter;
  import java.util.Objects;
-@@ -270,6 +271,32 @@ public abstract class QSTileImpl<TState extends State> implements QSTile, Lifecy
+@@ -272,6 +273,32 @@ public abstract class QSTileImpl<TState extends State> implements QSTile, Lifecy
          return true;
      }
  
@@ -95,7 +95,7 @@ index 9abc494e5..ab154a717 100644
      // safe to call from any thread
  
      public void addCallback(Callback callback) {
-@@ -596,16 +623,19 @@ public abstract class QSTileImpl<TState extends State> implements QSTile, Lifecy
+@@ -616,16 +643,19 @@ public abstract class QSTileImpl<TState extends State> implements QSTile, Lifecy
                          mActivityStarter.postStartActivityDismissingKeyguard(intent, 0);
                      } else {
                          mQSLogger.logHandleClick(mTileSpec, msg.arg1);

@@ -1,4 +1,4 @@
-From e264d65b04e66634bd1a307d44354071bee74d5b Mon Sep 17 00:00:00 2001
+From eaf658674961075a776ca13f3a4856858eeb5170 Mon Sep 17 00:00:00 2001
 From: Tim Zimmermann <tim@linux4.de>
 Date: Wed, 3 Jul 2024 14:32:17 +0200
 Subject: [PATCH 34/35] gmscompat: Don't log stacktrace if GMS isn't installed

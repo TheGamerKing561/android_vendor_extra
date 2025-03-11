@@ -1,7 +1,7 @@
-From b8af4104d95964a3f3d9d27c5bdaba1ec0fcc16e Mon Sep 17 00:00:00 2001
+From 3087eba3dba335bfaa48dc8600bd944b5b14d6ba Mon Sep 17 00:00:00 2001
 From: Daniel Micay <danielmicay@gmail.com>
 Date: Thu, 23 Apr 2020 16:34:04 -0400
-Subject: [PATCH 4/6] use SCHED_BATCH for the build
+Subject: [PATCH 7/9] use SCHED_BATCH for the build
 
 Signed-off-by: anupritaisno1 <www.anuprita804@gmail.com>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: anupritaisno1 <www.anuprita804@gmail.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/soong_ui.bash b/soong_ui.bash
-index 7737880..62f1308 100755
+index be78b68fc6..94e315684c 100755
 --- a/soong_ui.bash
 +++ b/soong_ui.bash
 @@ -14,6 +14,8 @@
@@ -18,9 +18,9 @@ index 7737880..62f1308 100755
  
 +chrt -bp 0 $$
 +
- # To track how long we took to startup.
- case $(uname -s) in
-   Darwin)
+ source $(cd $(dirname $BASH_SOURCE) &> /dev/null && pwd)/../make/shell_utils.sh
+ require_top
+ 
 -- 
 2.48.1
 

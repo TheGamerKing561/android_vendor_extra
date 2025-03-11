@@ -1,7 +1,7 @@
-From 2a03f632a463cc10713d43479042be7b6dd7cc78 Mon Sep 17 00:00:00 2001
+From 3d132d46278fa7ae92aa31eac80e00bb3f22e34e Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sat, 31 Dec 2022 08:31:30 +0000
-Subject: [PATCH 5/9] SF: Don't enable expensive rendering for unknown
+Subject: [PATCH 5/7] SF: Don't enable expensive rendering for unknown
  dataspace
 
 Layer dataspace is initialized as unknown by default, unless
@@ -14,10 +14,10 @@ Change-Id: I079c520f63a65c77ba3162664656e607eafff991
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/services/surfaceflinger/CompositionEngine/src/Output.cpp b/services/surfaceflinger/CompositionEngine/src/Output.cpp
-index 9c145b6454..5b22ae8c55 100644
+index ac252aaa45..358de58f6e 100644
 --- a/services/surfaceflinger/CompositionEngine/src/Output.cpp
 +++ b/services/surfaceflinger/CompositionEngine/src/Output.cpp
-@@ -1349,7 +1349,8 @@ std::optional<base::unique_fd> Output::composeSurfaces(
+@@ -1403,7 +1403,8 @@ std::optional<base::unique_fd> Output::composeSurfaces(
              std::any_of(clientCompositionLayers.begin(), clientCompositionLayers.end(),
                          [outputDataspace =
                                   clientCompositionDisplay.outputDataspace](const auto& layer) {
@@ -28,5 +28,5 @@ index 9c145b6454..5b22ae8c55 100644
      if (expensiveRenderingExpected) {
          setExpensiveRenderingExpected(true);
 -- 
-2.47.1
+2.48.1
 

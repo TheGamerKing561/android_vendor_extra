@@ -1,7 +1,7 @@
-From 73e1c406d91b821cc7525724c9364bb0a800564f Mon Sep 17 00:00:00 2001
+From c74b9a16cf0fbb3b6b8f78afdf29e5e402cc7221 Mon Sep 17 00:00:00 2001
 From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
 Date: Sun, 17 Mar 2024 17:10:38 +0800
-Subject: [PATCH 25/35] Remove debuggable requirement for signature spoofing
+Subject: [PATCH 23/35] Remove debuggable requirement for signature spoofing
 
 Change-Id: I8d637ddbbd117a9c5b1d9c5e462b0f4b30d98333
 ---
@@ -9,10 +9,10 @@ Change-Id: I8d637ddbbd117a9c5b1d9c5e462b0f4b30d98333
  1 file changed, 4 deletions(-)
 
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 4cf099aed..56f87f1fc 100644
+index 6f5813065..3ac4ac7b7 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
-@@ -1491,10 +1491,6 @@ public class ComputerEngine implements Computer {
+@@ -1493,10 +1493,6 @@ public class ComputerEngine implements Computer {
      private static native boolean isDebuggable();
  
      public static boolean isMicrogSigned(AndroidPackage p) {

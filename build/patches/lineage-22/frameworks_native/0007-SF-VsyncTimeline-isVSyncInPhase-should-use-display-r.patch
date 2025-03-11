@@ -1,7 +1,7 @@
-From f41e066a917ca61b5bea2c16e557944f7fc1696a Mon Sep 17 00:00:00 2001
+From 54500283b0a47b73fc0e6c68d9eb12c91c3a7fc5 Mon Sep 17 00:00:00 2001
 From: Ady Abraham <adyabr@google.com>
 Date: Sat, 23 Nov 2024 02:52:44 +0000
-Subject: [PATCH 7/9] SF: VsyncTimeline::isVSyncInPhase should use display rate
+Subject: [PATCH 7/7] SF: VsyncTimeline::isVSyncInPhase should use display rate
  [unflagged]
 
 Remove the flag for the fix in commit 4a719e88f8050713cc75d655f3e75473e5404327 so it will be enabled on android15-tests-dev (GSI) release.
@@ -18,10 +18,10 @@ Merged-In: I02deca58bfd9a2cf169c2e58995cc42eeb854c8d
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/services/surfaceflinger/Scheduler/VSyncPredictor.cpp b/services/surfaceflinger/Scheduler/VSyncPredictor.cpp
-index 6e36f02463..f878f9da48 100644
+index ff360b754c..2d7f26e0f5 100644
 --- a/services/surfaceflinger/Scheduler/VSyncPredictor.cpp
 +++ b/services/surfaceflinger/Scheduler/VSyncPredictor.cpp
-@@ -785,9 +785,7 @@ bool VSyncPredictor::VsyncTimeline::isVSyncInPhase(Model model, nsecs_t vsync, F
+@@ -780,9 +780,7 @@ bool VSyncPredictor::VsyncTimeline::isVSyncInPhase(Model model, nsecs_t vsync, F
          return ticks<std::milli, float>(TimePoint::fromNs(timePoint) - now);
      };
  
@@ -33,5 +33,5 @@ index 6e36f02463..f878f9da48 100644
      const auto now = TimePoint::now();
  
 -- 
-2.47.1
+2.48.1
 

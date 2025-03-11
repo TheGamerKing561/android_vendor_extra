@@ -1,0 +1,37 @@
+From 244ba03bd3b944167dabdc8d7b97d1b4c199ca49 Mon Sep 17 00:00:00 2001
+From: Cole Faust <colefaust@google.com>
+Date: Wed, 12 Feb 2025 21:04:09 -0800
+Subject: [PATCH 2/9] Optimize HasIntersection
+
+Just noticed it was wildly unoptimized while making
+a different change.
+
+Test: m nothing --no-skip-soong-tests
+Change-Id: I319a1f5ebc1269c5949735e77ec3bd8ef6ee95ee
+---
+ android/util.go | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/android/util.go b/android/util.go
+index 237bf324d9..e3ecbb2399 100644
+--- a/android/util.go
++++ b/android/util.go
+@@ -238,8 +238,13 @@ func ListSetDifference[T comparable](l1, l2 []T) (bool, []T, []T) {
+ 
+ // Returns true if the two lists have common elements.
+ func HasIntersection[T comparable](l1, l2 []T) bool {
+-	_, a, b := ListSetDifference(l1, l2)
+-	return len(a)+len(b) < len(setFromList(l1))+len(setFromList(l2))
++	m1 := setFromList(l1)
++	for _, x := range l2 {
++		if _, ok := m1[x]; ok {
++			return true
++		}
++	}
++	return false
+ }
+ 
+ // Returns true if the given string s is prefixed with any string in the given prefix list.
+-- 
+2.48.1
+

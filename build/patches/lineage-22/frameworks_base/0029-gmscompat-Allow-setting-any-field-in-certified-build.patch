@@ -1,4 +1,4 @@
-From de56199fc9a43401602ece0abff2d94f4897b370 Mon Sep 17 00:00:00 2001
+From f38eb32277f93a7835b0897c4cf6cb351e2db8fa Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sat, 18 Nov 2023 20:08:08 +0530
 Subject: [PATCH 29/35] gmscompat: Allow setting any field in certified build

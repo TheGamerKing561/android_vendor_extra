@@ -1,4 +1,4 @@
-From daf470918cc98fc8b88f8845f82da164fda4f339 Mon Sep 17 00:00:00 2001
+From 8662ee23ec56a86e06867f7cd3bdfa76ed36e339 Mon Sep 17 00:00:00 2001
 From: Vaisakh Murali <mvaisakh@statixos.com>
 Date: Wed, 19 Apr 2023 10:35:47 +0000
 Subject: [PATCH 08/35] libhwui: enable O3 when compiling for perf
@@ -19,7 +19,7 @@ Signed-off-by: Vaisakh Murali <mvaisakh@statixos.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/libs/hwui/Android.bp b/libs/hwui/Android.bp
-index 9623d58bf..89a69df3c 100644
+index e5409236a..0e7d3ec83 100644
 --- a/libs/hwui/Android.bp
 +++ b/libs/hwui/Android.bp
 @@ -176,6 +176,7 @@ cc_defaults {

@@ -1,0 +1,32 @@
+From 3e298a7b879d09b9e898df0a9690383e411b4086 Mon Sep 17 00:00:00 2001
+From: Cole Faust <colefaust@google.com>
+Date: Wed, 12 Feb 2025 21:21:04 -0800
+Subject: [PATCH 3/9] Unique lists in ListSetDifference
+
+aosp/3492712 tried to make this function deterministic,
+but it accidentally changed the behavior by including
+duplicate elements in the result. Unique the lists
+before looping over them.
+
+Test: Presubmits
+Change-Id: I7418eec98314578c0d1966bd71a094f289035f78
+---
+ android/util.go | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/android/util.go b/android/util.go
+index e3ecbb2399..aeb0407bf3 100644
+--- a/android/util.go
++++ b/android/util.go
+@@ -217,6 +217,8 @@ func PrettyConcat(list []string, quote bool, lastSep string) string {
+ // that are in l1 but not l2, and l2 but not l1.
+ func ListSetDifference[T comparable](l1, l2 []T) (bool, []T, []T) {
+ 	listsDiffer := false
++	l1 = firstUnique(l1)
++	l2 = firstUnique(l2)
+ 	diff1 := []T{}
+ 	diff2 := []T{}
+ 	m1 := setFromList(l1)
+-- 
+2.48.1
+

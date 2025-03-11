@@ -1,4 +1,4 @@
-From fa9b072d8a962cedeb8f673206c050c99d967b62 Mon Sep 17 00:00:00 2001
+From 520f81439381f4618eb9889c12bd2ad08f695725 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 3 Nov 2020 22:38:49 -0800
 Subject: [PATCH 03/35] core: Remove default aspect ratio limit for old apps
@@ -41,10 +41,10 @@ index 10d652ee5..87f5f228c 100644
          if (owner.applicationInfo.maxAspectRatio != 0) {
              // Use the application max aspect ration as default if set.
 diff --git a/core/java/com/android/internal/pm/pkg/parsing/ParsingPackageUtils.java b/core/java/com/android/internal/pm/pkg/parsing/ParsingPackageUtils.java
-index 44fedb11b..d3ce4d892 100644
+index c160b42f8..08f050cb8 100644
 --- a/core/java/com/android/internal/pm/pkg/parsing/ParsingPackageUtils.java
 +++ b/core/java/com/android/internal/pm/pkg/parsing/ParsingPackageUtils.java
-@@ -2879,9 +2879,8 @@ public class ParsingPackageUtils {
+@@ -2941,9 +2941,8 @@ public class ParsingPackageUtils {
       * ratio set.
       */
      private static void setMaxAspectRatio(ParsingPackage pkg) {

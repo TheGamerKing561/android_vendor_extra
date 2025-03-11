@@ -1,4 +1,4 @@
-From 40c2a0967429ba50cdabd5b33f4297c4deaab577 Mon Sep 17 00:00:00 2001
+From a95ceee04f51cf67d2bff4729dafc629cc86a7f1 Mon Sep 17 00:00:00 2001
 From: Jeferson <jroliveira.oliveira301@gmail.com>
 Date: Fri, 17 Jun 2022 15:04:04 +0200
 Subject: [PATCH 01/35] Revert "Ignore the charging ripple flag."

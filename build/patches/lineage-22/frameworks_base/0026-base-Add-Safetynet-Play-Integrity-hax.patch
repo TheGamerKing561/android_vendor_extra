@@ -1,4 +1,4 @@
-From 71bff7d51c1f871db64abfed5276278bbb1b9b2b Mon Sep 17 00:00:00 2001
+From ba06967fd36ebbf61fd27fb553c0c4162b78b5ac Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Sun, 18 Jun 2023 12:13:11 +0530
 Subject: [PATCH 26/35] base: Add Safetynet/Play Integrity hax
@@ -169,10 +169,10 @@ Change-Id: I774a8ffc98e329f5ccd79f07b0189b2ed19a6780
  create mode 100644 core/java/com/android/internal/gmscompat/AttestationHooks.java
 
 diff --git a/core/java/android/app/Instrumentation.java b/core/java/android/app/Instrumentation.java
-index 93a948984..1f19fd277 100644
+index 7eacaac29..c82abd14b 100644
 --- a/core/java/android/app/Instrumentation.java
 +++ b/core/java/android/app/Instrumentation.java
-@@ -63,6 +63,8 @@ import android.view.WindowManagerGlobal;
+@@ -66,6 +66,8 @@ import android.view.WindowManagerGlobal;
  
  import com.android.internal.content.ReferrerIntent;
  
@@ -181,7 +181,7 @@ index 93a948984..1f19fd277 100644
  import java.io.File;
  import java.lang.annotation.Retention;
  import java.lang.annotation.RetentionPolicy;
-@@ -1353,6 +1355,7 @@ public class Instrumentation {
+@@ -1356,6 +1358,7 @@ public class Instrumentation {
          Application app = getFactory(context.getPackageName())
                  .instantiateApplication(cl, className);
          app.attach(context);
@@ -189,7 +189,7 @@ index 93a948984..1f19fd277 100644
          return app;
      }
      
-@@ -1370,6 +1373,7 @@ public class Instrumentation {
+@@ -1373,6 +1376,7 @@ public class Instrumentation {
              ClassNotFoundException {
          Application app = (Application)clazz.newInstance();
          app.attach(context);

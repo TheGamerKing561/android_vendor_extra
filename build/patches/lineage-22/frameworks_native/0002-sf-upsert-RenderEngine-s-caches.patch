@@ -1,7 +1,7 @@
-From aa49d68aad397f21287800bebfb27a48681a4db2 Mon Sep 17 00:00:00 2001
+From 46e12133a4ce089b1579023f64b0af34499e0f38 Mon Sep 17 00:00:00 2001
 From: Ramakant Singh <quic_ramakant@quicinc.com>
 Date: Fri, 3 Nov 2023 12:51:55 +0530
-Subject: [PATCH 2/9] sf: upsert RenderEngine's caches
+Subject: [PATCH 2/7] sf: upsert RenderEngine's caches
 
 Upsert RenderEngine's caches before compostion start if there is
 dataspace change.
@@ -13,10 +13,10 @@ Change-Id: I34489510c0601bbcf4028eaf64afb2a02596750c
  1 file changed, 5 insertions(+), 18 deletions(-)
 
 diff --git a/services/surfaceflinger/Layer.cpp b/services/surfaceflinger/Layer.cpp
-index dcb0812b67..26b34e4266 100644
+index 195461f47e..51d58b795f 100644
 --- a/services/surfaceflinger/Layer.cpp
 +++ b/services/surfaceflinger/Layer.cpp
-@@ -1303,24 +1303,11 @@ void Layer::gatherBufferInfo() {
+@@ -1295,24 +1295,11 @@ void Layer::gatherBufferInfo() {
                  err = mapper.setDataspace(mBufferInfo.mBuffer->getBuffer()->handle,
                                            static_cast<ui::Dataspace>(mBufferInfo.mDataspace));
              }
@@ -45,7 +45,7 @@ index dcb0812b67..26b34e4266 100644
 +            /* QTI_END */
          }
      }
-     if (lastDataspace != mBufferInfo.mDataspace) {
+     if (lastDataspace != mBufferInfo.mDataspace ||
 -- 
-2.47.1
+2.48.1
 

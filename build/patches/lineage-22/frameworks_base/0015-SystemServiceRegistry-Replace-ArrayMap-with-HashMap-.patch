@@ -1,4 +1,4 @@
-From 31d0572f0e540df5a2b1b8841580062d17e6099b Mon Sep 17 00:00:00 2001
+From 0b4bdb29bf7274bf1338d70d6e180bf89d132572 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 5 Apr 2021 23:05:02 -0700
 Subject: [PATCH 15/35] SystemServiceRegistry: Replace ArrayMap with HashMap
@@ -117,10 +117,10 @@ Change-Id: I2a5b23793a4fc8aa720eead3ecc7ca4589cb67da
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/core/java/android/app/SystemServiceRegistry.java b/core/java/android/app/SystemServiceRegistry.java
-index 03bec7154..d041573a9 100644
+index 920b19cd8..d0eece85c 100644
 --- a/core/java/android/app/SystemServiceRegistry.java
 +++ b/core/java/android/app/SystemServiceRegistry.java
-@@ -245,7 +245,6 @@ import android.telephony.MmsManager;
+@@ -254,7 +254,6 @@ import android.telephony.MmsManager;
  import android.telephony.TelephonyFrameworkInitializer;
  import android.telephony.TelephonyRegistryManager;
  import android.transparency.BinaryTransparencyManager;
@@ -128,15 +128,15 @@ index 03bec7154..d041573a9 100644
  import android.util.Log;
  import android.util.Slog;
  import android.uwb.UwbFrameworkInitializer;
-@@ -280,6 +279,7 @@ import com.android.internal.os.IDropBoxManagerService;
- import com.android.internal.policy.PhoneLayoutInflater;
+@@ -290,6 +289,7 @@ import com.android.internal.policy.PhoneLayoutInflater;
  import com.android.internal.util.Preconditions;
  
+ import java.time.InstantSource;
 +import java.util.HashMap;
  import java.util.Map;
  import java.util.Objects;
  
-@@ -321,10 +321,10 @@ public final class SystemServiceRegistry {
+@@ -319,10 +319,10 @@ public final class SystemServiceRegistry {
      // Service registry information.
      // This information is never changed once static initialization has completed.
      private static final Map<Class<?>, String> SYSTEM_SERVICE_NAMES =

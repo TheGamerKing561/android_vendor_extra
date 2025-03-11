@@ -1,7 +1,7 @@
-From 6bab4841313c3ec2c4f174f887b0e6612b6d1f07 Mon Sep 17 00:00:00 2001
+From 0c04582efcdac340ed47c7e191bd810a5b9441e4 Mon Sep 17 00:00:00 2001
 From: Xiao Zhang <zhangxiao19@xiaomi.corp-partner.google.com>
 Date: Fri, 29 Nov 2024 09:08:16 +0000
-Subject: [PATCH 6/9] fix potential leakage issues
+Subject: [PATCH 6/7] fix potential leakage issues
 
 If validating the size of the buffer fails during the flattening process of GraphicBuffer, fd leakage will occur; You can easily reproduce this problem when validating the size of the buffer fails or simply setting the error to non NOERROR.
 
@@ -27,5 +27,5 @@ index b0c6e44b2b..18c9a6bc48 100644
              ALOGE("unflatten: registerBuffer failed: %s (%d)", strerror(-err), err);
              return err;
 -- 
-2.47.1
+2.48.1
 

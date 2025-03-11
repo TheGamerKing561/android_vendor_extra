@@ -1,4 +1,4 @@
-From 9f377b7928ef0d77e47b57ee2a6f016f503384c2 Mon Sep 17 00:00:00 2001
+From 80ef11d24e82fceb9334501628234daa4dfa979c Mon Sep 17 00:00:00 2001
 From: Till Kottmann <till.kottmann@bison-group.com>
 Date: Fri, 24 Aug 2018 08:56:47 +0200
 Subject: [PATCH 17/35] (Point) Only calculate sin and cos once

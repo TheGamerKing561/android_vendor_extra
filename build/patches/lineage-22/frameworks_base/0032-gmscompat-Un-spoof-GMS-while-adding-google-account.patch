@@ -1,4 +1,4 @@
-From 6cc994d6bc34d7ea674afb7bf1cc49a2848a6ce1 Mon Sep 17 00:00:00 2001
+From f4b6853f4465dcba71c1573c92acbfdcd705b4cc Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Thu, 8 Jun 2023 16:55:44 +0530
 Subject: [PATCH 32/35] gmscompat: Un-spoof GMS while adding google account
@@ -178,10 +178,10 @@ index 98b29b7d7..db118a3cb 100644
      }
  }
 diff --git a/services/core/java/com/android/server/wm/ActivityTaskManagerService.java b/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
-index f626ce278..9e253b377 100644
+index 63257f6a6..cdded3e72 100644
 --- a/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
 +++ b/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
-@@ -290,6 +290,7 @@ import com.android.server.uri.UriGrantsManagerInternal;
+@@ -289,6 +289,7 @@ import com.android.server.uri.UriGrantsManagerInternal;
  import com.android.server.wallpaper.WallpaperManagerInternal;
  import com.android.wm.shell.Flags;
  
@@ -189,7 +189,7 @@ index f626ce278..9e253b377 100644
  import org.lineageos.internal.applications.LineageActivityManager;
  
  import java.io.BufferedReader;
-@@ -1988,7 +1989,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
+@@ -2020,7 +2021,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
  
      @Override
      public RootTaskInfo getFocusedRootTaskInfo() throws RemoteException {
@@ -200,7 +200,7 @@ index f626ce278..9e253b377 100644
          final long ident = Binder.clearCallingIdentity();
          try {
              synchronized (mGlobalLock) {
-@@ -3110,7 +3113,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
+@@ -3144,7 +3147,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
      /** Sets the task stack listener that gets callbacks when a task stack changes. */
      @Override
      public void registerTaskStackListener(ITaskStackListener listener) {

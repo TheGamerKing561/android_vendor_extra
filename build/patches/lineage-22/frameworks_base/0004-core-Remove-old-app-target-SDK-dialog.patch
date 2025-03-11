@@ -1,4 +1,4 @@
-From ee82da4f97da653301ebae0fa0c74cb8338a61f6 Mon Sep 17 00:00:00 2001
+From 23097aff84873ca1c8c0b0b6797f94db7a6f6463 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 3 Nov 2020 22:43:12 -0800
 Subject: [PATCH 04/35] core: Remove old app target SDK dialog
@@ -17,18 +17,18 @@ Change-Id: I1a3021f0f9bec1ab6ff7641776391e1bd4c3cc49
  1 file changed, 2 deletions(-)
 
 diff --git a/services/core/java/com/android/server/wm/AppWarnings.java b/services/core/java/com/android/server/wm/AppWarnings.java
-index fcaab2c0f..600da3b29 100644
+index 601b17c46..9886785fa 100644
 --- a/services/core/java/com/android/server/wm/AppWarnings.java
 +++ b/services/core/java/com/android/server/wm/AppWarnings.java
-@@ -258,8 +258,6 @@ class AppWarnings {
+@@ -276,8 +276,6 @@ class AppWarnings {
      public void onStartActivity(ActivityRecord r) {
          showUnsupportedCompileSdkDialogIfNeeded(r);
          showUnsupportedDisplaySizeDialogIfNeeded(r);
 -        showDeprecatedTargetDialogIfNeeded(r);
 -        showDeprecatedAbiDialogIfNeeded(r);
-     }
- 
-     /**
+         if (Flags.appCompatOption16kb()) {
+             showPageSizeMismatchDialogIfNeeded(r);
+         }
 -- 
 2.48.1
 

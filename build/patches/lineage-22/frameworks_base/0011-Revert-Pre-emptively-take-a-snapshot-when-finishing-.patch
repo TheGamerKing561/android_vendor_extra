@@ -1,4 +1,4 @@
-From 6be1067d88a0e9f1f0e931d6f25bb433c0b10e61 Mon Sep 17 00:00:00 2001
+From fb95cb88e80e2a294bb4e86567d16f24657ff1dd Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 6 Apr 2021 15:55:54 -0700
 Subject: [PATCH 11/35] Revert "Pre-emptively take a snapshot when finishing an
@@ -58,7 +58,7 @@ Change-Id: Ib161679f1f3b83787f90b8ef7dcf46d246bb7c57
  1 file changed, 15 deletions(-)
 
 diff --git a/services/core/java/com/android/server/wm/ActivityRecord.java b/services/core/java/com/android/server/wm/ActivityRecord.java
-index 1b11e272b..b8c3fcb44 100644
+index 83ea4a616..e58305a36 100644
 --- a/services/core/java/com/android/server/wm/ActivityRecord.java
 +++ b/services/core/java/com/android/server/wm/ActivityRecord.java
 @@ -387,8 +387,6 @@ import com.android.window.flags.Flags;
@@ -70,7 +70,7 @@ index 1b11e272b..b8c3fcb44 100644
  import org.xmlpull.v1.XmlPullParserException;
  
  import java.io.File;
-@@ -3641,19 +3639,6 @@ final class ActivityRecord extends WindowToken implements WindowManagerService.A
+@@ -3721,19 +3719,6 @@ final class ActivityRecord extends WindowToken implements WindowManagerService.A
                  }
                  mDisplayContent.prepareAppTransition(TRANSIT_CLOSE);
  
