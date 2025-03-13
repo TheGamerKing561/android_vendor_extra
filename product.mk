@@ -53,7 +53,3 @@ PRODUCT_PACKAGES += \
     SystemUIOverlayEXTRA \
     SystemUIOverlayLEGACY \
     UpdaterOverlayEXTRA
-
-# Soong namespaces
-PRODUCT_SOONG_NAMESPACES += \
-    $(VENDOR_EXTRA_PATH)
