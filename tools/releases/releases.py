@@ -38,25 +38,28 @@ args = parser.parse_args()
 # Pre-checks
 assets_dir = pathlib.Path('assets')
 if not assets_dir.exists():
-    print(
+    error_msg = (
         f'\nError: The directory `{assets_dir}` does not exist.\n'
         'Please create a folder named `assets` with all the assets you want to upload inside it.'
     )
-    sys.exit(1)
+    print(error_msg)
+    raise FileNotFoundError(error_msg)
 
 if not assets_dir.is_dir():
-    print(
+    error_msg = (
         f'\nError: `{assets_dir}` is not a directory.\n'
         'Please create a folder named `assets` with all the assets you want to upload inside it.'
     )
-    sys.exit(1)
+    print(error_msg)
+    raise NotADirectoryError(error_msg)
 
 if not any(assets_dir.iterdir()):
-    print(
+    error_msg = (
         f'\nError: The directory `{assets_dir}` is empty.\n'
         'Please add the assets you want to upload inside the `assets` folder.'
     )
-    sys.exit(1)
+    print(error_msg)
+    raise ValueError(error_msg)
 
 
 # defs
@@ -87,13 +90,19 @@ def sha1sum(var):
 
 
 # Vars
+device_info = get_device(args.device)
+if device_info is None:
+    error_msg = f'\nError: Device "{args.device}" is not defined in get_device() function.\n'
+    print(error_msg)
+    raise ValueError(error_msg)
+
 GH_ASSETS = list(assets_dir.iterdir())
 GH_OWNER = 'ItsVixano-releases'  # Github profile name
-GH_REPO = get_device(args.device)[3]  # Github repo name
+GH_REPO = device_info[3]  # Github repo name
 GH_SECPATCH = args.release_spl  # LineageOS Security patch level
 GH_TAG = args.release_build_date  # Github release tag name
-GH_LINEAGE = get_device(args.device)[2]  # LineageOS Release
-GH_NAME = f"LineageOS {GH_LINEAGE} for {get_device(args.device)[1]} ({GH_TAG.replace('-', '')})"
+GH_LINEAGE = device_info[2]  # LineageOS Release
+GH_NAME = f'LineageOS {GH_LINEAGE} for {device_info[1]} ({GH_TAG.replace("-", "")})'  # ftm: skip
 GH_MESSAGE = f"""📅 Build date: `{GH_TAG}`
 
 🔒 Security patches: `{GH_SECPATCH}`

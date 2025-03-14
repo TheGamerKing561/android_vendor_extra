@@ -30,10 +30,14 @@ args = parser.parse_args()
 
 
 def getprop(prop):
-    return search(
+    match = search(
         r''.join(['(?<=', prop, '=).*']),
         pathlib.Path('system/build.prop').read_text(),
-    ).group(0)
+    )
+
+    if match is None:
+        raise ValueError(f'Property {prop} not found in build.prop')
+    return match.group(0)
 
 
 version, datetime, incremental, codename = (

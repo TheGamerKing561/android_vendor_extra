@@ -10,10 +10,11 @@ import json
 import pathlib
 
 import requests
-from config import GH_TOKEN
 from tqdm import tqdm
 
-# Configure GitHub
+from config import GH_TOKEN
+
+# Configure GitHub session
 session = requests.Session()
 session.headers.update({'Authorization': f'token {GH_TOKEN}'})
 
@@ -22,6 +23,9 @@ class FileWithCallback:
     def __init__(self, fd, callback):
         self.fd = fd
         self.callback = callback
+
+    def __iter__(self):
+        return iter([])
 
     def read(self, size):
         chunk = self.fd.read(size)
