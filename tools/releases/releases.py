@@ -65,14 +65,14 @@ if not any(assets_dir.iterdir()):
 # defs
 def get_device(var):
     return {
-        # LineageOS 22.1
-        'daisy': {1: 'Mi A2 Lite', 2: '22.1', 3: 'LineageOS_daisy'},
-        'gemstone': {1: 'Redmi Note 12 5G', 2: '22.1', 3: 'LineageOS_gemstone'},
-        'lisa': {1: 'Xiaomi 11 Lite 5G NE', 2: '22.1', 3: 'LineageOS_lisa'},
-        'miatoll': {1: 'Xiaomi Atoll Family', 2: '22.1', 3: 'LineageOS_miatoll'},
-        'sakura': {1: 'Redmi 6 Pro', 2: '22.1', 3: 'LineageOS_sakura'},
-        'xaga': {1: 'POCO X4 GT', 2: '22.1', 3: 'LineageOS_xaga'},
-        'ysl': {1: 'Redmi S2/Y2', 2: '22.1', 3: 'LineageOS_ysl'},
+        # LineageOS 22.2
+        'daisy': {1: 'Mi A2 Lite', 2: '22.2', 3: 'LineageOS_daisy'},
+        'gemstone': {1: 'Redmi Note 12 5G', 2: '22.2', 3: 'LineageOS_gemstone'},
+        'lisa': {1: 'Xiaomi 11 Lite 5G NE', 2: '22.2', 3: 'LineageOS_lisa'},
+        'miatoll': {1: 'Xiaomi Atoll Family', 2: '22.2', 3: 'LineageOS_miatoll'},
+        'sakura': {1: 'Redmi 6 Pro', 2: '22.2', 3: 'LineageOS_sakura'},
+        'xaga': {1: 'POCO X4 GT', 2: '22.2', 3: 'LineageOS_xaga'},
+        'ysl': {1: 'Redmi S2/Y2', 2: '22.2', 3: 'LineageOS_ysl'},
         # Test
         'test': {1: 'Test Device', 2: '12.3', 3: 'LineageOS_test'},
         'test_priv': {1: 'Test Device', 2: '12.3', 3: 'LineageOS_test_priv'},
