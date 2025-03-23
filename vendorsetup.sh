@@ -241,6 +241,7 @@ mka_build() {
 
     # Build
     rm -rf out/target/product/"${DEVICE}"/lineage-*.zip &>/dev/null
+    find out/target/product/"${DEVICE}" -name manifest.xml -delete &>/dev/null
     breakfast "${DEVICE}" "${BUILD_TYPE}"
 
     [[ "${DIRTY_BUILD}" != "true" ]] && mka installclean
