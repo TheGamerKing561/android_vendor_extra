@@ -45,5 +45,7 @@
         <item>com.google.android.gms.location.history</item>
         <!-- Google -->
         <item>com.google.android.googlequicksearchbox</item>
+        <!-- Settings -->
+        <item>com.android.settings</item>
     </string-array>
 </resources>
