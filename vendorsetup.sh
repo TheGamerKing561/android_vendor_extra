@@ -5,7 +5,7 @@
 
 # Override host metadata to make builds more reproducible and avoid leaking info
 export BUILD_USERNAME=android-user
-export BUILD_HOSTNAME=r-0123456789abcdef-0123
+export BUILD_HOSTNAME=r-$(openssl rand -hex 8)-$(tr -dc 'a-z0-9' < /dev/urandom | head -c 4)
 
 # Make smaller .tar.gz files by excluding debug targets.
 export ART_BUILD_TARGET_NDEBUG=true
