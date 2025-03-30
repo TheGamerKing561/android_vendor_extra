@@ -1,7 +1,7 @@
-From 6762ea34482f60365b7f3005d491bb46e2c43395 Mon Sep 17 00:00:00 2001
+From d7c7c7496b449d77931c4e1db60832470337eb81 Mon Sep 17 00:00:00 2001
 From: Alexander Koskovich <akoskovich@pm.me>
 Date: Wed, 8 Jun 2022 12:59:31 -0700
-Subject: [PATCH 3/3] sm8350-common: Define boot image security patch
+Subject: [PATCH 7/7] sm8350-common: Define boot image security patch
 
 Change-Id: I2471d3412577fee8e7bca40743b38a2fc765884c
 ---
@@ -9,10 +9,10 @@ Change-Id: I2471d3412577fee8e7bca40743b38a2fc765884c
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
-index 562644761..5613e2e50 100644
+index fe5973d5..faec46e8 100644
 --- a/BoardConfigCommon.mk
 +++ b/BoardConfigCommon.mk
-@@ -159,7 +159,8 @@ TARGET_USERIMAGES_USE_F2FS := true
+@@ -154,7 +154,8 @@ TARGET_USERIMAGES_USE_F2FS := true
  ENABLE_VENDOR_RIL_SERVICE := true
  
  # Security patch level
@@ -23,5 +23,5 @@ index 562644761..5613e2e50 100644
  # Sepolicy
  include device/qcom/sepolicy_vndr/SEPolicy.mk
 -- 
-2.47.0
+2.49.0
 

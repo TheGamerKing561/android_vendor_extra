@@ -1,7 +1,7 @@
-From 2f81a905c2076fc17c43ddd7f46ab5886174ef9d Mon Sep 17 00:00:00 2001
+From 76101fe666f25d88824d40251fee376ddcd687db Mon Sep 17 00:00:00 2001
 From: Chris Fries <cfries@google.com>
 Date: Tue, 26 Feb 2019 17:37:41 +0000
-Subject: [PATCH 2/3] sm8350-common: Set VENDOR_SECURITY_PATCH to platform
+Subject: [PATCH 6/7] sm8350-common: Set VENDOR_SECURITY_PATCH to platform
 
 Set the VENDOR_SECURITY_PATCH level to match the platform
 security patch level.  These are functionally the same.
@@ -14,10 +14,10 @@ Change-Id: I0007c6ca8bef2865101d620e2dcf3675cb8771ea
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
-index 4d9f8a799..562644761 100644
+index 7f8e4f9d..fe5973d5 100644
 --- a/BoardConfigCommon.mk
 +++ b/BoardConfigCommon.mk
-@@ -159,7 +159,7 @@ TARGET_USERIMAGES_USE_F2FS := true
+@@ -154,7 +154,7 @@ TARGET_USERIMAGES_USE_F2FS := true
  ENABLE_VENDOR_RIL_SERVICE := true
  
  # Security patch level
@@ -27,5 +27,5 @@ index 4d9f8a799..562644761 100644
  # Sepolicy
  include device/qcom/sepolicy_vndr/SEPolicy.mk
 -- 
-2.47.0
+2.49.0
 
