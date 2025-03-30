@@ -1,7 +1,7 @@
-From c8f04124acc73ece289ad649745fa62d7836fee2 Mon Sep 17 00:00:00 2001
+From d09c9145e8a75a848c49132a891d04dfacea844e Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 5 Apr 2021 22:39:55 -0700
-Subject: [PATCH 14/35] LocalServices: Replace ArrayMap with HashMap for
+Subject: [PATCH 14/38] LocalServices: Replace ArrayMap with HashMap for
  performance
 
 When opening and closing activities in Settings, a significant amount of
@@ -123,5 +123,5 @@ index 2a10918a5..4f9cc88aa 100644
      /**
       * Returns a local service instance that implements the specified interface.
 -- 
-2.48.1
+2.49.0
 

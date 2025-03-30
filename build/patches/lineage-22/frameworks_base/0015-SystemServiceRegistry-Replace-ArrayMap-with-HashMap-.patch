@@ -1,7 +1,7 @@
-From 0b4bdb29bf7274bf1338d70d6e180bf89d132572 Mon Sep 17 00:00:00 2001
+From fe08f7d84f044b5cce0dde61f9b57f36a458f375 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 5 Apr 2021 23:05:02 -0700
-Subject: [PATCH 15/35] SystemServiceRegistry: Replace ArrayMap with HashMap
+Subject: [PATCH 15/38] SystemServiceRegistry: Replace ArrayMap with HashMap
  for performance
 
 When opening and closing activities in Settings, a significant amount of
@@ -151,5 +151,5 @@ index 920b19cd8..d0eece85c 100644
      private static int sServiceCacheSize;
  
 -- 
-2.48.1
+2.49.0
 

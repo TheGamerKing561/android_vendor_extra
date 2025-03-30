@@ -1,7 +1,7 @@
-From fb95cb88e80e2a294bb4e86567d16f24657ff1dd Mon Sep 17 00:00:00 2001
+From a4f032d4abf7a8791b72b6118ad07b0f7f53561f Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 6 Apr 2021 15:55:54 -0700
-Subject: [PATCH 11/35] Revert "Pre-emptively take a snapshot when finishing an
+Subject: [PATCH 11/38] Revert "Pre-emptively take a snapshot when finishing an
  activity before changing visibility"
 
 This reverts commit 6dad90e5883db82c345a3ab592b26f0fd69fe28d.
@@ -91,5 +91,5 @@ index 83ea4a616..e58305a36 100644
                  setVisibility(false);
                  // Propagate the last IME visibility in the same task, so the IME can show
 -- 
-2.48.1
+2.49.0
 

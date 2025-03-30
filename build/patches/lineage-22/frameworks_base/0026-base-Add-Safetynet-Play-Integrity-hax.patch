@@ -1,7 +1,7 @@
-From ba06967fd36ebbf61fd27fb553c0c4162b78b5ac Mon Sep 17 00:00:00 2001
+From c3aec58660cfe0e0e434f0b1dffa900dab87b318 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Sun, 18 Jun 2023 12:13:11 +0530
-Subject: [PATCH 26/35] base: Add Safetynet/Play Integrity hax
+Subject: [PATCH 26/38] base: Add Safetynet/Play Integrity hax
 
 Author: Danny Lin <danny@kdrag0n.dev>
 Date:   Mon Oct 11 19:59:51 2021 -0700
@@ -329,5 +329,5 @@ index e6a63b9c4..6a80c14c9 100644
  
          if (response == null || response.metadata.certificate == null) {
 -- 
-2.48.1
+2.49.0
 

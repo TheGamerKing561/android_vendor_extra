@@ -1,7 +1,7 @@
-From a5b55a9d60813027d6a81e9b2481c27790fdf41b Mon Sep 17 00:00:00 2001
+From 3308eb68635a482d1dbf7c8ccaf3e6daa783d0bd Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 19:18:48 -0700
-Subject: [PATCH 05/35] SystemUI: Reduce screenshot dismiss delay to 3 seconds
+Subject: [PATCH 05/38] SystemUI: Reduce screenshot dismiss delay to 3 seconds
 
 3 seconds is enough in most cases. Keeping the overlay around for too
 long forces the user to dismiss it manually, which is a regression
@@ -13,10 +13,10 @@ Change-Id: I38f4bfbdd88a56a4ffba225c38050f28d43fc418
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotController.kt b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotController.kt
-index 6d0aa5b24..7a4da4963 100644
+index ec86c76ad..287148a11 100644
 --- a/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotController.kt
 +++ b/packages/SystemUI/src/com/android/systemui/screenshot/ScreenshotController.kt
-@@ -569,7 +569,7 @@ internal constructor(
+@@ -602,7 +602,7 @@ internal constructor(
          // From WizardManagerHelper.java
          private const val SETTINGS_SECURE_USER_SETUP_COMPLETE = "user_setup_complete"
  
@@ -26,5 +26,5 @@ index 6d0aa5b24..7a4da4963 100644
          /** Does the aspect ratio of the bitmap with insets removed match the bounds. */
          private fun aspectRatiosMatch(
 -- 
-2.48.1
+2.49.0
 

@@ -1,7 +1,7 @@
-From c74b9a16cf0fbb3b6b8f78afdf29e5e402cc7221 Mon Sep 17 00:00:00 2001
+From 4f9bcb4da29d8b3115bec0e28729c9118627631b Mon Sep 17 00:00:00 2001
 From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
 Date: Sun, 17 Mar 2024 17:10:38 +0800
-Subject: [PATCH 23/35] Remove debuggable requirement for signature spoofing
+Subject: [PATCH 23/38] Remove debuggable requirement for signature spoofing
 
 Change-Id: I8d637ddbbd117a9c5b1d9c5e462b0f4b30d98333
 ---
@@ -24,5 +24,5 @@ index 6f5813065..3ac4ac7b7 100644
          // * com.android.vending - microG Companion
          // * com.google.android.gms - microG Services
 -- 
-2.48.1
+2.49.0
 

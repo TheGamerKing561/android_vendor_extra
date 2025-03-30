@@ -1,7 +1,7 @@
-From 3b33df081720d00572603260cc8cb6b203ed8fe0 Mon Sep 17 00:00:00 2001
+From 013a118849be6dc489ecc40663346e1e4242335c Mon Sep 17 00:00:00 2001
 From: Dmitry Muhomor <muhomor.dmitry@gmail.com>
 Date: Mon, 11 Mar 2024 19:40:49 +0200
-Subject: [PATCH 25/35] SystemUI: allow to use some QS tiles while device is
+Subject: [PATCH 25/38] SystemUI: allow to use some QS tiles while device is
  locked
 
 Change-Id: Ic695a9215420b8a4e01571ff86ce5f36e2e66755
@@ -210,5 +210,5 @@ index 61beb6ca1..43137a589 100644
      protected void handleClick(@Nullable Expandable expandable) {
          if (getState().state == Tile.STATE_UNAVAILABLE) {
 -- 
-2.48.1
+2.49.0
 

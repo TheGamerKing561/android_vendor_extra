@@ -1,7 +1,7 @@
-From a87698795f80b3b959fd9cb7e9e42c0e102276ee Mon Sep 17 00:00:00 2001
+From a8d32bf098a004d0a0086777ac128c8490e61bbe Mon Sep 17 00:00:00 2001
 From: SamarV-121 <samar@samarv121.dev>
 Date: Thu, 30 Nov 2023 15:41:12 +0530
-Subject: [PATCH 30/35] gmscompat: Dynamically spoof props for GMS
+Subject: [PATCH 30/38] gmscompat: Dynamically spoof props for GMS
 
  * since goolag is on rampage of killing working build FPs
 
@@ -348,5 +348,5 @@ index e92ba3ed7..34e785c02 100644
      }
  
 -- 
-2.48.1
+2.49.0
 

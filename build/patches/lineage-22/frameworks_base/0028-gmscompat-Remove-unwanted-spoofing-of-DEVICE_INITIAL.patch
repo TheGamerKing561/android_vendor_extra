@@ -1,7 +1,7 @@
-From 4ca4f4c529aceeb6c53374161969f374976b79e9 Mon Sep 17 00:00:00 2001
+From e847452775a74235ad8fb3f7c01579a9a6b9ea46 Mon Sep 17 00:00:00 2001
 From: SamarV-121 <samar@samarv121.dev>
 Date: Thu, 30 Nov 2023 15:36:40 +0530
-Subject: [PATCH 28/35] gmscompat: Remove unwanted spoofing of
+Subject: [PATCH 28/38] gmscompat: Remove unwanted spoofing of
  DEVICE_INITIAL_SDK_INT
 
 Change-Id: I902311e48ec5d214cf9768684a8d1d8bfe27d208
@@ -53,5 +53,5 @@ index 8996ca8c7..a331c4aa7 100644
          }
  
 -- 
-2.48.1
+2.49.0
 

@@ -1,7 +1,7 @@
-From f38eb32277f93a7835b0897c4cf6cb351e2db8fa Mon Sep 17 00:00:00 2001
+From 29761c516a6e42a7bbcf1931c23a4eff0147ccbd Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sat, 18 Nov 2023 20:08:08 +0530
-Subject: [PATCH 29/35] gmscompat: Allow setting any field in certified build
+Subject: [PATCH 29/38] gmscompat: Allow setting any field in certified build
  props
 
 Brand and manufacturer may also be used for attestation checks, as seen
@@ -65,5 +65,5 @@ index a331c4aa7..314264a7a 100644
                sIsGms = true;
                setBuildField("FINGERPRINT", "google/marlin/marlin:7.1.2/NJH47F/4146041:user/release-keys");
 -- 
-2.48.1
+2.49.0
 

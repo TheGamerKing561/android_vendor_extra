@@ -1,7 +1,7 @@
-From 3a6072aba994eb7dc886101a9378e25a83bc87f3 Mon Sep 17 00:00:00 2001
+From 72ff763112b9bc1d7598dfbcfc6898ec18e28cfa Mon Sep 17 00:00:00 2001
 From: Vaisakh Murali <mvaisakh@statixos.com>
 Date: Wed, 19 Apr 2023 10:32:33 +0000
-Subject: [PATCH 07/35] libhwui: remove deprecated perf flags
+Subject: [PATCH 07/38] libhwui: remove deprecated perf flags
 
 These no longer exist in newer clang versions.
 
@@ -25,5 +25,5 @@ index e2db2c9e3..e5409236a 100644
  }
  
 -- 
-2.48.1
+2.49.0
 

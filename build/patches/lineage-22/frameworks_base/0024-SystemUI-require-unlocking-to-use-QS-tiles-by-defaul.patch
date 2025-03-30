@@ -1,7 +1,7 @@
-From 22ed3976ff68f6067555c10e4ad0569fcbbea016 Mon Sep 17 00:00:00 2001
+From 2c89ccefad5ed313275ce84814ee79d961080531 Mon Sep 17 00:00:00 2001
 From: Dmitry Muhomor <muhomor.dmitry@gmail.com>
 Date: Mon, 11 Mar 2024 19:40:18 +0200
-Subject: [PATCH 24/35] SystemUI: require unlocking to use QS tiles by default
+Subject: [PATCH 24/38] SystemUI: require unlocking to use QS tiles by default
 
 ---
  .../src/com/android/systemui/qs/QSHost.java   |  1 +
@@ -119,5 +119,5 @@ index 1d1e99118..e9dc57e4c 100644
                      name = "handleRefreshState";
                      handleRefreshState(msg.obj);
 -- 
-2.48.1
+2.49.0
 

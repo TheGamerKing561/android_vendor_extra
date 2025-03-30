@@ -1,7 +1,7 @@
-From 23097aff84873ca1c8c0b0b6797f94db7a6f6463 Mon Sep 17 00:00:00 2001
+From 2c0c085800fd45d6316dec28ed3937d2ac14599b Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 3 Nov 2020 22:43:12 -0800
-Subject: [PATCH 04/35] core: Remove old app target SDK dialog
+Subject: [PATCH 04/38] core: Remove old app target SDK dialog
 
 If an app is old, users should already know that, and there's usually no
 point in warning them about it because they would already be using a
@@ -30,5 +30,5 @@ index 601b17c46..9886785fa 100644
              showPageSizeMismatchDialogIfNeeded(r);
          }
 -- 
-2.48.1
+2.49.0
 
