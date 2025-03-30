@@ -18,7 +18,8 @@ export USE_DEX2OAT_DEBUG=false
 export NINJA_HIGHMEM_NUM_JOBS=1
 
 # Defs
-LOS_VERSION=$(grep "PRODUCT_VERSION_MAJOR" $(gettop)/vendor/lineage/config/version.mk | sed 's/PRODUCT_VERSION_MAJOR = //g' | head -1)
+LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' $(gettop)/vendor/lineage/config/version.mk)
+AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' $(gettop)/vendor/lineage/vars/aosp_target_release)
 VENDOR_EXTRA_PATH=$(gettop)/vendor/extra
 MKA_JOBS=$(($(nproc) - 5))
 [[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=15
@@ -67,9 +68,30 @@ apply_patches() {
     croot
 }
 
+# Generate "release_config_map.textproto"
+gen_release_config_map() {
+    cat <<EOF > "${VENDOR_EXTRA_PATH}/release/release_config_map.textproto"
+default_containers: "product"
+default_containers: "system"
+default_containers: "system_ext"
+default_containers: "vendor"
+
+release_config {
+    name: "${AOSP_TARGET_RELEASE}"
+    flag_value_files: "release_configs/${AOSP_TARGET_RELEASE}.textproto"
+}
+
+build_config {
+    name: "${AOSP_TARGET_RELEASE}"
+    flag_value_files: "build_config/${AOSP_TARGET_RELEASE}.textproto"
+}
+EOF
+}
+
 if [[ "${APPLY_PATCHES}" == "true" ]]; then
     apply_patches "${VENDOR_EXTRA_PATH}"/build/patches/lineage-"${LOS_VERSION}"
 fi
+gen_release_config_map
 
 # functions
 los_changelog() {
