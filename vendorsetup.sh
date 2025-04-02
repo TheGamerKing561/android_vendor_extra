@@ -8,9 +8,9 @@ export BUILD_USERNAME=android-user
 export BUILD_HOSTNAME=r-0123456789abcdef-0123
 
 # Make smaller .tar.gz files by excluding debug targets.
-export ART_BUILD_TARGET_NDEBUG=false
+export ART_BUILD_TARGET_NDEBUG=true
 export ART_BUILD_TARGET_DEBUG=false
-export ART_BUILD_HOST_NDEBUG=false
+export ART_BUILD_HOST_NDEBUG=true
 export ART_BUILD_HOST_DEBUG=false
 export USE_DEX2OAT_DEBUG=false
 
