@@ -24,14 +24,21 @@ class FileWithCallback:
         self.fd = fd
         self.callback = callback
 
-    def __iter__(self):
-        return iter([])
+    def get_colour(self, percentage):
+        if percentage < 50:
+            return 'RED'
+        elif percentage < 90:
+            return 'YELLOW'
+        else:
+            return 'GREEN'
 
-    def read(self, size):
-        chunk = self.fd.read(size)
-        if chunk:
-            self.callback(len(chunk))
-        return chunk
+    def read(self, chunk_size):
+        data = self.fd.read(chunk_size)
+        self.callback.update(len(data))
+        if hasattr(self.callback, 'n') and hasattr(self.callback, 'total'):
+            percentage = (self.callback.n / self.callback.total) * 100
+            self.callback.colour = self.get_colour(percentage)
+        return data
 
 
 def create_git_release(GH_OWNER, GH_REPO, data):
@@ -50,36 +57,25 @@ def upload_asset(GH_OWNER, GH_REPO, release_id, asset_path):
     asset_name = path.name
 
     with path.open('rb') as f:
-        pbar = tqdm(
+        with tqdm(
             total=file_size,
             unit='B',
             unit_scale=True,
             colour='RED',
             bar_format='{percentage:3.0f}%|{bar:25}| {n_fmt}/{total_fmt} [{rate_fmt}]',
             ascii='-#',
-        )
+        ) as pbar:
+            progress_file = FileWithCallback(f, pbar)
 
-        def get_colour(percentage):
-            if percentage < 50:
-                return 'RED'  # Red
-            elif percentage < 90:
-                return 'YELLOW'  # Yellow
-            else:
-                return 'GREEN'  # Green
+            response = session.post(
+                f'https://uploads.github.com/repos/{GH_OWNER}/{GH_REPO}/releases/{release_id}/assets?name={asset_name}',
+                headers={
+                    'Content-Type': 'application/octet-stream',
+                    'Content-Length': str(file_size),
+                },
+                data=progress_file,
+            )
 
-        def update_progress_bar(chunk_size):
-            pbar.update(chunk_size)
-            pbar.colour = get_colour(pbar.n / pbar.total * 100)
+            response.raise_for_status()
 
-        response = session.post(
-            f'https://uploads.github.com/repos/{GH_OWNER}/{GH_REPO}/releases/{release_id}/assets?name={asset_name}',
-            headers={
-                'Content-Type': 'application/octet-stream',
-                'Content-Length': str(file_size),
-            },
-            data=FileWithCallback(f, update_progress_bar),
-        )
-
-        pbar.close()
-        response.raise_for_status()
-        return response
+            return response
