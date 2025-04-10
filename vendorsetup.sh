@@ -23,7 +23,7 @@ AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' $(gettop)/vendor/lineag
 VENDOR_EXTRA_PATH=$(gettop)/vendor/extra
 MKA_JOBS=$(($(nproc) - 5))
 [[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=10
-[[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=20
+[[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=15
 
 # Logging defs
 LOGI() {
