@@ -67,7 +67,6 @@ def get_device(var):
     return {
         # LineageOS 22.2
         'daisy': {1: 'Mi A2 Lite', 2: '22.2', 3: 'LineageOS_daisy'},
-        'gemstone': {1: 'Redmi Note 12 5G', 2: '22.2', 3: 'LineageOS_gemstone'},
         'lisa': {1: 'Xiaomi 11 Lite 5G NE', 2: '22.2', 3: 'LineageOS_lisa'},
         'miatoll': {1: 'Xiaomi Atoll Family', 2: '22.2', 3: 'LineageOS_miatoll'},
         'nairo': {1: 'Moto G 5G Plus', 2: '22.2', 3: 'LineageOS_nairo'},
