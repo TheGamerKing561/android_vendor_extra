@@ -1,0 +1,76 @@
+From 63694332739b80a3f36d9c661d394d3a347af909 Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Thu, 19 Nov 2020 19:12:06 +0100
+Subject: [PATCH] sm7250-common: Add system_ext to dynamic partitions list
+
+Change-Id: Ibac5e64c748fdbe2d26acb8fcaa85c674d3ba92f
+
+sm7250-common: Add odm to dynamic partitions list
+
+Change-Id: I173beb983bae67040bc82960a0c053ecb3f9a544
+---
+ BoardConfigCommon.mk | 6 +++++-
+ common.mk            | 4 +++-
+ init/fstab.qcom      | 2 ++
+ 3 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
+index 6f7988fa..4b539097 100644
+--- a/BoardConfigCommon.mk
++++ b/BoardConfigCommon.mk
+@@ -127,17 +127,21 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 104857600
+ 
+ BOARD_SUPER_PARTITION_SIZE ?= 10736369664
+ BOARD_SUPER_PARTITION_GROUPS := moto_dynamic_partitions
+-BOARD_MOTO_DYNAMIC_PARTITIONS_PARTITION_LIST := system product vendor
++BOARD_MOTO_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext product vendor odm
+ BOARD_MOTO_DYNAMIC_PARTITIONS_SIZE ?= 5363990528 # (BOARD_SUPER_PARTITION_SIZE / 2) - 4MB
+ 
+ BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
+ BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
++BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
+ BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
++BOARD_ODMIMAGE_FILE_SYSTEM_TYPE := ext4
+ 
+ TARGET_USERIMAGES_USE_F2FS := true
+ 
+ TARGET_COPY_OUT_PRODUCT := product
++TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+ TARGET_COPY_OUT_VENDOR := vendor
++TARGET_COPY_OUT_ODM := odm
+ 
+ # Platform
+ BOARD_USES_QCOM_HARDWARE := true
+diff --git a/common.mk b/common.mk
+index 7cd50d6f..ebe76791 100644
+--- a/common.mk
++++ b/common.mk
+@@ -22,9 +22,11 @@ AB_OTA_PARTITIONS += \
+     product \
+     recovery \
+     system \
++    system_ext \
+     vbmeta \
+     vbmeta_system \
+-    vendor
++    vendor \
++    odm
+ 
+ PRODUCT_PACKAGES += \
+     update_engine \
+diff --git a/init/fstab.qcom b/init/fstab.qcom
+index 5392a6f5..724be039 100644
+--- a/init/fstab.qcom
++++ b/init/fstab.qcom
+@@ -9,6 +9,8 @@
+ system                                                  /system                  ext4    ro                                                   wait,slotselect,avb=vbmeta_system,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey,logical,first_stage_mount
+ vendor                                                  /vendor                  ext4    ro                                                   wait,slotselect,avb=vbmeta,logical,first_stage_mount
+ product                                                 /product                 ext4    ro                                                   wait,slotselect,avb,logical,nofail,first_stage_mount
++odm                                                     /odm                     ext4    ro                                                   wait,slotselect,avb=vbmeta,logical,first_stage_mount
++system_ext                                              /system_ext              ext4    ro                                                   wait,slotselect,avb,logical,nofail,first_stage_mount
+ /dev/block/by-name/metadata                             /metadata                ext4    noatime,nosuid,nodev,discard,data=journal,commit=1   wait,formattable,first_stage_mount,check,metadata_csum
+ /dev/block/bootdevice/by-name/userdata                  /data                    f2fs    noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,fsync_mode=nobarrier,inlinecrypt       latemount,wait,check,formattable,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption,quota,reservedsize=512M,sysfs_path=/sys/devices/platform/soc/1d84000.ufshc,checkpoint=fs
+ /devices/platform/soc/8804000.sdhci/mmc_host*           auto                     auto    defaults                                             wait,voldmanaged=sdcard1:auto
+-- 
+2.49.0
+
