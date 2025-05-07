@@ -11,6 +11,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     tombstoned.max_tombstone_count=10
 
+# Audio service timeout
+PRODUCT_PRODUCT_PROPERTIES += \
+    audio.service.client_wait_ms=10000
+
 ifneq ($(filter daisy prague stanford ysl,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 # set threshold to filter unused apps
 PRODUCT_PRODUCT_PROPERTIES += \
