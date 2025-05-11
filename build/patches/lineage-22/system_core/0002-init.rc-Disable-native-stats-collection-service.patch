@@ -1,7 +1,7 @@
-From 84ec5595a2a067650b9b2ff367b6faa022687df2 Mon Sep 17 00:00:00 2001
+From 33d7dae8d6add939bd50bfa4bc91364014ba0eca Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 5 Apr 2021 23:20:49 -0700
-Subject: [PATCH 2/2] init.rc: Disable native stats collection service
+Subject: [PATCH 2/3] init.rc: Disable native stats collection service
 
 When opening and closing activities in Settings, a measurably
 significant amount of CPU time is spent processing and logging stats
@@ -28,10 +28,10 @@ Test: simpleperf record -a; verify that statsd no longer appears in
  1 file changed, 1 deletion(-)
 
 diff --git a/rootdir/init.rc b/rootdir/init.rc
-index 1acd637..2b52ec3 100644
+index 0cc1297078..7ffec91f62 100644
 --- a/rootdir/init.rc
 +++ b/rootdir/init.rc
-@@ -1132,7 +1132,6 @@ on zygote-start
+@@ -1137,7 +1137,6 @@ on zygote-start
      wait_for_prop odsign.verification.done 1
      # A/B update verifier that marks a successful boot.
      exec_start update_verifier
@@ -40,5 +40,5 @@ index 1acd637..2b52ec3 100644
      start zygote_secondary
  
 -- 
-2.48.0
+2.49.0
 
