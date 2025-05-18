@@ -1,7 +1,11 @@
-From 63694332739b80a3f36d9c661d394d3a347af909 Mon Sep 17 00:00:00 2001
-From: LuK1337 <priv.luk@gmail.com>
-Date: Thu, 19 Nov 2020 19:12:06 +0100
-Subject: [PATCH] sm7250-common: Add system_ext to dynamic partitions list
+From 0d72b693856537290b82c4c19d566fdf4631f04e Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Sun, 18 May 2025 17:24:30 +0200
+Subject: [PATCH] Revert "sm7250-common: Update partition sizes"
+
+This reverts commit ed6bb854e3ec5b01ab81111b4cb7294ee97c19c3.
+
+sm7250-common: Add system_ext to dynamic partitions list
 
 Change-Id: Ibac5e64c748fdbe2d26acb8fcaa85c674d3ba92f
 
@@ -9,16 +13,27 @@ sm7250-common: Add odm to dynamic partitions list
 
 Change-Id: I173beb983bae67040bc82960a0c053ecb3f9a544
 ---
- BoardConfigCommon.mk | 6 +++++-
- common.mk            | 4 +++-
- init/fstab.qcom      | 2 ++
- 3 files changed, 10 insertions(+), 2 deletions(-)
+ BoardConfigCommon.mk | 10 ++++++----
+ common.mk            |  4 +++-
+ init/fstab.qcom      |  2 ++
+ 3 files changed, 11 insertions(+), 5 deletions(-)
 
 diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
-index 6f7988fa..4b539097 100644
+index c5c8b8cc..ad00861f 100644
 --- a/BoardConfigCommon.mk
 +++ b/BoardConfigCommon.mk
-@@ -127,17 +127,21 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 104857600
+@@ -110,9 +110,7 @@ TARGET_MODULE_ALIASES += \
+ TARGET_USES_ION := true
+ 
+ # Partitions
+-ifneq ($(WITH_GMS),true)
+-BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 1610612736
+-endif
++BOARD_PRODUCTIMAGE_MINIMAL_PARTITION_RESERVED_SIZE := true
+ -include vendor/lineage/config/BoardConfigReservedSize.mk
+ 
+ BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
+@@ -123,17 +121,21 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 104857600
  
  BOARD_SUPER_PARTITION_SIZE ?= 10736369664
  BOARD_SUPER_PARTITION_GROUPS := moto_dynamic_partitions
@@ -42,10 +57,10 @@ index 6f7988fa..4b539097 100644
  # Platform
  BOARD_USES_QCOM_HARDWARE := true
 diff --git a/common.mk b/common.mk
-index 7cd50d6f..ebe76791 100644
+index 6cb3739f..f6979ecf 100644
 --- a/common.mk
 +++ b/common.mk
-@@ -22,9 +22,11 @@ AB_OTA_PARTITIONS += \
+@@ -19,9 +19,11 @@ AB_OTA_PARTITIONS += \
      product \
      recovery \
      system \
