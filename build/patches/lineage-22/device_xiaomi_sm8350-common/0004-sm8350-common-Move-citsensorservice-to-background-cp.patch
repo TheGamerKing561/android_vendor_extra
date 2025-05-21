@@ -1,4 +1,4 @@
-From 4b2d1a820c9cdf08262e413f610b1f1e6bec6bd6 Mon Sep 17 00:00:00 2001
+From a48b0df87b4aef23053c5be5bf1d37bfa82a59c7 Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sat, 12 Aug 2023 11:07:53 +0530
 Subject: [PATCH 4/7] sm8350-common: Move citsensorservice to background cpuset

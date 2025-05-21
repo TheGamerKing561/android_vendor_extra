@@ -1,4 +1,4 @@
-From 21bd46e77dcdbb3565790425bc45ce3967051481 Mon Sep 17 00:00:00 2001
+From 03881dcf31b358675498a463c98ce14caf6d21f6 Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sun, 24 Jan 2021 14:02:20 +0530
 Subject: [PATCH 3/7] sm8350-common: Switch to dot product CPU variant
@@ -24,7 +24,7 @@ Change-Id: I484bb2bcc181c62e29c04bc6e467e5edea8ac0d8
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
-index 47d753b4..7f8e4f9d 100644
+index 297ce06a..0134c70a 100644
 --- a/BoardConfigCommon.mk
 +++ b/BoardConfigCommon.mk
 @@ -22,7 +22,7 @@ AB_OTA_PARTITIONS += \

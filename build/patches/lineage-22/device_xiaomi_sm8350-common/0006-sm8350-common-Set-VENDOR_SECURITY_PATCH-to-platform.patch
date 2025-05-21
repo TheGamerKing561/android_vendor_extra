@@ -1,4 +1,4 @@
-From 76101fe666f25d88824d40251fee376ddcd687db Mon Sep 17 00:00:00 2001
+From 8c116d8abd28cb5a88617d53f0374ddb5edcc5c2 Mon Sep 17 00:00:00 2001
 From: Chris Fries <cfries@google.com>
 Date: Tue, 26 Feb 2019 17:37:41 +0000
 Subject: [PATCH 6/7] sm8350-common: Set VENDOR_SECURITY_PATCH to platform
@@ -14,14 +14,14 @@ Change-Id: I0007c6ca8bef2865101d620e2dcf3675cb8771ea
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
-index 7f8e4f9d..fe5973d5 100644
+index 0134c70a..f44e17fa 100644
 --- a/BoardConfigCommon.mk
 +++ b/BoardConfigCommon.mk
-@@ -154,7 +154,7 @@ TARGET_USERIMAGES_USE_F2FS := true
+@@ -148,7 +148,7 @@ TARGET_USERIMAGES_USE_F2FS := true
  ENABLE_VENDOR_RIL_SERVICE := true
  
  # Security patch level
--VENDOR_SECURITY_PATCH := 2024-11-01
+-VENDOR_SECURITY_PATCH := 2025-02-01
 +VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
  
  # Sepolicy

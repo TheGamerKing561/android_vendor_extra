@@ -1,4 +1,4 @@
-From 0f963c5e338221f16eb46e98b88ac4692840d864 Mon Sep 17 00:00:00 2001
+From 46d3c62b015b04cd87a5962ae7bf41d3002b3bcb Mon Sep 17 00:00:00 2001
 From: David Sehr <sehr@google.com>
 Date: Sat, 25 Apr 2020 15:50:40 -0700
 Subject: [PATCH 1/7] sm8350-common: Enable usage of dex2oat64
@@ -15,7 +15,7 @@ Merged-In: I3e7a6e6e9385ff6564d1a2e6dda004ebb061f095
  1 file changed, 3 insertions(+)
 
 diff --git a/vendor.prop b/vendor.prop
-index 3acfb992..86a13941 100644
+index 5f629206..5fca65e9 100644
 --- a/vendor.prop
 +++ b/vendor.prop
 @@ -155,6 +155,9 @@ ro.soc.manufacturer=QTI

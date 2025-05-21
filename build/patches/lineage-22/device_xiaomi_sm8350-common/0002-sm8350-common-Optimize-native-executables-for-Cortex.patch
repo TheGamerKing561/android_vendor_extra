@@ -1,4 +1,4 @@
-From 9d4ba04e35b3b0863a37fce443704f1a038e74e1 Mon Sep 17 00:00:00 2001
+From caa5d52672d0ab4766aa672fe0aa58f813c2c4c6 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 20 Dec 2021 17:33:29 -0500
 Subject: [PATCH 2/7] sm8350-common: Optimize native executables for Cortex-A76
@@ -14,7 +14,7 @@ Change-Id: Idd3414de107f47a18c2769dc930e6c4bceacdc62
  1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
-index 7d3de29c..47d753b4 100644
+index e1a074e7..297ce06a 100644
 --- a/BoardConfigCommon.mk
 +++ b/BoardConfigCommon.mk
 @@ -25,15 +25,13 @@ TARGET_ARCH := arm64

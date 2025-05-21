@@ -1,4 +1,4 @@
-From 1d1b5506e33ebe2165e3f7f8d11728efbf5da681 Mon Sep 17 00:00:00 2001
+From 0d0fc3c23bc1ba0f6559ca16d8e8cd550a689417 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Thu, 4 Jul 2024 18:51:05 +0200
 Subject: [PATCH 5/7] sm8350-common: Don't copy dummy camera config
@@ -9,7 +9,7 @@ Change-Id: I24f2a85adfd0f2e1187f0ad9d685c75e7c62aa3e
  1 file changed, 3 deletions(-)
 
 diff --git a/common.mk b/common.mk
-index 4afd8f69..1df12aa2 100644
+index d978b9db..45bb7e5c 100644
 --- a/common.mk
 +++ b/common.mk
 @@ -116,9 +116,6 @@ PRODUCT_PACKAGES += \
