@@ -49,6 +49,7 @@ PRODUCT_PACKAGES += \
     FrameworkOverlayEXTRA \
     NfcOverlayEXTRA \
     SettingsOverlayEXTRA \
+    SettingsProviderOverlayEXTRA \
     SimpleDeviceConfigOverlayEXTRA \
     SystemUIOverlayEXTRA \
     SystemUIOverlayLEGACY \
