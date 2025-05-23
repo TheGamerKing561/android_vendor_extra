@@ -228,6 +228,8 @@ mka_build() {
     local DIRTY_BUILD="false"
     local BUILD_TYPE="userdebug"
     local LOCAL_BUILD=$([ "$(cat /etc/hostname)" = "asus" ] && echo "true" || echo "false")
+    export WITH_GMS=
+    export TARGET_UNOFFICIAL_BUILD_ID=
 
     while [ "$#" -gt 0 ]; do
         case "${1}" in
@@ -248,6 +250,10 @@ mka_build() {
                 ;;
             -l | --local-build)
                 local LOCAL_BUILD="true"
+                ;;
+            --microg)
+                export WITH_GMS=true
+                export TARGET_UNOFFICIAL_BUILD_ID=microG
                 ;;
         esac
         shift
