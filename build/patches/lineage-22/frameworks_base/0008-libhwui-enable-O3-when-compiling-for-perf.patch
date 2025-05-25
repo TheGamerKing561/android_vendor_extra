@@ -1,7 +1,7 @@
-From de03132f6286841d102554f1532643d0ade85a5e Mon Sep 17 00:00:00 2001
+From 2ace7391fc62b0390fa92946a907702906e1e41d Mon Sep 17 00:00:00 2001
 From: Vaisakh Murali <mvaisakh@statixos.com>
 Date: Wed, 19 Apr 2023 10:35:47 +0000
-Subject: [PATCH 08/35] libhwui: enable O3 when compiling for perf
+Subject: [PATCH 08/36] libhwui: enable O3 when compiling for perf
 
 This reduces ui jitter by a lot.
 

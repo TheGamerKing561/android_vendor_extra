@@ -1,7 +1,7 @@
-From 29761c516a6e42a7bbcf1931c23a4eff0147ccbd Mon Sep 17 00:00:00 2001
+From b2d87c97afb8cc304414c90308227951f0fd9ead Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sat, 18 Nov 2023 20:08:08 +0530
-Subject: [PATCH 29/35] gmscompat: Allow setting any field in certified build
+Subject: [PATCH 28/36] gmscompat: Allow setting any field in certified build
  props
 
 Brand and manufacturer may also be used for attestation checks, as seen
