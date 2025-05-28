@@ -11,7 +11,5 @@
         <!-- Xiaomi SM6375 -->
         <item>moonstone_p_global</item>
         <item>sunstone_global</item>
-        <!-- Xiaomi SM8350 -->
-        <item>lisa</item>
     </string-array>
 </resources>

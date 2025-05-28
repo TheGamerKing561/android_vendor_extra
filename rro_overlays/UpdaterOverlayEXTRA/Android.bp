@@ -21,8 +21,5 @@ lineage_updater_overlay {
             },
         },
     },
-    manifest: "AndroidManifest.xml",
     product_specific: true,
-    certificate: "platform",
-    sdk_version: "current",
 }
