@@ -8,9 +8,7 @@ export BUILD_USERNAME=android-user
 export BUILD_HOSTNAME=r-$(openssl rand -hex 8)-$(tr -dc 'a-z0-9' < /dev/urandom | head -c 4)
 
 # Make smaller .tar.gz files by excluding debug targets.
-export ART_BUILD_TARGET_NDEBUG=true
 export ART_BUILD_TARGET_DEBUG=false
-export ART_BUILD_HOST_NDEBUG=true
 export ART_BUILD_HOST_DEBUG=false
 export USE_DEX2OAT_DEBUG=false
 
