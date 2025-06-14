@@ -85,36 +85,8 @@ ota = f"""{{
 }}
 """
 
-# TODO: Nuke it on LineageOS 23
-ota_daisy = f"""{{
-  "response": [
-    {{
-      "datetime": {datetime},
-      "filename": "{filename}",
-      "id": "{id}",
-      "romtype": "unofficial",
-      "size": {size},
-      "url": "{url}",
-      "version": "23.0"
-    }}
-  ]
-}}
-"""
-
 for ota_json_file in ota_path.glob('*.json'):
-    cringe_jsons = [
-        '1735027826.json',
-        '1737963944.json',
-        '1738137293.json',
-        '1739607521.json',
-    ]
-
-    if codename == 'daisy' and any(
-        ota_json_file.name.endswith(x) for x in cringe_jsons
-    ):
-        ota_json_file.write_text(ota_daisy)
-    else:
-        ota_json_file.write_text(ota)
+    ota_json_file.write_text(ota)
 
 # Write a dummy ota
 dummy_ota = """{
