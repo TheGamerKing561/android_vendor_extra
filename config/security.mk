@@ -16,5 +16,5 @@ PRODUCT_EXTRA_RECOVERY_KEYS += \
 ifneq ($(DEFAULT_SYSTEM_DEV_CERTIFICATE),build/make/target/product/security/testkey)
 PRODUCT_BUILD_PROP_OVERRIDES += \
     BuildFlavor="$(VENDOR_EXTRA_TARGET_DEVICE)-$(TARGET_BUILD_VARIANT)" \
-    LineageDesc="$(BUILD_ID)"
+    BuildVariant="user"
 endif
