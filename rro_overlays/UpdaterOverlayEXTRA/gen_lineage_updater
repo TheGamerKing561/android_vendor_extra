@@ -1,9 +1,0 @@
-#!/bin/bash
-
-[ -z $1 ] && echo 'cringe' && exit
-
-for version in $@; do
-    [ -d ${version} ] && rm -rf ${version}
-    cp -r base ${version}
-    sed -i "s/lineage-base/lineage-${version}/g" ${version}/res/values/string.xml
-done
