@@ -28,3 +28,9 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.config.avoid_gfx_accel=true
 endif
+
+ifneq ($(filter dodge nairo,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+# OEM Unlock reporting
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.oem_unlock_supported=0
+endif

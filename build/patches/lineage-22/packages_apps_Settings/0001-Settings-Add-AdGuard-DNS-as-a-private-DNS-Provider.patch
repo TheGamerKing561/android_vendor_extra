@@ -1,7 +1,7 @@
 From be8c764f435f303844f508caecd863ba856f437b Mon Sep 17 00:00:00 2001
 From: Adam Lawson <adamjlawson22@gmail.com>
 Date: Tue, 4 Jan 2022 08:45:51 +0000
-Subject: [PATCH 1/2] Settings: Add AdGuard DNS as a private DNS Provider
+Subject: [PATCH] Settings: Add AdGuard DNS as a private DNS Provider
 
 Co-authored-by: Pranav Vashi <neobuddy89@gmail.com>
 Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>

@@ -3,11 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Xiaomi SM6250
+# Properties
 on early-init && property:ro.boot.hwname=joyeuse
     setprop ro.boot.hardware.sku joyeuse
 
-# Xiaomi SM6375
 on early-init && property:ro.boot.product.hardware.sku=moonstone_p_global
     setprop ro.boot.hardware.sku moonstone_p_global
 
