@@ -24,20 +24,20 @@ MKA_JOBS=$(($(nproc) - 5))
 [[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=15
 
 # Logging defs
-LOGI() {
+function LOGI() {
     echo -e "\n\033[32m[INFO]: $1\033[0m"
 }
 
-LOGW() {
+function LOGW() {
     echo -e "\n\033[33m[WARNING]: $1\033[0m"
 }
 
-LOGE() {
+function LOGE() {
     echo -e "\n\033[31m[ERROR]: $1\033[0m"
 }
 
 # Apply patches
-apply_patches() {
+function apply_patches() {
     local patches_dir="$1"
 
     [[ ! -d "${patches_dir}" ]] && return
@@ -67,7 +67,7 @@ apply_patches() {
 }
 
 # Generate "release_config_map.textproto"
-gen_release_config_map() {
+function gen_release_config_map() {
     cat <<EOF > "${VENDOR_EXTRA_PATH}/release/release_config_map.textproto"
 default_containers: "product"
 default_containers: "system"
@@ -92,7 +92,7 @@ fi
 gen_release_config_map
 
 # functions
-mka_build() {
+function mka_build() {
     # Defs
     DEVICE=""
     local DIRTY_BUILD="false"
@@ -139,7 +139,7 @@ mka_build() {
     LOGI "Done!"
 }
 
-mka_kernel() {
+function mka_kernel() {
     # Defs
     DEVICE=""
     BETA_BUILD="false"
