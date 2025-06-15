@@ -1,4 +1,4 @@
-From 14f5bee93bac6363b63efb6d32c51e3734a7e4e2 Mon Sep 17 00:00:00 2001
+From 562486a054c2c929044d23d01bb0b5b3877fc4ac Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Wed, 7 Oct 2020 00:24:54 -0700
 Subject: [PATCH 1/2] init: Report valid verified boot for SafetyNet checks
@@ -15,14 +15,14 @@ software because the verified boot chain is broken in that case.
 
 Change-Id: I66d23fd91d82906b00d5eb020668f01ae83ec31f
 ---
- init/property_service.cpp | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ init/property_service.cpp | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/init/property_service.cpp b/init/property_service.cpp
-index b0871890f3..a812891b7c 100644
+index b0871890f3..38e494a913 100644
 --- a/init/property_service.cpp
 +++ b/init/property_service.cpp
-@@ -1410,6 +1410,20 @@ static void ProcessBootconfig() {
+@@ -1410,6 +1410,22 @@ static void ProcessBootconfig() {
      });
  }
  
@@ -35,15 +35,17 @@ index b0871890f3..a812891b7c 100644
 +#endif
 +
 +    InitPropertySet("ro.boot.flash.locked", "1");
++    InitPropertySet("ro.boot.vbmeta.device_state", "locked");
 +    InitPropertySet("ro.boot.verifiedbootstate", "green");
 +    InitPropertySet("ro.boot.veritymode", "enforcing");
-+    InitPropertySet("ro.boot.vbmeta.device_state", "locked");
++    InitPropertySet("ro.boot.warranty_bit", "0");
++    InitPropertySet("ro.warranty_bit", "0");
 +}
 +
  void PropertyInit() {
      selinux_callback cb;
      cb.func_audit = PropertyAuditCallback;
-@@ -1424,6 +1438,9 @@ void PropertyInit() {
+@@ -1424,6 +1440,9 @@ void PropertyInit() {
          LOG(FATAL) << "Failed to load serialized property info file";
      }
  
