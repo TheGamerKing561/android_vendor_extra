@@ -91,6 +91,10 @@ if [[ "${APPLY_PATCHES}" == "true" ]]; then
 fi
 gen_release_config_map
 
+# Call _TOP/infra/vendorsetup.sh
+echo "including infra/vendorsetup.sh"
+. $(gettop)/infra/vendorsetup.sh
+
 # functions
 function mka_build() {
     # Defs
