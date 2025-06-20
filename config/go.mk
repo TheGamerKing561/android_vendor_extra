@@ -18,9 +18,6 @@ PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG := true
 # Dexpreopt
 WITH_DEXPREOPT_DEBUG_INFO := false
 
-# Use the low memory allocator to save RSS.
-MALLOC_LOW_MEMORY := true
-
 # Do not build non-GSI partition images.
 PRODUCT_BUILD_DEBUG_BOOT_IMAGE := false
 PRODUCT_BUILD_DEBUG_VENDOR_BOOT_IMAGE := false
