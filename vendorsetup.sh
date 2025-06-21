@@ -165,7 +165,6 @@ function mka_kernel() {
 
     # Build
     breakfast "${DEVICE}" "${BUILD_TYPE}"
-    mka installclean
 
     declare -A device_kernel_targets
     device_kernel_targets["dodge"]="bootimage dtboimage vendorbootimage vendor_dlkmimage system_dlkmimage initbootimage recoveryimage"
