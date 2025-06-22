@@ -60,5 +60,4 @@ PRODUCT_PACKAGES += \
     SettingsProviderOverlayEXTRA \
     SimpleDeviceConfigOverlayEXTRA \
     SystemUIOverlayEXTRA \
-    SystemUIOverlayLEGACY \
     UpdaterOverlayEXTRA

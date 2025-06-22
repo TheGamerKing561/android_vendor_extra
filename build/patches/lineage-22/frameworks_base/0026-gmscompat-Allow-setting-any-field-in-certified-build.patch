@@ -1,0 +1,69 @@
+From c7e321aad55f65164dcf3f13601de3d350c3d595 Mon Sep 17 00:00:00 2001
+From: Adithya R <gh0strider.2k18.reborn@gmail.com>
+Date: Sat, 18 Nov 2023 20:08:08 +0530
+Subject: [PATCH 26/34] gmscompat: Allow setting any field in certified build
+ props
+
+Brand and manufacturer may also be used for attestation checks, as seen
+by _FOR_ATTESTATION fields added in Android 14 [1]. Refactor certified
+properties to allow setting any Build or Build.VERSION string or integer
+field, to make it more scalable for future.
+
+[1]: https://cs.android.com/android/_/android/platform/frameworks/base/+/fb32aac1ea60bf267ff013f6e1023641736c6de5
+
+Change-Id: I16dc8e18a67ffd8fdba8eb9c6928447f82b7d810
+Signed-off-by: SamarV-121 <samar@samarv121.dev>
+---
+ .../internal/gmscompat/AttestationHooks.java  | 21 ++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+index a331c4aa7..314264a7a 100644
+--- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
++++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+@@ -36,18 +36,29 @@ public final class AttestationHooks {
+ 
+     private AttestationHooks() { }
+ 
+-    private static void setBuildField(String key, Object value) {
++    private static void setBuildField(String key, String value) {
+         try {
+             // Unlock
+-            Field field = Build.class.getDeclaredField(key);
++            Class clazz = Build.class;
++            if (key.startsWith("VERSION:")) {
++                clazz = Build.VERSION.class;
++                key = key.substring(8);
++            }
++            Field field = clazz.getDeclaredField(key);
+             field.setAccessible(true);
+ 
+             // Edit
+-            field.set(null, value);
++            if (field.getType().equals(Long.TYPE)) {
++                field.set(null, Long.parseLong(value));
++            } else if (field.getType().equals(Integer.TYPE)) {
++                field.set(null, Integer.parseInt(value));
++            } else {
++                field.set(null, value);
++            }
+ 
+             // Lock
+             field.setAccessible(false);
+-        } catch (NoSuchFieldException | IllegalAccessException e) {
++        } catch (Exception e) {
+             Log.e(TAG, "Failed to spoof Build." + key, e);
+         }
+     }
+@@ -62,7 +73,7 @@ public final class AttestationHooks {
+         }
+ 
+         if (PACKAGE_GMS.equals(packageName)) {
+-            setBuildField("TIME", System.currentTimeMillis());
++            setBuildField("TIME", String.valueOf(System.currentTimeMillis()));
+             if (PROCESS_UNSTABLE.equals(processName)) {
+               sIsGms = true;
+               setBuildField("FINGERPRINT", "google/marlin/marlin:7.1.2/NJH47F/4146041:user/release-keys");
+-- 
+2.49.0
+
