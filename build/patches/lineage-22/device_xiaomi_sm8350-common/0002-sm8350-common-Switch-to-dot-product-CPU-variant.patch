@@ -1,7 +1,7 @@
 From 03881dcf31b358675498a463c98ce14caf6d21f6 Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sun, 24 Jan 2021 14:02:20 +0530
-Subject: [PATCH 3/7] sm8350-common: Switch to dot product CPU variant
+Subject: [PATCH 2/3] sm8350-common: Switch to dot product CPU variant
 
  * lisa:/ $ cat /proc/cpuinfo | grep -m 1 Features
    Features: fp asimd evtstrm aes pmull sha1 sha2 crc32
