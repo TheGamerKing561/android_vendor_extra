@@ -1,7 +1,7 @@
 From 0d0fc3c23bc1ba0f6559ca16d8e8cd550a689417 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Thu, 4 Jul 2024 18:51:05 +0200
-Subject: [PATCH 3/3] sm8350-common: Don't copy dummy camera config
+Subject: [PATCH] sm8350-common: Don't copy dummy camera config
 
 Change-Id: I24f2a85adfd0f2e1187f0ad9d685c75e7c62aa3e
 ---
