@@ -1,0 +1,49 @@
+From ff261abd69ff4bea18f5d3a2a846732577adee34 Mon Sep 17 00:00:00 2001
+From: Alexander Winkowski <dereference23@outlook.com>
+Date: Sun, 1 Oct 2023 17:38:41 +0000
+Subject: [PATCH] Force userdebug behaviour
+
+Change-Id: Idbcbdea6c310a55f77856ad859b59af070ad7f72
+---
+ recovery.cpp      | 2 +-
+ recovery_main.cpp | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/recovery.cpp b/recovery.cpp
+index f769154c..0e4b9bb0 100644
+--- a/recovery.cpp
++++ b/recovery.cpp
+@@ -124,7 +124,7 @@ static bool save_current_log = false;
+  */
+ 
+ static bool IsRoDebuggable() {
+-  return android::base::GetBoolProperty("ro.debuggable", false);
++  return true;
+ }
+ 
+ // Clear the recovery command and prepare to boot a (hopefully working) system,
+diff --git a/recovery_main.cpp b/recovery_main.cpp
+index 91b2515a..ba330bd8 100644
+--- a/recovery_main.cpp
++++ b/recovery_main.cpp
+@@ -70,7 +70,7 @@ static constexpr const char* LOCALE_FILE = "/cache/recovery/last_locale";
+ static RecoveryUI* ui = nullptr;
+ 
+ static bool IsRoDebuggable() {
+-  return android::base::GetBoolProperty("ro.debuggable", false);
++  return true;
+ }
+ 
+ static bool IsDeviceUnlocked() {
+@@ -78,7 +78,7 @@ static bool IsDeviceUnlocked() {
+ }
+ 
+ std::string get_build_type() {
+-  return android::base::GetProperty("ro.build.type", "");
++  return "userdebug";
+ }
+ 
+ static constexpr const char* adb_keys_data = "/data/misc/adb/adb_keys";
+-- 
+2.50.0
+
