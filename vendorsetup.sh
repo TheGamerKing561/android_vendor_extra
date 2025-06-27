@@ -88,8 +88,8 @@ EOF
 
 if [[ "${APPLY_PATCHES}" == "true" ]]; then
     apply_patches "${VENDOR_EXTRA_PATH}"/build/patches/lineage-"${LOS_VERSION}"
+    gen_release_config_map
 fi
-gen_release_config_map
 
 # Call _TOP/infra/vendorsetup.sh
 echo "including infra/vendorsetup.sh"
