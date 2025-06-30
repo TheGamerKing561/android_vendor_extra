@@ -166,13 +166,14 @@ function mka_kernel() {
     # Build
     breakfast "${DEVICE}" "${BUILD_TYPE}"
 
-    declare -A device_kernel_targets
-    device_kernel_targets["dodge"]="bootimage dtboimage vendorbootimage vendor_dlkmimage system_dlkmimage initbootimage"
-    device_kernel_targets["gemstone"]="bootimage dtboimage vendorbootimage"
-    device_kernel_targets["lisa"]="bootimage dtboimage vendorbootimage vendor_dlkmimage"
-    device_kernel_targets["miatoll"]="bootimage dtboimage"
-    device_kernel_targets["venus"]="bootimage dtboimage vendorbootimage vendor_dlkmimage"
-    device_kernel_targets["xaga"]="bootimage vendorbootimage vendor_dlkmimage"
+    declare -A device_kernel_targets=(
+        [dodge]="bootimage dtboimage initbootimage system_dlkmimage vendor_dlkmimage vendorbootimage"
+        [gemstone]="bootimage dtboimage vendorbootimage"
+        [lisa]="bootimage dtboimage vendor_dlkmimage vendorbootimage"
+        [miatoll]="bootimage dtboimage"
+        [venus]="bootimage dtboimage vendor_dlkmimage vendorbootimage"
+        [xaga]="bootimage vendor_dlkmimage vendorbootimage"
+    )
 
     kernel_targets=${device_kernel_targets[$DEVICE]:-"bootimage"}
 
