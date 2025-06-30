@@ -167,7 +167,7 @@ function mka_kernel() {
     breakfast "${DEVICE}" "${BUILD_TYPE}"
 
     declare -A device_kernel_targets
-    device_kernel_targets["dodge"]="bootimage dtboimage vendorbootimage vendor_dlkmimage system_dlkmimage initbootimage recoveryimage"
+    device_kernel_targets["dodge"]="bootimage dtboimage vendorbootimage vendor_dlkmimage system_dlkmimage initbootimage"
     device_kernel_targets["gemstone"]="bootimage dtboimage vendorbootimage"
     device_kernel_targets["lisa"]="bootimage dtboimage vendorbootimage vendor_dlkmimage"
     device_kernel_targets["miatoll"]="bootimage dtboimage"
