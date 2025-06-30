@@ -3,7 +3,7 @@
      SPDX-FileCopyrightText: The LineageOS Project
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Whether or not device header widget tile should display in device info page -->
     <bool name="config_show_device_header_in_device_info">false</bool>
 </resources>

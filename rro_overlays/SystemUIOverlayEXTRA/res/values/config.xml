@@ -3,13 +3,10 @@
      SPDX-FileCopyrightText: The LineageOS Project
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- ComponentName for the file browsing app that the system would expect to be used for
          screenshots. The icon for this app will be shown to the user when informing them that a
          screenshot has been saved to a different profile (e.g. work profile). If blank, a default
          icon will be shown. -->
     <string name="config_screenshotFilesApp" translatable="false">com.android.documentsui/.files.LauncherActivity</string>
-
-    <!-- Whether to play turbulence noise after clicking the play button -->
-    <bool name="config_turbulenceNoise">false</bool>
 </resources>
