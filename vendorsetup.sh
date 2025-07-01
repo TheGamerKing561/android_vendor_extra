@@ -167,16 +167,16 @@ function mka_kernel() {
     breakfast "${DEVICE}" "${BUILD_TYPE}"
 
     declare -A device_kernel_targets=(
-        [dodge]="bootimage dtboimage initbootimage system_dlkmimage vendor_dlkmimage vendorbootimage"
-        [gemstone]="bootimage dtboimage vendorbootimage"
-        [lisa]="bootimage dtboimage vendor_dlkmimage vendorbootimage"
-        [miatoll]="bootimage dtboimage"
-        [nairo]="bootimage dtboimage vendor_dlkmimage"
-        [venus]="bootimage dtboimage vendor_dlkmimage vendorbootimage"
-        [xaga]="bootimage vendor_dlkmimage vendorbootimage"
+        [dodge]="dtboimage initbootimage system_dlkmimage vendor_dlkmimage vendorbootimage"
+        [gemstone]="dtboimage vendorbootimage"
+        [lisa]="dtboimage vendor_dlkmimage vendorbootimage"
+        [miatoll]="dtboimage"
+        [nairo]="dtboimage vendor_dlkmimage"
+        [venus]="dtboimage vendor_dlkmimage vendorbootimage"
+        [xaga]="vendor_dlkmimage vendorbootimage"
     )
 
-    kernel_targets=${device_kernel_targets[$DEVICE]:-"bootimage"}
+    kernel_targets="bootimage ${device_kernel_targets[$DEVICE]}"
 
     while ! mka ${kernel_targets} -j${MKA_JOBS}; do
         LOGE "${kernel_targets} failed!"
