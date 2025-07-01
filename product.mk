@@ -54,7 +54,6 @@ PRODUCT_PACKAGES += \
 # Overlays
 PRODUCT_PACKAGES += \
     FrameworkOverlayEXTRA \
-    LineageSettingsProviderOverlayEXTRA \
     NfcOverlayEXTRA \
     SettingsOverlayEXTRA \
     SettingsProviderOverlayEXTRA \
