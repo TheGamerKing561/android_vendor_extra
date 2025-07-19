@@ -1,0 +1,216 @@
+From d7ed7ec5d9a964f0a68a9ff30f07beb6075a2951 Mon Sep 17 00:00:00 2001
+From: Adithya R <gh0strider.2k18.reborn@gmail.com>
+Date: Thu, 8 Jun 2023 16:55:44 +0530
+Subject: [PATCH 27/32] gmscompat: Un-spoof GMS while adding google account
+
+GMS uses its DroidGuard service (the same that's used for safetynet)
+to get the device name from the build fingerprint, which from our
+current certified props, is Pixel XL. The device name after Google
+login shows up in the login alert accordingly as Pixel XL, which is
+inconvenient especially when you have multiple devices on the same ROM.
+
+By restarting the DroidGuard service process (gms.unstable) as soon as
+the user starts adding Google account (i.e when the GMS add account
+activity is started and moved to the top of the task stack), we can
+skip spoofing to certified props in this instance. When the user
+stops/finishes adding account (GMS add account activity is no longer
+at the top of the task stack), restart the process again, this time
+spoofing to certified props in order to be ready for safetynet.
+
+This ensures while adding a Google account, GMS reads the original
+properties of the device and labels the device with its original name,
+while in any other situation GMS reads certified properties required
+to pass SafetyNet/Play Integrity.
+
+Test:
+- Add google account from setup wizard, settings, any other app
+- Observe correct device name in gmail login alert
+- SafetyNet (basic, CTS), Play Integrity (basic, device) passes.
+
+Change-Id: Ifc9bd4d4295cfb7c0eaad6172e12f88c22d6ec26
+Signed-off-by: SamarV-121 <samar@samarv121.dev>
+---
+ .../internal/gmscompat/AttestationHooks.java  | 91 ++++++++++++++++---
+ .../server/wm/ActivityTaskManagerService.java |  9 +-
+ 2 files changed, 86 insertions(+), 14 deletions(-)
+
+diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+index 98b29b7d7..db118a3cb 100644
+--- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
++++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+@@ -1,6 +1,8 @@
+ /*
+  * Copyright (C) 2021 The Android Open Source Project
+- * Copyright (C) 2024 The LeafOS Project
++ *           (C) 2023 ArrowOS
++ *           (C) 2023 The LibreMobileOS Foundation
++ *           (C) 2024 The LeafOS Project
+  *
+  * SPDX-License-Identifier: Apache-2.0
+  *
+@@ -8,10 +10,15 @@
+ 
+ package com.android.internal.gmscompat;
+ 
++import android.app.ActivityTaskManager;
+ import android.app.Application;
++import android.app.TaskStackListener;
++import android.content.ComponentName;
+ import android.content.Context;
++import android.os.Binder;
+ import android.os.Build;
+ import android.os.Environment;
++import android.os.Process;
+ import android.os.SystemProperties;
+ import android.text.TextUtils;
+ import android.util.Log;
+@@ -40,6 +47,11 @@ public final class AttestationHooks {
+     private static final boolean SPOOF_GMS =
+             SystemProperties.getBoolean("persist.sys.spoof.gms", true);
+ 
++    private static final ComponentName GMS_ADD_ACCOUNT_ACTIVITY =
++            ComponentName.unflattenFromString(
++                    "com.google.android.gms/.auth.uiflows.minutemaid.MinuteMaidActivity");
++
++    private static volatile String sProcessName;
+     private static volatile boolean sIsGms = false;
+ 
+     private AttestationHooks() {}
+@@ -83,6 +95,7 @@ public final class AttestationHooks {
+         if (SPOOF_GMS && PACKAGE_GMS.equals(packageName)) {
+             setBuildField("TIME", String.valueOf(System.currentTimeMillis()));
+             if (PROCESS_UNSTABLE.equals(processName)) {
++                sProcessName = processName;
+                 sIsGms = true;
+                 setGmsCertifiedProps();
+             }
+@@ -106,20 +119,74 @@ public final class AttestationHooks {
+         }
+ 
+         dlog("Found props");
++        final boolean was = isGmsAddAccountActivityOnTop();
++        final TaskStackListener taskStackListener =
++                new TaskStackListener() {
++                    @Override
++                    public void onTaskStackChanged() {
++                        final boolean is = isGmsAddAccountActivityOnTop();
++                        if (is ^ was) {
++                            // process will restart automatically later
++                            dlog(
++                                    "GmsAddAccountActivityOnTop is:"
++                                            + is
++                                            + " was:"
++                                            + was
++                                            + ", killing myself!");
++                            Process.killProcess(Process.myPid());
++                        }
++                    }
++                };
++        if (!was) {
++            try {
++                JSONObject parsedProps = new JSONObject(savedProps);
++                Iterator<String> keys = parsedProps.keys();
++
++                while (keys.hasNext()) {
++                    String key = keys.next();
++                    String value = parsedProps.getString(key);
++                    dlog(key + ": " + value);
++
++                    setBuildField(key, value);
++                }
++            } catch (JSONException e) {
++                Log.e(TAG, "Error parsing JSON data", e);
++            }
++        } else {
++            dlog("Skip spoofing build for GMS, because GmsAddAccountActivityOnTop");
++        }
+         try {
+-            JSONObject parsedProps = new JSONObject(savedProps);
+-            Iterator<String> keys = parsedProps.keys();
++            ActivityTaskManager.getService().registerTaskStackListener(taskStackListener);
++        } catch (Exception e) {
++            Log.e(TAG, "Failed to register task stack listener!", e);
++        }
++    }
+ 
+-            while (keys.hasNext()) {
+-                String key = keys.next();
+-                String value = parsedProps.getString(key);
+-                dlog(key + ": " + value);
++    private static boolean isGmsAddAccountActivityOnTop() {
++        try {
++            final ActivityTaskManager.RootTaskInfo focusedTask =
++                    ActivityTaskManager.getService().getFocusedRootTaskInfo();
++            return focusedTask != null
++                    && focusedTask.topActivity != null
++                    && focusedTask.topActivity.equals(GMS_ADD_ACCOUNT_ACTIVITY);
++        } catch (Exception e) {
++            Log.e(TAG, "Unable to get top activity!", e);
++        }
++        return false;
++    }
+ 
+-                setBuildField(key, value);
+-            }
+-        } catch (JSONException e) {
+-            Log.e(TAG, "Error parsing JSON data", e);
++    public static boolean shouldBypassTaskPermission(Context context) {
++        // GMS doesn't have MANAGE_ACTIVITY_TASKS permission
++        final int callingUid = Binder.getCallingUid();
++        final int gmsUid;
++        try {
++            gmsUid = context.getPackageManager().getApplicationInfo(PACKAGE_GMS, 0).uid;
++            dlog("shouldBypassTaskPermission: gmsUid:" + gmsUid + " callingUid:" + callingUid);
++        } catch (Exception e) {
++            Log.e(TAG, "shouldBypassTaskPermission: unable to get gms uid", e);
++            return false;
+         }
++        return gmsUid == callingUid;
+     }
+ 
+     private static boolean isCallerSafetyNet() {
+@@ -152,6 +219,6 @@ public final class AttestationHooks {
+     }
+ 
+     private static void dlog(String message) {
+-        if (DEBUG) Log.d(TAG, message);
++        if (DEBUG) Log.d(TAG, "[" + sProcessName + "] " + message);
+     }
+ }
+diff --git a/services/core/java/com/android/server/wm/ActivityTaskManagerService.java b/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
+index 63257f6a6..cdded3e72 100644
+--- a/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
++++ b/services/core/java/com/android/server/wm/ActivityTaskManagerService.java
+@@ -289,6 +289,7 @@ import com.android.server.uri.UriGrantsManagerInternal;
+ import com.android.server.wallpaper.WallpaperManagerInternal;
+ import com.android.wm.shell.Flags;
+ 
++import com.android.internal.gmscompat.AttestationHooks;
+ import org.lineageos.internal.applications.LineageActivityManager;
+ 
+ import java.io.BufferedReader;
+@@ -2020,7 +2021,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
+ 
+     @Override
+     public RootTaskInfo getFocusedRootTaskInfo() throws RemoteException {
+-        enforceTaskPermission("getFocusedRootTaskInfo()");
++        if (!AttestationHooks.shouldBypassTaskPermission(mContext)) {
++            enforceTaskPermission("getFocusedRootTaskInfo()");
++        }
+         final long ident = Binder.clearCallingIdentity();
+         try {
+             synchronized (mGlobalLock) {
+@@ -3144,7 +3147,9 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
+     /** Sets the task stack listener that gets callbacks when a task stack changes. */
+     @Override
+     public void registerTaskStackListener(ITaskStackListener listener) {
+-        enforceTaskPermission("registerTaskStackListener()");
++        if (!AttestationHooks.shouldBypassTaskPermission(mContext)) {
++            enforceTaskPermission("registerTaskStackListener()");
++        }
+         mTaskChangeNotificationController.registerTaskStackListener(listener);
+     }
+ 
+-- 
+2.50.1
+

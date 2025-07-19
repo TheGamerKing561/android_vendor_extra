@@ -12,21 +12,16 @@ $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/go.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/properties.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/security.mk)
 
-# Inherit Pixel clocks Makefile
-$(call inherit-product, vendor/pixel_clocks/product.mk)
-
 # Inherit MiuiCamera Makefile
 $(call inherit-product-if-exists, vendor/xiaomi/miuicamera-$(VENDOR_EXTRA_TARGET_DEVICE)/device.mk)
 
+# Inherit Pixel clocks Makefile
+$(call inherit-product, vendor/pixel_clocks/product.mk)
+
 # NFC
-ifneq ($(filter dodge venus lisa nairo,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+ifneq ($(filter dodge lisa nairo venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 $(call soong_config_set,lineage_extra,product_has_nfc,true)
 endif
-
-# Audio (Debugging)
-PRODUCT_PACKAGES += \
-    tinymix \
-    tinyplay
 
 # Boot animation
 TARGET_BOOTANIMATION_HALF_RES := true
@@ -42,11 +37,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     init.extra.rc
 
-ifneq ($(filter lisa venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
-PRODUCT_PACKAGES += \
-    init.sm8350.rc
-endif
-
 # Iperf3
 PRODUCT_PACKAGES += \
     iperf3
@@ -60,3 +50,7 @@ PRODUCT_PACKAGES += \
     SimpleDeviceConfigOverlayEXTRA \
     SystemUIOverlayEXTRA \
     UpdaterOverlayEXTRA
+
+# tinymix
+PRODUCT_PACKAGES += \
+    tinymix

@@ -3,17 +3,17 @@
 # SPDX-FileCopyrightText: Giovanni Ricca
 # SPDX-License-Identifier: Apache-2.0
 
+# Hardcode High Memory Parallel Process
+export NINJA_HIGHMEM_NUM_JOBS=1
+
 # Override host metadata to make builds more reproducible and avoid leaking info
-export BUILD_USERNAME=android-user
-export BUILD_HOSTNAME=r-$(openssl rand -hex 8)-$(tr -dc 'a-z0-9' < /dev/urandom | head -c 4)
+export BUILD_USERNAME=android-build
+export BUILD_HOSTNAME=$(openssl rand -hex 6)
 
 # Make smaller .tar.gz files by excluding debug targets.
 export ART_BUILD_TARGET_DEBUG=false
 export ART_BUILD_HOST_DEBUG=false
 export USE_DEX2OAT_DEBUG=false
-
-# Hardcode High Memory Parallel Process
-export NINJA_HIGHMEM_NUM_JOBS=1
 
 # Defs
 LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' $(gettop)/vendor/lineage/config/version.mk)

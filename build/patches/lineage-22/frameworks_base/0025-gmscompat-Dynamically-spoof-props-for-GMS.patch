@@ -1,0 +1,352 @@
+From f6f64f316a49d9dcdec1f793bb1e2f5657a5b1ac Mon Sep 17 00:00:00 2001
+From: SamarV-121 <samar@samarv121.dev>
+Date: Thu, 30 Nov 2023 15:41:12 +0530
+Subject: [PATCH 25/32] gmscompat: Dynamically spoof props for GMS
+
+ * since goolag is on rampage of killing working build FPs
+
+Change-Id: Ib920ba0b404382344e23b9763251b33ba275634b
+---
+ .../internal/gmscompat/AttestationHooks.java  |  90 +++++++---
+ .../server/gmscompat/AttestationService.java  | 166 ++++++++++++++++++
+ .../java/com/android/server/SystemServer.java |   5 +
+ 3 files changed, 241 insertions(+), 20 deletions(-)
+ create mode 100644 services/core/java/com/android/server/gmscompat/AttestationService.java
+
+diff --git a/core/java/com/android/internal/gmscompat/AttestationHooks.java b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+index 314264a7a..42cd62ac7 100644
+--- a/core/java/com/android/internal/gmscompat/AttestationHooks.java
++++ b/core/java/com/android/internal/gmscompat/AttestationHooks.java
+@@ -1,17 +1,9 @@
+ /*
+  * Copyright (C) 2021 The Android Open Source Project
++ * Copyright (C) 2024 The LeafOS Project
+  *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
++ * SPDX-License-Identifier: Apache-2.0
+  *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+  */
+ 
+ package com.android.internal.gmscompat;
+@@ -19,22 +11,35 @@ package com.android.internal.gmscompat;
+ import android.app.Application;
+ import android.content.Context;
+ import android.os.Build;
++import android.os.Environment;
++import android.os.SystemProperties;
+ import android.text.TextUtils;
+ import android.util.Log;
+ 
++import org.json.JSONException;
++import org.json.JSONObject;
++
++import java.io.BufferedReader;
++import java.io.File;
++import java.io.FileReader;
++import java.io.IOException;
+ import java.lang.reflect.Field;
+ import java.util.Arrays;
++import java.util.Iterator;
+ 
+ /** @hide */
+ public final class AttestationHooks {
+-    private static final String TAG = "GmsCompat/Attestation";
++    private static final String TAG = AttestationHooks.class.getSimpleName();
++    private static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
++
+     private static final String PACKAGE_GMS = "com.google.android.gms";
+     private static final String PROCESS_UNSTABLE = "com.google.android.gms.unstable";
+     private static final String SAMSUNG = "com.samsung.android.";
++    private static final String DATA_FILE = "gms_certified_props.json";
+ 
+     private static volatile boolean sIsGms = false;
+ 
+-    private AttestationHooks() { }
++    private AttestationHooks() {}
+ 
+     private static void setBuildField(String key, String value) {
+         try {
+@@ -75,18 +80,42 @@ public final class AttestationHooks {
+         if (PACKAGE_GMS.equals(packageName)) {
+             setBuildField("TIME", String.valueOf(System.currentTimeMillis()));
+             if (PROCESS_UNSTABLE.equals(processName)) {
+-              sIsGms = true;
+-              setBuildField("FINGERPRINT", "google/marlin/marlin:7.1.2/NJH47F/4146041:user/release-keys");
+-              setBuildField("PRODUCT", "marlin");
+-              setBuildField("DEVICE", "marlin");
+-              setBuildField("MODEL", "Pixel XL");
++                sIsGms = true;
++                setGmsCertifiedProps();
+             }
+         }
+ 
+-        // Samsung apps like SmartThings, Galaxy Wearable crashes on samsung devices running AOSP
++        // Samsung apps like SmartThings, Galaxy Wearable crashes
++        // on samsung devices running AOSP
+         if (packageName.startsWith(SAMSUNG)) {
+-          setBuildField("BRAND", "google");
+-          setBuildField("MANUFACTURER", "google");
++            setBuildField("BRAND", "google");
++            setBuildField("MANUFACTURER", "google");
++        }
++    }
++
++    private static void setGmsCertifiedProps() {
++        File dataFile = new File(Environment.getDataSystemDirectory(), DATA_FILE);
++        String savedProps = readFromFile(dataFile);
++
++        if (TextUtils.isEmpty(savedProps)) {
++            Log.e(TAG, "No props found to spoof");
++            return;
++        }
++
++        dlog("Found props");
++        try {
++            JSONObject parsedProps = new JSONObject(savedProps);
++            Iterator<String> keys = parsedProps.keys();
++
++            while (keys.hasNext()) {
++                String key = keys.next();
++                String value = parsedProps.getString(key);
++                dlog(key + ": " + value);
++
++                setBuildField(key, value);
++            }
++        } catch (JSONException e) {
++            Log.e(TAG, "Error parsing JSON data", e);
+         }
+     }
+ 
+@@ -101,4 +130,25 @@ public final class AttestationHooks {
+             throw new UnsupportedOperationException();
+         }
+     }
++
++    private static String readFromFile(File file) {
++        StringBuilder content = new StringBuilder();
++
++        if (file.exists()) {
++            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
++                String line;
++
++                while ((line = reader.readLine()) != null) {
++                    content.append(line);
++                }
++            } catch (IOException e) {
++                Log.e(TAG, "Error reading from file", e);
++            }
++        }
++        return content.toString();
++    }
++
++    private static void dlog(String message) {
++        if (DEBUG) Log.d(TAG, message);
++    }
+ }
+diff --git a/services/core/java/com/android/server/gmscompat/AttestationService.java b/services/core/java/com/android/server/gmscompat/AttestationService.java
+new file mode 100644
+index 000000000..4c5816784
+--- /dev/null
++++ b/services/core/java/com/android/server/gmscompat/AttestationService.java
+@@ -0,0 +1,166 @@
++/*
++ * Copyright (C) 2024 The LeafOS Project
++ *
++ * SPDX-License-Identifier: Apache-2.0
++ *
++ */
++
++package com.android.server.gmscompat;
++
++import android.content.Context;
++import android.net.ConnectivityManager;
++import android.net.Network;
++import android.net.NetworkCapabilities;
++import android.os.Environment;
++import android.os.SystemProperties;
++import android.util.Log;
++
++import com.android.server.SystemService;
++
++import java.io.BufferedReader;
++import java.io.File;
++import java.io.FileReader;
++import java.io.FileWriter;
++import java.io.IOException;
++import java.io.InputStreamReader;
++import java.net.HttpURLConnection;
++import java.net.URI;
++import java.net.URL;
++import java.util.concurrent.Executors;
++import java.util.concurrent.ScheduledExecutorService;
++import java.util.concurrent.TimeUnit;
++
++public final class AttestationService extends SystemService {
++    private static final String TAG = AttestationService.class.getSimpleName();
++    private static final String API = "https://play.leafos.org";
++
++    private static final String DATA_FILE = "gms_certified_props.json";
++
++    private static final long INITIAL_DELAY = 0;
++    private static final long INTERVAL = 5;
++
++    private static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
++
++    private final Context mContext;
++    private final File mDataFile;
++    private final ScheduledExecutorService mScheduler;
++
++    public AttestationService(Context context) {
++        super(context);
++        mContext = context;
++        mDataFile = new File(Environment.getDataSystemDirectory(), DATA_FILE);
++        mScheduler = Executors.newSingleThreadScheduledExecutor();
++    }
++
++    @Override
++    public void onStart() {}
++
++    @Override
++    public void onBootPhase(int phase) {
++        if (phase == PHASE_BOOT_COMPLETED) {
++            Log.i(TAG, "Scheduling the service");
++            mScheduler.scheduleAtFixedRate(
++                    new FetchGmsCertifiedProps(), INITIAL_DELAY, INTERVAL, TimeUnit.MINUTES);
++        }
++    }
++
++    private String readFromFile(File file) {
++        StringBuilder content = new StringBuilder();
++
++        if (file.exists()) {
++            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
++                String line;
++
++                while ((line = reader.readLine()) != null) {
++                    content.append(line);
++                }
++            } catch (IOException e) {
++                Log.e(TAG, "Error reading from file", e);
++            }
++        }
++        return content.toString();
++    }
++
++    private void writeToFile(File file, String data) {
++        try (FileWriter writer = new FileWriter(file)) {
++            writer.write(data);
++            // Set -rw-r--r-- (644) permission to make it readable by others.
++            file.setReadable(true, false);
++        } catch (IOException e) {
++            Log.e(TAG, "Error writing to file", e);
++        }
++    }
++
++    private String fetchProps() {
++        try {
++            URL url = new URI(API).toURL();
++            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
++
++            try {
++                urlConnection.setConnectTimeout(10000);
++                urlConnection.setReadTimeout(10000);
++
++                try (BufferedReader reader =
++                        new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
++                    StringBuilder response = new StringBuilder();
++                    String line;
++
++                    while ((line = reader.readLine()) != null) {
++                        response.append(line);
++                    }
++
++                    return response.toString();
++                }
++            } finally {
++                urlConnection.disconnect();
++            }
++        } catch (Exception e) {
++            Log.e(TAG, "Error making an API request", e);
++            return null;
++        }
++    }
++
++    private boolean isInternetConnected() {
++        ConnectivityManager cm =
++                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
++        Network nw = cm.getActiveNetwork();
++        if (nw == null) return false;
++        NetworkCapabilities actNw = cm.getNetworkCapabilities(nw);
++        return actNw != null
++                && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
++                        || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
++                        || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
++                        || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
++    }
++
++    private void dlog(String message) {
++        if (DEBUG) Log.d(TAG, message);
++    }
++
++    private class FetchGmsCertifiedProps implements Runnable {
++        @Override
++        public void run() {
++            try {
++                dlog("FetchGmsCertifiedProps started");
++
++                if (!isInternetConnected()) {
++                    Log.e(TAG, "Internet unavailable");
++                    return;
++                }
++
++                String savedProps = readFromFile(mDataFile);
++                String props = fetchProps();
++
++                if (props != null && !savedProps.equals(props)) {
++                    dlog("Found new props");
++                    writeToFile(mDataFile, props);
++                    dlog("FetchGmsCertifiedProps completed");
++                } else {
++                    dlog("No change in props");
++                }
++            } catch (Exception e) {
++                Log.e(TAG, "Error in FetchGmsCertifiedProps", e);
++            }
++        }
++    }
++}
+diff --git a/services/java/com/android/server/SystemServer.java b/services/java/com/android/server/SystemServer.java
+index e92ba3ed7..34e785c02 100644
+--- a/services/java/com/android/server/SystemServer.java
++++ b/services/java/com/android/server/SystemServer.java
+@@ -172,6 +172,7 @@ import com.android.server.display.color.ColorDisplayService;
+ import com.android.server.dreams.DreamManagerService;
+ import com.android.server.emergency.EmergencyAffordanceService;
+ import com.android.server.flags.FeatureFlagsService;
++import com.android.server.gmscompat.AttestationService;
+ import com.android.server.gpu.GpuService;
+ import com.android.server.grammaticalinflection.GrammaticalInflectionService;
+ import com.android.server.graphics.fonts.FontManagerService;
+@@ -3472,6 +3473,10 @@ public final class SystemServer implements Dumpable {
+         }
+         t.traceEnd();
+ 
++        // AttestationService
++        t.traceBegin("AttestationService");
++        mSystemServiceManager.startService(AttestationService.class);
++        t.traceEnd();
+         t.traceEnd(); // startOtherServices
+     }
+ 
+-- 
+2.50.1
+
