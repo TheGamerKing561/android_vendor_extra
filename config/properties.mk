@@ -11,3 +11,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # OEM Unlock reporting
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.oem_unlock_supported=0
+
+# Log tag
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.log.tag.HWUI=S
