@@ -1,7 +1,7 @@
-From 8c4068b44de0d935f28127137e632b9b489e59d7 Mon Sep 17 00:00:00 2001
+From b3ba3c3127e1f734cc658337c894321ed0403a4b Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 20:25:27 -0700
-Subject: [PATCH 12/32] Editor: Disable magnifier position animation
+Subject: [PATCH 12/33] Editor: Disable magnifier position animation
 
 In my opinion, this animation serves no purpose because it doesn't
 correspond to any animations in the text selection/handle flow, and is

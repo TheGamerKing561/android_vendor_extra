@@ -1,7 +1,7 @@
-From 7bb4763b79b36c2035db95b34a2d17f4720f1fa3 Mon Sep 17 00:00:00 2001
+From a8f3a2655e1e93a11c19387b294b79cc120eeec8 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 5 Apr 2021 23:05:02 -0700
-Subject: [PATCH 10/32] SystemServiceRegistry: Replace ArrayMap with HashMap
+Subject: [PATCH 10/33] SystemServiceRegistry: Replace ArrayMap with HashMap
  for performance
 
 When opening and closing activities in Settings, a significant amount of
