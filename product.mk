@@ -32,9 +32,6 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
-    neofetch
-
-PRODUCT_PACKAGES += \
     init.extra.rc
 
 # Iperf3

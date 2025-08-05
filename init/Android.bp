@@ -3,13 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-// Init scripts
-sh_binary {
-    name: "neofetch",
-    src: "neofetch",
-    product_specific: true,
-}
-
 // Init configuration files
 prebuilt_etc {
     name: "init.debugrom.rc",
