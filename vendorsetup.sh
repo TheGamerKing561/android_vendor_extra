@@ -171,7 +171,7 @@ function mka_kernel() {
         [gemstone]="dtboimage vendorbootimage"
         [lisa]="dtboimage vendor_dlkmimage vendorbootimage"
         [miatoll]="dtboimage"
-        [nairo]="dtboimage vendor_dlkmimage"
+        [nairo]="dtboimage vendorimage"
         [venus]="dtboimage vendor_dlkmimage vendorbootimage"
         [xaga]="vendor_dlkmimage vendorbootimage"
     )
