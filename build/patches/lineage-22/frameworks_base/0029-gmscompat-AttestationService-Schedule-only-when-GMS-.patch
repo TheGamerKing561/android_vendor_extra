@@ -1,7 +1,7 @@
-From 8d7dcbabb814c3a8e5f0181d9b05b422da15eaaa Mon Sep 17 00:00:00 2001
+From f35e44fa3d9b4950db59781642434a33fe5acc42 Mon Sep 17 00:00:00 2001
 From: SamarV-121 <samar@samarv121.dev>
 Date: Wed, 28 Feb 2024 16:23:53 +0530
-Subject: [PATCH 29/33] gmscompat: AttestationService: Schedule only when GMS
+Subject: [PATCH 29/34] gmscompat: AttestationService: Schedule only when GMS
  is installed
 
 Change-Id: I2852e8f4ffc95f535d7aeca5d78e29426e5902d7

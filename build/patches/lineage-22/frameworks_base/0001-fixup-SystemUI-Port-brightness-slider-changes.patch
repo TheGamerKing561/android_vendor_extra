@@ -1,7 +1,7 @@
-From 242575c201c43e2f6c121a1eed1fb8dc141e70b7 Mon Sep 17 00:00:00 2001
+From 9d86438f70a76ae1cad93a0f6f1480b968d3c74d Mon Sep 17 00:00:00 2001
 From: Oliver Scott <olivercscott@gmail.com>
 Date: Tue, 15 Apr 2025 16:45:20 -0400
-Subject: [PATCH 01/33] fixup! SystemUI: Port brightness slider changes
+Subject: [PATCH 01/34] fixup! SystemUI: Port brightness slider changes
 
 Issue: calyxos#3134
 Change-Id: I78659ae0eb579fdec60c7dee9eda93e7c5574324

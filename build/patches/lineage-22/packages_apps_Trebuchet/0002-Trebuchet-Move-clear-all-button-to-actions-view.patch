@@ -1,4 +1,4 @@
-From 130bb32edad22e08b017fbb917273c949a7e9872 Mon Sep 17 00:00:00 2001
+From fd56928b8110838abbfa050cc679c7634ce32d24 Mon Sep 17 00:00:00 2001
 From: Vachounet <vachounet@live.fr>
 Date: Mon, 26 Oct 2020 17:05:18 +0100
 Subject: [PATCH 2/3] Trebuchet: Move clear all button to actions view
@@ -138,5 +138,5 @@ index 6752775..0e7c740 100644
  
      @Override
 -- 
-2.48.1
+2.50.1
 

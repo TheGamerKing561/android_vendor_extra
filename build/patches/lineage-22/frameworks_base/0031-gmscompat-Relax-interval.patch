@@ -1,0 +1,28 @@
+From 84889d64f45c09da61e33284ea8907478e426463 Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Sat, 16 Aug 2025 03:11:07 +0200
+Subject: [PATCH 31/34] gmscompat: Relax interval
+
+Change-Id: Ia1cfaa658a6d01367faaf2d801af9b0504d20ef9
+---
+ .../java/com/android/server/gmscompat/AttestationService.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/services/core/java/com/android/server/gmscompat/AttestationService.java b/services/core/java/com/android/server/gmscompat/AttestationService.java
+index 37b926837..2f186ff8d 100644
+--- a/services/core/java/com/android/server/gmscompat/AttestationService.java
++++ b/services/core/java/com/android/server/gmscompat/AttestationService.java
+@@ -37,8 +37,8 @@ public final class AttestationService extends SystemService {
+ 
+     private static final String DATA_FILE = "gms_certified_props.json";
+ 
+-    private static final long INITIAL_DELAY = 0;
+-    private static final long INTERVAL = 5;
++    private static final long INITIAL_DELAY = 5;
++    private static final long INTERVAL = 120;
+ 
+     private static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
+     private static final boolean SPOOF_GMS =
+-- 
+2.50.1
+

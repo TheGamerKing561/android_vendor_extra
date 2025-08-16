@@ -1,4 +1,4 @@
-From db3f5f68be0ffacf4e26b6f395464fa0d7bfb3e6 Mon Sep 17 00:00:00 2001
+From d7e73f6d042412f7fd472010cf45255848e96d65 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Thu, 7 Nov 2024 21:48:23 +0100
 Subject: [PATCH 3/3] Launcher3: SysUiScrim: Hide top shadow
@@ -33,5 +33,5 @@ index d59fc19..b3aac60 100644
          mTopMaskBitmap = mHideSysUiScrim ? null : createDitheredAlphaMask(mTopMaskHeight,
                  new int[]{0x3DFFFFFF, 0x0AFFFFFF, 0x00FFFFFF},
 -- 
-2.48.1
+2.50.1
 

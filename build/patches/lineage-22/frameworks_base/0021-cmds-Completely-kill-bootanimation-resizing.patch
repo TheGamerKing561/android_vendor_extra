@@ -1,7 +1,7 @@
-From 25862ca9e141384a342c1ae6533c594bd749a56f Mon Sep 17 00:00:00 2001
+From 21120032d414f435bc23b74ea25ffc8b5e0b95ba Mon Sep 17 00:00:00 2001
 From: Vishalcj17 <vishalcj@aospa.co>
 Date: Tue, 27 Feb 2024 18:23:01 +0900
-Subject: [PATCH 21/33] cmds: Completely kill bootanimation resizing.
+Subject: [PATCH 21/34] cmds: Completely kill bootanimation resizing.
 
 02-27 14:46:25.818  1781  1909 V BootAnimation: Resizing the boot animation surface to 1440 3216
 
