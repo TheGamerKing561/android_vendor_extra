@@ -1,7 +1,7 @@
-From 97d8a6871fb71c7f4ce1b2dcd1eadb62051f7412 Mon Sep 17 00:00:00 2001
+From e87c103699329be722c1bfde83148c6a3b66150d Mon Sep 17 00:00:00 2001
 From: Oliver Scott <olivercscott@gmail.com>
 Date: Tue, 15 Apr 2025 14:15:50 -0400
-Subject: [PATCH 02/34] fixup! SystemUI: Add double tap to sleep gesture
+Subject: [PATCH 02/33] fixup! SystemUI: Add double tap to sleep gesture
 
 Issue: calyxos#3134
 Change-Id: Iee6fe3a037077713f5888e8757b2195524c4abf4

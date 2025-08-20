@@ -1,7 +1,7 @@
-From 84889d64f45c09da61e33284ea8907478e426463 Mon Sep 17 00:00:00 2001
+From dc0075a3d1f2d00db10980201cdc249830d907b2 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Sat, 16 Aug 2025 03:11:07 +0200
-Subject: [PATCH 31/34] gmscompat: Relax interval
+Subject: [PATCH 30/33] gmscompat: Relax interval
 
 Change-Id: Ia1cfaa658a6d01367faaf2d801af9b0504d20ef9
 ---
