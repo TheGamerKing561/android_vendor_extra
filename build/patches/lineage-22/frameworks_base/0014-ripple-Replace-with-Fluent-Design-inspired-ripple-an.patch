@@ -1,7 +1,7 @@
-From 972414a643d81cac685711d2fc70678a9521d233 Mon Sep 17 00:00:00 2001
+From d47340b1f6a277caeee4dfe6eb132ea5fb3a19d4 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 21:00:42 -0700
-Subject: [PATCH 14/33] ripple: Replace with Fluent Design-inspired ripple
+Subject: [PATCH 14/23] ripple: Replace with Fluent Design-inspired ripple
  animation
 
 This is a new GLSL ripple animation inspired by Microsoft's Fluent
@@ -253,5 +253,5 @@ index c2a7a84ad..99dba9635 100644
      private static final String SHADER = SHADER_UNIFORMS + SHADER_LIB + SHADER_MAIN;
      private static final double PI_ROTATE_RIGHT = Math.PI * 0.0078125;
 -- 
-2.50.1
+2.51.0
 

@@ -1,7 +1,7 @@
-From 0d24d930f9f3e2c7711ddad0547cc29978dba0b9 Mon Sep 17 00:00:00 2001
+From 617eeec0a56e45f7c541c42cf2e13b722ff532cf Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Sat, 16 Oct 2021 05:28:30 -0700
-Subject: [PATCH 13/33] display: Render screen-off fade animation in linear
+Subject: [PATCH 13/23] display: Render screen-off fade animation in linear
  sRGB space
 
 The sRGB transfer function is a piecewise function with linear and gamma
@@ -117,5 +117,5 @@ index 93d9b8d30..5b1aefa59 100644
          // Use textures
          GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 -- 
-2.50.1
+2.51.0
 

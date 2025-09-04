@@ -1,7 +1,7 @@
-From e644ca4b6bdb96d1cd6c414dd7259b1b861c065d Mon Sep 17 00:00:00 2001
+From fac3304e6cec2a1375771f4f84fdac927acf44ef Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 6 Apr 2021 15:55:54 -0700
-Subject: [PATCH 06/33] Revert "Pre-emptively take a snapshot when finishing an
+Subject: [PATCH 06/23] Revert "Pre-emptively take a snapshot when finishing an
  activity before changing visibility"
 
 This reverts commit 6dad90e5883db82c345a3ab592b26f0fd69fe28d.
@@ -58,10 +58,10 @@ Change-Id: Ib161679f1f3b83787f90b8ef7dcf46d246bb7c57
  1 file changed, 15 deletions(-)
 
 diff --git a/services/core/java/com/android/server/wm/ActivityRecord.java b/services/core/java/com/android/server/wm/ActivityRecord.java
-index 83ea4a616..e58305a36 100644
+index 6436f2227..a59f6f7a2 100644
 --- a/services/core/java/com/android/server/wm/ActivityRecord.java
 +++ b/services/core/java/com/android/server/wm/ActivityRecord.java
-@@ -387,8 +387,6 @@ import com.android.window.flags.Flags;
+@@ -388,8 +388,6 @@ import com.android.window.flags.Flags;
  
  import dalvik.annotation.optimization.NeverCompile;
  
@@ -70,7 +70,7 @@ index 83ea4a616..e58305a36 100644
  import org.xmlpull.v1.XmlPullParserException;
  
  import java.io.File;
-@@ -3721,19 +3719,6 @@ final class ActivityRecord extends WindowToken implements WindowManagerService.A
+@@ -3741,19 +3739,6 @@ final class ActivityRecord extends WindowToken implements WindowManagerService.A
                  }
                  mDisplayContent.prepareAppTransition(TRANSIT_CLOSE);
  
@@ -91,5 +91,5 @@ index 83ea4a616..e58305a36 100644
                  setVisibility(false);
                  // Propagate the last IME visibility in the same task, so the IME can show
 -- 
-2.50.1
+2.51.0
 

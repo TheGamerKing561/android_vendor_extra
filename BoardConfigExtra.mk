@@ -18,7 +18,3 @@ endif
 ifneq (,$(filter $(PRODUCT_DEVICE),xaga dodge))
 KERNEL_LTO := thin
 endif
-
-# Security patch level
-BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
-VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
