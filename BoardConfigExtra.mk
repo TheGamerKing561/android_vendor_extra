@@ -18,3 +18,11 @@ endif
 ifneq (,$(filter $(PRODUCT_DEVICE),xaga dodge))
 KERNEL_LTO := thin
 endif
+
+ifneq (,$(filter $(PRODUCT_DEVICE),miatoll))
+# Workaround for dirty flash: Freeze vendor & boot SPL
+# to the latest release to avoid clean flashes.
+# https://github.com/ItsVixano-releases/LineageOS_miatoll/releases/tag/20250415
+BOOT_SECURITY_PATCH := 2025-04-05
+VENDOR_SECURITY_PATCH := 2025-04-05
+endif
