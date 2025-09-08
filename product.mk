@@ -18,7 +18,7 @@ $(call inherit-product-if-exists, vendor/xiaomi/miuicamera-$(VENDOR_EXTRA_TARGET
 # Inherit Pixel clocks Makefile
 $(call inherit-product, vendor/pixel_clocks/product.mk)
 
-ifneq ($(filter dodge lisa nairo venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+ifneq ($(filter dodge lisa nairo tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 # NFC
 $(call soong_config_set,lineage_extra,product_has_nfc,true)
 endif
