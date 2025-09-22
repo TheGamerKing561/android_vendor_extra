@@ -1,0 +1,217 @@
+From 6e159b60c9fe46830aaa3e7d4cce2e8ef2111174 Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Tue, 23 Sep 2025 00:03:36 +0200
+Subject: [PATCH] Revert "dodge: Import status bar dimensions from stock"
+
+This reverts commit 9b90581262c9133495bb4cef639ece9d7a93a15c.
+---
+ .../res/values-land/dimens.xml                | 17 +++++++++++++++++
+ .../res/values-sw320dp/dimens.xml             | 16 ----------------
+ .../res/values-sw360dp/dimens.xml             | 16 ----------------
+ .../res/values-sw411dp/dimens.xml             | 16 ----------------
+ .../res/values/dimens.xml                     | 19 ++++++++++---------
+ .../res/drawable/rounded.xml                  | 14 ++++++++++++++
+ .../res/values-land/dimens.xml                | 17 +++++++++++++++++
+ .../res/values/dimens.xml                     | 14 +++++++++++++-
+ 8 files changed, 71 insertions(+), 58 deletions(-)
+ create mode 100644 overlay/OPlusFrameworksResTarget/res/values-land/dimens.xml
+ delete mode 100644 overlay/OPlusFrameworksResTarget/res/values-sw320dp/dimens.xml
+ delete mode 100644 overlay/OPlusFrameworksResTarget/res/values-sw360dp/dimens.xml
+ delete mode 100644 overlay/OPlusFrameworksResTarget/res/values-sw411dp/dimens.xml
+ create mode 100644 overlay/OPlusSystemUIResTarget/res/drawable/rounded.xml
+ create mode 100644 overlay/OPlusSystemUIResTarget/res/values-land/dimens.xml
+
+diff --git a/overlay/OPlusFrameworksResTarget/res/values-land/dimens.xml b/overlay/OPlusFrameworksResTarget/res/values-land/dimens.xml
+new file mode 100644
+index 0000000..73f4405
+--- /dev/null
++++ b/overlay/OPlusFrameworksResTarget/res/values-land/dimens.xml
+@@ -0,0 +1,17 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++     Copyright (C) 2023 The LineageOS Project
++     SPDX-License-Identifier: Apache-2.0
++-->
++<resources>
++
++    <!-- Height of the status bar.
++         Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
++         -->
++    <dimen name="status_bar_height">98px</dimen>
++
++    <!-- The default height of the status bar used in {@link SystemBarUtils#getStatusBarHeight} to
++         calculate the status bar height. -->
++    <dimen name="status_bar_height_default">@dimen/status_bar_height</dimen>
++
++</resources>
+diff --git a/overlay/OPlusFrameworksResTarget/res/values-sw320dp/dimens.xml b/overlay/OPlusFrameworksResTarget/res/values-sw320dp/dimens.xml
+deleted file mode 100644
+index dbce6c0..0000000
+--- a/overlay/OPlusFrameworksResTarget/res/values-sw320dp/dimens.xml
++++ /dev/null
+@@ -1,16 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<!--
+-     Copyright (C) 2025 The LineageOS Project
+-     SPDX-License-Identifier: Apache-2.0
+--->
+-<resources>
+-    <!-- Height of the status bar in portrait.
+-         Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
+-         -->
+-    <dimen name="status_bar_height_portrait">35.56dp</dimen>
+-
+-    <!-- Height of the status bar in landscape.
+-         Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
+-         -->
+-    <dimen name="status_bar_height_landscape">35.56dp</dimen>
+-</resources>
+diff --git a/overlay/OPlusFrameworksResTarget/res/values-sw360dp/dimens.xml b/overlay/OPlusFrameworksResTarget/res/values-sw360dp/dimens.xml
+deleted file mode 100644
+index d7b844e..0000000
+--- a/overlay/OPlusFrameworksResTarget/res/values-sw360dp/dimens.xml
++++ /dev/null
+@@ -1,16 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<!--
+-     Copyright (C) 2025 The LineageOS Project
+-     SPDX-License-Identifier: Apache-2.0
+--->
+-<resources>
+-    <!-- Height of the status bar in portrait.
+-         Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
+-         -->
+-    <dimen name="status_bar_height_portrait">40dp</dimen>
+-
+-    <!-- Height of the status bar in landscape.
+-         Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
+-         -->
+-    <dimen name="status_bar_height_landscape">40dp</dimen>
+-</resources>
+diff --git a/overlay/OPlusFrameworksResTarget/res/values-sw411dp/dimens.xml b/overlay/OPlusFrameworksResTarget/res/values-sw411dp/dimens.xml
+deleted file mode 100644
+index 646a64f..0000000
+--- a/overlay/OPlusFrameworksResTarget/res/values-sw411dp/dimens.xml
++++ /dev/null
+@@ -1,16 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<!--
+-     Copyright (C) 2025 The LineageOS Project
+-     SPDX-License-Identifier: Apache-2.0
+--->
+-<resources>
+-    <!-- Height of the status bar in portrait.
+-         Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
+-         -->
+-    <dimen name="status_bar_height_portrait">45.67dp</dimen>
+-
+-    <!-- Height of the status bar in landscape.
+-         Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
+-         -->
+-    <dimen name="status_bar_height_landscape">45.67dp</dimen>
+-</resources>
+diff --git a/overlay/OPlusFrameworksResTarget/res/values/dimens.xml b/overlay/OPlusFrameworksResTarget/res/values/dimens.xml
+index 56f21b4..168df3d 100644
+--- a/overlay/OPlusFrameworksResTarget/res/values/dimens.xml
++++ b/overlay/OPlusFrameworksResTarget/res/values/dimens.xml
+@@ -1,19 +1,20 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <!--
+-     Copyright (C) 2022-2025 The LineageOS Project
++     Copyright (C) 2022 The LineageOS Project
+      SPDX-License-Identifier: Apache-2.0
+ -->
+ <resources>
+-    <!-- Default radius of the software rounded corners. -->
+-    <dimen name="rounded_corner_radius">112px</dimen>
+ 
+-    <!-- Height of the status bar in portrait.
++    <!-- Height of the status bar.
+          Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
+          -->
+-    <dimen name="status_bar_height_portrait">40dp</dimen>
++    <dimen name="status_bar_height">110px</dimen>
++
++    <!-- The default height of the status bar used in {@link SystemBarUtils#getStatusBarHeight} to
++         calculate the status bar height. -->
++    <dimen name="status_bar_height_default">@dimen/status_bar_height</dimen>
++
++    <!-- Default radius of the software rounded corners. -->
++    <dimen name="rounded_corner_radius">8dp</dimen>
+ 
+-    <!-- Height of the status bar in landscape.
+-         Do not read this dimen directly. Use {@link SystemBarUtils#getStatusBarHeight} instead.
+-         -->
+-    <dimen name="status_bar_height_landscape">40dp</dimen>
+ </resources>
+diff --git a/overlay/OPlusSystemUIResTarget/res/drawable/rounded.xml b/overlay/OPlusSystemUIResTarget/res/drawable/rounded.xml
+new file mode 100644
+index 0000000..1dd3baa
+--- /dev/null
++++ b/overlay/OPlusSystemUIResTarget/res/drawable/rounded.xml
+@@ -0,0 +1,14 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="209px"
++    android:height="209px"
++    android:viewportWidth="209"
++    android:viewportHeight="209">
++
++    <path
++        android:fillColor="#ff000000"
++        android:pathData="M196.755,-0L-0,-0L-0,208.273C-0,116.958 2.154,70.516 39.062,36.485C75.202,3.163 108.538,-0 196.755,-0Z"
++        android:strokeColor="#00000000"
++        android:strokeWidth="1.0"
++        android:fillType="evenOdd" />
++
++</vector>
+diff --git a/overlay/OPlusSystemUIResTarget/res/values-land/dimens.xml b/overlay/OPlusSystemUIResTarget/res/values-land/dimens.xml
+new file mode 100644
+index 0000000..19c6bfa
+--- /dev/null
++++ b/overlay/OPlusSystemUIResTarget/res/values-land/dimens.xml
+@@ -0,0 +1,17 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++     Copyright (C) 2022 The LineageOS Project
++     SPDX-License-Identifier: Apache-2.0
++-->
++<resources>
++
++    <!-- the padding on the start of the statusbar -->
++    <dimen name="status_bar_padding_start">63px</dimen>
++
++    <!-- the padding on the end of the statusbar -->
++    <dimen name="status_bar_padding_end">33px</dimen>
++
++    <!-- the padding on the top of the statusbar (usually 0) -->
++    <dimen name="status_bar_padding_top">4px</dimen>
++
++</resources>
+diff --git a/overlay/OPlusSystemUIResTarget/res/values/dimens.xml b/overlay/OPlusSystemUIResTarget/res/values/dimens.xml
+index 63588cf..fa4edec 100644
+--- a/overlay/OPlusSystemUIResTarget/res/values/dimens.xml
++++ b/overlay/OPlusSystemUIResTarget/res/values/dimens.xml
+@@ -13,7 +13,19 @@
+     <item name="pixel_pitch" format="float" type="dimen">49.49</item>
+ 
+     <!-- the padding on the start of the statusbar -->
+-    <dimen name="status_bar_padding_start">8dp</dimen>
++    <dimen name="status_bar_padding_start">60px</dimen>
++
++    <!-- the padding on the end of the statusbar -->
++    <dimen name="status_bar_padding_end">16px</dimen>
++
++    <!-- the padding on the top of the statusbar (usually 0) -->
++    <dimen name="status_bar_padding_top">16px</dimen>
++
++    <!-- Height of the status bar header bar when on Keyguard -->
++    <dimen name="status_bar_header_height_keyguard">@*android:dimen/status_bar_height</dimen>
++
++    <!-- Margin on the left side of the carrier text on Keyguard -->
++    <dimen name="keyguard_carrier_text_margin">@dimen/status_bar_padding_start</dimen>
+ 
+     <!-- Location on the screen of the center of the physical power button. -->
+     <dimen name="physical_power_button_center_screen_location_y">1000px</dimen>
+-- 
+2.51.0
+
