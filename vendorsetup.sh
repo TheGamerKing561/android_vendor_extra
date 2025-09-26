@@ -171,6 +171,7 @@ function mka_kernel() {
         [lisa]="dtboimage vendor_dlkmimage vendorbootimage"
         [miatoll]="dtboimage"
         [nairo]="dtboimage vendorimage"
+        [racer]="dtboimage vendorimage"
         [venus]="dtboimage vendor_dlkmimage vendorbootimage"
         [xaga]="vendor_dlkmimage vendorbootimage"
     )
