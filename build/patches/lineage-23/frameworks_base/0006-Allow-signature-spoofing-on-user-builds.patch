@@ -1,0 +1,126 @@
+From 3f7bbb95d0bd36ce5fa0c9305dab8bdb5b735380 Mon Sep 17 00:00:00 2001
+From: Pranav Vashi <neobuddy89@gmail.com>
+Date: Sat, 16 Mar 2024 20:01:22 +0530
+Subject: [PATCH 6/7] Allow signature spoofing on user builds
+
+* This is custom rom breaking google's integrity check.
+
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ .../com/android/server/pm/ComputerEngine.java |  6 ---
+ services/core/jni/Android.bp                  |  7 ----
+ .../com_android_server_pm_ComputerEngine.cpp  | 38 -------------------
+ services/core/jni/onload.cpp                  |  2 -
+ 4 files changed, 53 deletions(-)
+ delete mode 100644 services/core/jni/com_android_server_pm_ComputerEngine.cpp
+
+diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
+index 7117beecf..ba2632a81 100644
+--- a/services/core/java/com/android/server/pm/ComputerEngine.java
++++ b/services/core/java/com/android/server/pm/ComputerEngine.java
+@@ -1490,13 +1490,7 @@ public class ComputerEngine implements Computer {
+         return result;
+     }
+ 
+-    private static native boolean isDebuggable();
+-
+     public static boolean isMicrogSigned(AndroidPackage p) {
+-        if (!isDebuggable()) {
+-            return false;
+-        }
+-
+         // Allowlist the following apps:
+         // * com.android.vending - microG Companion
+         // * com.google.android.gms - microG Services
+diff --git a/services/core/jni/Android.bp b/services/core/jni/Android.bp
+index 9057f4fe1..2606a5aca 100644
+--- a/services/core/jni/Android.bp
++++ b/services/core/jni/Android.bp
+@@ -71,7 +71,6 @@ cc_library_static {
+         "com_android_server_vibrator_VibratorManagerService.cpp",
+         "com_android_server_pdb_PersistentDataBlockService.cpp",
+         "com_android_server_am_LowMemDetector.cpp",
+-        "com_android_server_pm_ComputerEngine.cpp",
+         "com_android_server_pm_PackageManagerShellCommandDataLoader.cpp",
+         "com_android_server_sensor_SensorService.cpp",
+         "com_android_server_wm_TaskFpsCallbackController.cpp",
+@@ -96,12 +95,6 @@ cc_library_static {
+     header_libs: [
+         "bionic_libc_platform_headers",
+     ],
+-
+-    product_variables: {
+-        debuggable: {
+-            cflags: ["-DANDROID_DEBUGGABLE"],
+-        }
+-    },
+ }
+ 
+ cc_defaults {
+diff --git a/services/core/jni/com_android_server_pm_ComputerEngine.cpp b/services/core/jni/com_android_server_pm_ComputerEngine.cpp
+deleted file mode 100644
+index bbe298097..000000000
+--- a/services/core/jni/com_android_server_pm_ComputerEngine.cpp
++++ /dev/null
+@@ -1,38 +0,0 @@
+-/*
+- * Copyright (C) 2024 The LineageOS Project
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-#include <nativehelper/JNIHelp.h>
+-
+-namespace android {
+-
+-static bool isDebuggable(JNIEnv* env) {
+-#ifdef ANDROID_DEBUGGABLE
+-    return true;
+-#else
+-    return false;
+-#endif
+-}
+-
+-static const JNINativeMethod method_table[] = {
+-        {"isDebuggable", "()Z", (void*)isDebuggable},
+-};
+-
+-int register_android_server_com_android_server_pm_ComputerEngine(JNIEnv* env) {
+-    return jniRegisterNativeMethods(env, "com/android/server/pm/ComputerEngine",
+-                                    method_table, NELEM(method_table));
+-}
+-
+-} // namespace android
+diff --git a/services/core/jni/onload.cpp b/services/core/jni/onload.cpp
+index d9b9542d8..569383e71 100644
+--- a/services/core/jni/onload.cpp
++++ b/services/core/jni/onload.cpp
+@@ -59,7 +59,6 @@ int register_android_server_utils_AnrTimer(JNIEnv *env);
+ int register_android_server_utils_LazyJniRegistrar(JNIEnv* env);
+ int register_com_android_server_soundtrigger_middleware_AudioSessionProviderImpl(JNIEnv* env);
+ int register_com_android_server_soundtrigger_middleware_ExternalCaptureStateTracker(JNIEnv* env);
+-int register_android_server_com_android_server_pm_ComputerEngine(JNIEnv* env);
+ int register_android_server_com_android_server_pm_PackageManagerShellCommandDataLoader(JNIEnv* env);
+ int register_android_server_AdbDebuggingManager(JNIEnv* env);
+ int register_android_server_FaceService(JNIEnv* env);
+@@ -128,7 +127,6 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void* /* reserved */)
+     register_android_server_utils_LazyJniRegistrar(env);
+     register_com_android_server_soundtrigger_middleware_AudioSessionProviderImpl(env);
+     register_com_android_server_soundtrigger_middleware_ExternalCaptureStateTracker(env);
+-    register_android_server_com_android_server_pm_ComputerEngine(env);
+     register_android_server_com_android_server_pm_PackageManagerShellCommandDataLoader(env);
+     register_android_server_AdbDebuggingManager(env);
+     register_android_server_FaceService(env);
+-- 
+2.51.0
+

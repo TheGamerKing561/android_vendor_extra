@@ -1,0 +1,37 @@
+From 0c61abe06e26d9d1fd3378a6ae9856f5df4b6de2 Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Thu, 7 Nov 2024 21:48:23 +0100
+Subject: [PATCH 3/3] Launcher3: SysUiScrim: Hide top shadow
+
+ref: https://issuetracker.google.com/issues/265539047
+
+Change-Id: I8e7c4d24ab40ad14ec7349cd52d50f27f8b382e3
+---
+ src/com/android/launcher3/graphics/SysUiScrim.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/com/android/launcher3/graphics/SysUiScrim.java b/src/com/android/launcher3/graphics/SysUiScrim.java
+index 6f1d98f..d9440ec 100644
+--- a/src/com/android/launcher3/graphics/SysUiScrim.java
++++ b/src/com/android/launcher3/graphics/SysUiScrim.java
+@@ -86,7 +86,7 @@ public class SysUiScrim implements View.OnAttachStateChangeListener {
+ 
+     private final View mRoot;
+     private final StatefulContainer mContainer;
+-    private final boolean mHideSysUiScrim;
++    private static final boolean mHideSysUiScrim = true;
+     private boolean mSkipScrimAnimationForTest = false;
+ 
+     private boolean mAnimateScrimOnNextDraw = false;
+@@ -100,7 +100,7 @@ public class SysUiScrim implements View.OnAttachStateChangeListener {
+ 
+         mTopMaskHeight = ResourceUtils.pxFromDp(TOP_MASK_HEIGHT_DP, dm);
+         mBottomMaskHeight = ResourceUtils.pxFromDp(BOTTOM_MASK_HEIGHT_DP, dm);
+-        mHideSysUiScrim = Themes.getAttrBoolean(view.getContext(), R.attr.isWorkspaceDarkText);
++        // mHideSysUiScrim = Themes.getAttrBoolean(view.getContext(), R.attr.isWorkspaceDarkText);
+ 
+         mTopMaskBitmap = mHideSysUiScrim ? null : createDitheredAlphaMask(mTopMaskHeight,
+                 new int[]{0x3DFFFFFF, 0x0AFFFFFF, 0x00FFFFFF},
+-- 
+2.51.0
+
