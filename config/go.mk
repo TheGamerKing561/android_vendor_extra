@@ -6,9 +6,6 @@
 # Dexpreopt
 WITH_DEXPREOPT_DEBUG_INFO := false
 
-# Disable debugging in userdebug builds
-PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG := true
-
 # Enable whole-program R8 Java optimizations for SystemUI and system_server,
 SYSTEM_OPTIMIZE_JAVA := true
 SYSTEMUI_OPTIMIZE_JAVA := true

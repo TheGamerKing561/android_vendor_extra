@@ -1,4 +1,4 @@
-From b45218c8bbaa7318d8263328ea95242a79820498 Mon Sep 17 00:00:00 2001
+From d7ef250259bfed47c0212850c2716e7dc9869401 Mon Sep 17 00:00:00 2001
 From: Alexander Martinz <amartinz@shiftphones.com>
 Date: Fri, 27 Aug 2021 13:37:54 +0200
 Subject: [PATCH 2/2] init: reboot to recovery on panic by default to allow
@@ -27,5 +27,5 @@ index 547b1869f3..dd0fbbfe81 100644
  
  // this needs to read the /proc/* files directly because it is called before
 -- 
-2.49.0
+2.51.0
 
