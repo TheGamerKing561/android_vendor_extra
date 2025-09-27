@@ -15,3 +15,9 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # Log tag
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.log.tag.HWUI=S
+
+ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+# Display
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.sys.activity_anim_perf_override=true
+endif

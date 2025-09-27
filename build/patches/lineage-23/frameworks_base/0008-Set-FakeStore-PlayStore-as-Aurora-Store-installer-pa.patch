@@ -1,7 +1,7 @@
-From ea31986d275557552a74c89e99676ec83ae16ec9 Mon Sep 17 00:00:00 2001
+From 6778bd762c5442ea3bcdc9622ceffba9a7d960d3 Mon Sep 17 00:00:00 2001
 From: Oliver Scott <olivercscott@gmail.com>
 Date: Thu, 5 Jan 2023 22:37:42 -0500
-Subject: [PATCH 7/7] Set FakeStore/PlayStore as Aurora Store installer package
+Subject: [PATCH 8/8] Set FakeStore/PlayStore as Aurora Store installer package
  name
 
 Issue: calyxos#240
