@@ -1,0 +1,36 @@
+From 4da49fceb127bc98bbb7638c7edeea9fd49a06f7 Mon Sep 17 00:00:00 2001
+From: Pranav Vashi <neobuddy89@gmail.com>
+Date: Fri, 28 Oct 2022 23:18:18 +0530
+Subject: [PATCH 4/4] Launcher3: Refresh themed icons after OTA update
+
+Change-Id: I17e78fe5962c0ee5dafa907337811cf97578d008
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ src/com/android/launcher3/icons/LauncherIconProvider.java | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/com/android/launcher3/icons/LauncherIconProvider.java b/src/com/android/launcher3/icons/LauncherIconProvider.java
+index 7241198..7dfa602 100644
+--- a/src/com/android/launcher3/icons/LauncherIconProvider.java
++++ b/src/com/android/launcher3/icons/LauncherIconProvider.java
+@@ -21,6 +21,7 @@ import android.content.res.Resources;
+ import android.content.res.XmlResourceParser;
+ import android.graphics.drawable.AdaptiveIconDrawable;
+ import android.graphics.drawable.Drawable;
++import android.os.Build;
+ import android.text.TextUtils;
+ import android.util.ArrayMap;
+ import android.util.Log;
+@@ -88,7 +89,8 @@ public class LauncherIconProvider extends IconProvider {
+     @Override
+     public void updateSystemState() {
+         super.updateSystemState();
+-        mSystemState += "," + mThemeManager.getIconState().toUniqueId();
++        mSystemState += "," + mThemeManager.getIconState().toUniqueId()
++            + Build.VERSION.INCREMENTAL;
+     }
+ 
+     @Override
+-- 
+2.51.0
+
