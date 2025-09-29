@@ -1,0 +1,319 @@
+From fb5126b2e1f0cb5ea48cf3b995987a67601dd913 Mon Sep 17 00:00:00 2001
+From: Tommy Webb <tommy@calyxinstitute.org>
+Date: Tue, 11 Jun 2024 18:52:16 +0000
+Subject: [PATCH 1/2] Multiple work profile badge colors for Launcher3
+
+Original-Change-Id: I64f1b425eee5cc7994616050411a881d84ece99d
+Original-Change-Id-2: I9b9f01a8e483ee3de1c11a82e8b569537308596d
+Change-Id: Id1541fe766dfe12a458e42fb2c26fcb51b9003a6
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ iconloaderlib/res/values-night-v31/colors.xml |  2 +
+ iconloaderlib/res/values-night/colors.xml     |  2 +
+ iconloaderlib/res/values-v31/colors.xml       |  2 +
+ iconloaderlib/res/values/colors.xml           |  7 +-
+ .../launcher3/icons/BaseIconFactory.java      | 86 +++++++++++++++++++
+ .../android/launcher3/icons/BitmapInfo.java   | 31 +++++++
+ .../launcher3/icons/cache/BaseIconCache.java  | 10 ++-
+ 7 files changed, 133 insertions(+), 7 deletions(-)
+
+diff --git a/iconloaderlib/res/values-night-v31/colors.xml b/iconloaderlib/res/values-night-v31/colors.xml
+index e5ebda6..5ed9e2a 100644
+--- a/iconloaderlib/res/values-night-v31/colors.xml
++++ b/iconloaderlib/res/values-night-v31/colors.xml
+@@ -19,6 +19,8 @@
+ <resources>
+     <color name="themed_icon_color">@android:color/system_accent1_200</color>
+     <color name="themed_icon_background_color">@android:color/system_accent2_800</color>
++    <!-- Fallback colors specified in main colors.xml
+     <color name="themed_badge_icon_color">@android:color/system_accent2_800</color>
+     <color name="themed_badge_icon_background_color">@android:color/system_accent1_200</color>
++    -->
+ </resources>
+diff --git a/iconloaderlib/res/values-night/colors.xml b/iconloaderlib/res/values-night/colors.xml
+index 9de7074..f7b1558 100644
+--- a/iconloaderlib/res/values-night/colors.xml
++++ b/iconloaderlib/res/values-night/colors.xml
+@@ -19,6 +19,8 @@
+ <resources>
+     <color name="themed_icon_color">#A8C7FA</color>
+     <color name="themed_icon_background_color">#003355</color>
++    <!-- Fallback colors specified in main colors.xml
+     <color name="themed_badge_icon_color">#003355</color>
+     <color name="themed_badge_icon_background_color">#A8C7FA</color>
++    -->
+ </resources>
+diff --git a/iconloaderlib/res/values-v31/colors.xml b/iconloaderlib/res/values-v31/colors.xml
+index 1405ad0..b1e7492 100644
+--- a/iconloaderlib/res/values-v31/colors.xml
++++ b/iconloaderlib/res/values-v31/colors.xml
+@@ -19,6 +19,8 @@
+ <resources>
+     <color name="themed_icon_color">@android:color/system_accent1_700</color>
+     <color name="themed_icon_background_color">@android:color/system_accent1_100</color>
++    <!-- Fallback colors specified in main colors.xml
+     <color name="themed_badge_icon_color">@android:color/system_accent1_700</color>
+     <color name="themed_badge_icon_background_color">@android:color/system_accent1_100</color>
++    -->
+ </resources>
+diff --git a/iconloaderlib/res/values/colors.xml b/iconloaderlib/res/values/colors.xml
+index 56ae0b6..6b7a484 100644
+--- a/iconloaderlib/res/values/colors.xml
++++ b/iconloaderlib/res/values/colors.xml
+@@ -19,11 +19,12 @@
+ <resources>
+     <color name="themed_icon_color">#0842A0</color>
+     <color name="themed_icon_background_color">#D3E3FD</color>
+-    <color name="themed_badge_icon_color">#0842A0</color>
+-    <color name="themed_badge_icon_background_color">#D3E3FD</color>
++    <!-- Grayscale work badge icon color used for fallback only (system provides colorized icon) -->
++    <color name="themed_badge_icon_color">#AAAAAA</color>
++    <color name="themed_badge_icon_background_color">#222222</color>
+ 
+     <color name="badge_tint_instant">@android:color/black</color>
+-    <color name="badge_tint_work">#1A73E8</color>
++    <color name="badge_tint_work">@color/themed_badge_icon_color</color>
+     <color name="badge_tint_private">#3C4043</color>
+     <color name="badge_tint_clone">#ff3C4043</color>
+ 
+diff --git a/iconloaderlib/src/com/android/launcher3/icons/BaseIconFactory.java b/iconloaderlib/src/com/android/launcher3/icons/BaseIconFactory.java
+index f3f9d1e..912c27e 100644
+--- a/iconloaderlib/src/com/android/launcher3/icons/BaseIconFactory.java
++++ b/iconloaderlib/src/com/android/launcher3/icons/BaseIconFactory.java
+@@ -30,7 +30,9 @@ import android.graphics.drawable.Drawable;
+ import android.graphics.drawable.DrawableWrapper;
+ import android.graphics.drawable.InsetDrawable;
+ import android.os.Build;
++import android.os.Process;
+ import android.os.UserHandle;
++import android.util.Pair;
+ import android.util.SparseArray;
+ 
+ import androidx.annotation.ColorInt;
+@@ -43,6 +45,8 @@ import com.android.launcher3.util.FlagOp;
+ import com.android.launcher3.util.UserIconInfo;
+ 
+ import java.lang.annotation.Retention;
++import java.util.LinkedHashMap;
++import java.util.Map;
+ 
+ /**
+  * This class will be moved to androidx library. There shouldn't be any dependency outside
+@@ -103,6 +107,19 @@ public class BaseIconFactory implements AutoCloseable {
+     private Drawable mWrapperIcon;
+     private int mWrapperBackgroundColor = DEFAULT_WRAPPER_BACKGROUND;
+ 
++    // User badges cached by size, e.g. workspace badge (large) vs widget badge (small)
++    private final LinkedHashMap<Pair<UserHandle, Integer>, Bitmap> mUserBadges =
++            new LinkedHashMap<>() {
++        // This *is* a cache, so it shouldn't grow forever. Lazily limit it by number of entries.
++        // We will likely only be dealing with 2 different sizes; multiply that by the number of
++        // profiles + 1 for the current user, and we really don't need much room. This is plenty.
++        private static final int MAX_ENTRIES = 50;
++        @Override
++        protected boolean removeEldestEntry(Map.Entry eldest) {
++            return size() > MAX_ENTRIES;
++        }
++    };
++
+     private static int PLACEHOLDER_BACKGROUND_COLOR = Color.rgb(245, 245, 245);
+ 
+     protected BaseIconFactory(Context context, int fullResIconDpi, int iconBitmapSize,
+@@ -245,6 +262,13 @@ public class BaseIconFactory implements AutoCloseable {
+         } else if (IconProvider.ATLEAST_T && mThemeController != null && adaptiveIcon != null) {
+             info.setThemedBitmap(mThemeController.createThemedBitmap(adaptiveIcon, info, this));
+         }
++        if (options != null) {
++            final UserHandle user = options.mUserHandle != null ? options.mUserHandle
++                    : (options.mUserIconInfo != null ? options.mUserIconInfo.user : null);
++            if (user != null) {
++                info.setUser(user, this);
++            }
++        }
+         info = info.withFlags(getBitmapFlagOp(options));
+         return info;
+     }
+@@ -483,6 +507,68 @@ public class BaseIconFactory implements AutoCloseable {
+         return createBadgedIconBitmap(iconProvider.getFullResDefaultActivityIcon(mFullResIconDpi));
+     }
+ 
++    public Drawable getBadgeForUser(UserHandle user) {
++        return getBadgeForUser(user, mIconBitmapSize);
++    }
++
++    /**
++     * Returns a drawable that can be used as a badge for the user or null.
++     */
++    // @UiThread
++    public Drawable getBadgeForUser(UserHandle user, int iconSize) {
++        final int badgeSize = getBadgeSizeForIconSize(iconSize);
++        Bitmap badgeBitmap = getUserBadge(user, badgeSize);
++        FastBitmapDrawable d = new FastBitmapDrawable(badgeBitmap);
++        d.setFilterBitmap(true);
++        d.setBounds(0 /* left */, 0 /* top */, badgeBitmap.getWidth(), badgeBitmap.getHeight());
++        return d;
++    }
++
++    private Bitmap getUserBadge(UserHandle user, int badgeSize) {
++        if (badgeSize > mIconBitmapSize) {
++            throw new IllegalArgumentException("badgeSize cannot be larger than mIconBitmapSize: "
++                    + "got " + badgeSize + ", expected less than or equal to " + mIconBitmapSize);
++        }
++        Pair<UserHandle, Integer> userBadgeOfSize = new Pair<>(user, badgeSize);
++        synchronized (mUserBadges) {
++            Bitmap badgeBitmap = mUserBadges.get(userBadgeOfSize);
++            if (badgeBitmap != null) {
++                return badgeBitmap;
++            }
++
++            final Resources res = mContext.getResources();
++            Bitmap badgedBitmap = Bitmap.createBitmap(
++                    mIconBitmapSize, mIconBitmapSize, Bitmap.Config.ARGB_8888);
++
++            // PackageManager's getUserBadgedDrawableForDensity results in a giant work profile
++            // icon that extends outside of the badge icon's circle, seemingly no matter what
++            // arguments are provided. getUserBadgeForDensity is not even exposed (hidden).
++            // So, unfortunately, we draw into a full icon size Bitmap and then crop out the
++            // badge from the corner.
++            Drawable drawable = mContext.getPackageManager().getUserBadgedIcon(
++                    new BitmapDrawable(res, badgedBitmap), user);
++            /* Drawable drawable = mContext.getPackageManager().getUserBadgedDrawableForDensity(
++                    new BitmapDrawable(res, badgeBitmap), user,
++                    new Rect(0, 0, badgeSize, badgeSize),
++                    0); */
++            if (drawable instanceof BitmapDrawable) {
++                badgedBitmap = ((BitmapDrawable) drawable).getBitmap();
++            } else {
++                badgedBitmap.eraseColor(Color.TRANSPARENT);
++                Canvas c = new Canvas(badgedBitmap);
++                drawable.setBounds(0, 0, badgeSize, badgeSize);
++                drawable.draw(c);
++                c.setBitmap(null);
++            }
++            final int cropOffset = Math.max(mIconBitmapSize - badgeSize, 0);
++            badgeBitmap = Bitmap.createBitmap(badgedBitmap,
++                    cropOffset /* x */, cropOffset /* y */,
++                    badgeSize /* width */, badgeSize /* height */);
++            mUserBadges.put(userBadgeOfSize, badgeBitmap);
++            return badgeBitmap;
++        }
++    }
++
+     /**
+      * Returns the correct badge size given an icon size
+      */
+diff --git a/iconloaderlib/src/com/android/launcher3/icons/BitmapInfo.java b/iconloaderlib/src/com/android/launcher3/icons/BitmapInfo.java
+index 480061a..63d6d3c 100644
+--- a/iconloaderlib/src/com/android/launcher3/icons/BitmapInfo.java
++++ b/iconloaderlib/src/com/android/launcher3/icons/BitmapInfo.java
+@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
+ import android.graphics.Bitmap.Config;
+ import android.graphics.Canvas;
+ import android.graphics.drawable.Drawable;
++import android.os.UserHandle;
+ 
+ import androidx.annotation.IntDef;
+ import androidx.annotation.NonNull;
+@@ -65,6 +66,12 @@ public class BitmapInfo {
+     public @BitmapInfoFlags int flags;
+     private BitmapInfo badgeInfo;
+ 
++    @Nullable
++    private UserHandle mUserHandle;
++
++    @Nullable
++    private Drawable mUserBadge;
++
+     public BitmapInfo(Bitmap icon, int color) {
+         this.icon = icon;
+         this.color = color;
+@@ -88,10 +95,18 @@ public class BitmapInfo {
+         return result;
+     }
+ 
++    public BitmapInfo withUser(@Nullable UserHandle user, @NonNull BaseIconFactory iconFactory) {
++        BitmapInfo result = clone();
++        result.setUser(user, iconFactory);
++        return result;
++    }
++
+     protected BitmapInfo copyInternalsTo(BitmapInfo target) {
+         target.mThemedBitmap = mThemedBitmap;
+         target.flags = flags;
+         target.badgeInfo = badgeInfo;
++        target.mUserHandle = mUserHandle;
++        target.mUserBadge = mUserBadge;
+         return target;
+     }
+ 
+@@ -109,6 +124,15 @@ public class BitmapInfo {
+         return mThemedBitmap;
+     }
+ 
++    public void setUser(@Nullable UserHandle user, @NonNull BaseIconFactory iconFactory) {
++        mUserHandle = user;
++        if (user != null) {
++            mUserBadge = iconFactory.getBadgeForUser(mUserHandle);
++        } else {
++            mUserBadge = null;
++        }
++    }
++
+     /**
+      * Ideally icon should not be null, except in cases when generating hardware bitmap failed
+      */
+@@ -127,6 +151,8 @@ public class BitmapInfo {
+         return !isNullOrLowRes();
+     }
+ 
++    public UserHandle getUser() { return mUserHandle; }
++
+     /**
+      * Creates a drawable for the provided BitmapInfo
+      */
+@@ -181,6 +207,11 @@ public class BitmapInfo {
+         }
+         if (skipUserBadge) {
+             return null;
++        } else if (mUserBadge != null) {
++            // We use a copy of the badge, or changes will affect everywhere it is used;
++            // e.g., shortcuts/widget user badges are very small, and these could affect
++            // regular launcher icons, and the other way around.
++            return mUserBadge.getConstantState().newDrawable().mutate();
+         } else if ((flags & FLAG_INSTANT) != 0) {
+             return new UserBadgeDrawable(context, R.drawable.ic_instant_app_badge,
+                     R.color.badge_tint_instant, isThemed);
+diff --git a/iconloaderlib/src/com/android/launcher3/icons/cache/BaseIconCache.java b/iconloaderlib/src/com/android/launcher3/icons/cache/BaseIconCache.java
+index 959f14d..bd37ec5 100644
+--- a/iconloaderlib/src/com/android/launcher3/icons/cache/BaseIconCache.java
++++ b/iconloaderlib/src/com/android/launcher3/icons/cache/BaseIconCache.java
+@@ -369,12 +369,12 @@ public abstract class BaseIconCache {
+ 
+     @NonNull
+     public synchronized BitmapInfo getDefaultIcon(@NonNull final UserHandle user) {
+-        if (mDefaultIcon == null) {
+-            try (BaseIconFactory li = getIconFactory()) {
++        try (BaseIconFactory li = getIconFactory()) {
++            if (mDefaultIcon == null) {
+                 mDefaultIcon = li.makeDefaultIcon(mIconProvider);
+             }
++            return mDefaultIcon.withUser(user, li);
+         }
+-        return mDefaultIcon.withFlags(getUserFlagOpLocked(user));
+     }
+ 
+     @NonNull
+@@ -704,7 +704,9 @@ public abstract class BaseIconCache {
+             }
+         }
+         entry.bitmap.flags = c.getInt(IconDB.INDEX_FLAGS);
+-        entry.bitmap = entry.bitmap.withFlags(getUserFlagOpLocked(cacheKey.user));
++        try (BaseIconFactory factory = getIconFactory()) {
++            entry.bitmap = entry.bitmap.withUser(cacheKey.user, factory);
++        }
+         return entry.bitmap != null;
+     }
+ 
+-- 
+2.51.0
+
