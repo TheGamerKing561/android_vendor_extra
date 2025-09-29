@@ -1,0 +1,45 @@
+From bc57985864b4bef4f976be30b394bcc0a8759151 Mon Sep 17 00:00:00 2001
+From: minaripenguin <minaripenguin@users.noreply.github.com>
+Date: Sat, 4 Jan 2025 19:27:02 +0800
+Subject: [PATCH 2/3] iconloaderlib: Update themed icons color palette
+
+* based from nothing os
+
+Signed-off-by: minaripenguin <minaripenguin@users.noreply.github.com>
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ iconloaderlib/res/values-night-v31/colors.xml | 2 +-
+ iconloaderlib/res/values-v31/colors.xml       | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/iconloaderlib/res/values-night-v31/colors.xml b/iconloaderlib/res/values-night-v31/colors.xml
+index 5ed9e2a..6ab6884 100644
+--- a/iconloaderlib/res/values-night-v31/colors.xml
++++ b/iconloaderlib/res/values-night-v31/colors.xml
+@@ -18,7 +18,7 @@
+ -->
+ <resources>
+     <color name="themed_icon_color">@android:color/system_accent1_200</color>
+-    <color name="themed_icon_background_color">@android:color/system_accent2_800</color>
++    <color name="themed_icon_background_color">@android:color/system_neutral1_900</color>
+     <!-- Fallback colors specified in main colors.xml
+     <color name="themed_badge_icon_color">@android:color/system_accent2_800</color>
+     <color name="themed_badge_icon_background_color">@android:color/system_accent1_200</color>
+diff --git a/iconloaderlib/res/values-v31/colors.xml b/iconloaderlib/res/values-v31/colors.xml
+index b1e7492..f64b3d4 100644
+--- a/iconloaderlib/res/values-v31/colors.xml
++++ b/iconloaderlib/res/values-v31/colors.xml
+@@ -17,8 +17,8 @@
+ */
+ -->
+ <resources>
+-    <color name="themed_icon_color">@android:color/system_accent1_700</color>
+-    <color name="themed_icon_background_color">@android:color/system_accent1_100</color>
++    <color name="themed_icon_color">@android:color/system_accent1_600</color>
++    <color name="themed_icon_background_color">@android:color/system_neutral1_50</color>
+     <!-- Fallback colors specified in main colors.xml
+     <color name="themed_badge_icon_color">@android:color/system_accent1_700</color>
+     <color name="themed_badge_icon_background_color">@android:color/system_accent1_100</color>
+-- 
+2.51.0
+
