@@ -1,7 +1,7 @@
-From caaaed875132a21cadf32b03a9968b77232b2962 Mon Sep 17 00:00:00 2001
+From 05bcb1233d577e282bc40150c9ec3339e7c26946 Mon Sep 17 00:00:00 2001
 From: Dmitry Muhomor <muhomor.dmitry@gmail.com>
 Date: Thu, 21 Mar 2024 17:18:31 +0200
-Subject: [PATCH] Revert "Remove strip.keep_symbols from libart defaults"
+Subject: [PATCH 2/2] Revert "Remove strip.keep_symbols from libart defaults"
 
 This reverts commit c7f5eb7654a9689f03dc0f038ad802758ed24623.
 ---
@@ -9,10 +9,10 @@ This reverts commit c7f5eb7654a9689f03dc0f038ad802758ed24623.
  1 file changed, 31 insertions(+)
 
 diff --git a/runtime/Android.bp b/runtime/Android.bp
-index 17f09cf..8def551 100644
+index c0a65f2..46ce959 100644
 --- a/runtime/Android.bp
 +++ b/runtime/Android.bp
-@@ -43,6 +43,37 @@ cc_defaults {
+@@ -44,6 +44,37 @@ cc_defaults {
                  "-Wno-unused-command-line-argument",
              ],
          },
@@ -51,5 +51,5 @@ index 17f09cf..8def551 100644
  }
  
 -- 
-2.45.2
+2.51.0
 
