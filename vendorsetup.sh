@@ -130,6 +130,7 @@ function mka_build() {
 
     # Build
     rm -rf out/target/product/"${DEVICE}"/lineage-*.zip &>/dev/null
+    rm -rf out/soong/.intermediates/vendor/lineage/build/soong/generated_kernel_includes &>/dev/null
     find out/target/product/"${DEVICE}" -name manifest.xml -delete &>/dev/null
     breakfast "${DEVICE}" "${BUILD_TYPE}"
 
