@@ -14,6 +14,13 @@ ifneq (,$(filter $(PRODUCT_DEVICE),dodge tiro xaga))
 KERNEL_LTO := thin
 endif
 
+# Partitions - reserved size
+ifeq ($(PRODUCT_USE_DYNAMIC_PARTITIONS), true)
+BOARD_ODMIMAGE_PARTITION_RESERVED_SIZE := 30720000
+BOARD_VENDORIMAGE_PARTITION_RESERVED_SIZE := 30720000
+endif
+
+# Security patch level
 ifeq ($(PRODUCT_DEVICE),miatoll)
 # Workaround for dirty flash: Freeze vendor & boot SPL
 # to the latest release to avoid clean flashes.
