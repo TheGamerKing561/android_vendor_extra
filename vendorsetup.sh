@@ -15,6 +15,9 @@ export ART_BUILD_TARGET_DEBUG=false
 export ART_BUILD_HOST_DEBUG=false
 export USE_DEX2OAT_DEBUG=false
 
+# HAX
+export LINEAGE_FIXUP_COMMON_OUT=true
+
 # Defs
 LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' $(gettop)/vendor/lineage/config/version.mk)
 AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' $(gettop)/vendor/lineage/vars/aosp_target_release)
