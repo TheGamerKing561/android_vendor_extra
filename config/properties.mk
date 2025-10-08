@@ -12,10 +12,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.oem_unlock_supported=0
 
-# Log tag
-PRODUCT_PRODUCT_PROPERTIES += \
-    persist.log.tag.HWUI=S
-
 ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 # Display
 PRODUCT_PRODUCT_PROPERTIES += \
