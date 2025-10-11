@@ -1,7 +1,7 @@
-From 04a16b41fe1b5ed4cea35619cee07117656a2311 Mon Sep 17 00:00:00 2001
+From c0138d98e97e425e6626d83862ca88b083e43914 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Mon, 29 Sep 2025 13:45:41 +0200
-Subject: [PATCH 3/3] iconloaderlib: Enable enable_forced_themed_icon
+Subject: [PATCH 3/5] iconloaderlib: Enable enable_forced_themed_icon
 
 Change-Id: I173f46a43f159841f748fc4ae8f306a0ecba6a11
 ---
