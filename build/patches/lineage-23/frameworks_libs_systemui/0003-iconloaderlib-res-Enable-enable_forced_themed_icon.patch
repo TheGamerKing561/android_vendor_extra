@@ -1,9 +1,9 @@
-From c0138d98e97e425e6626d83862ca88b083e43914 Mon Sep 17 00:00:00 2001
+From f126a0cbe4746de8b3ee42c47d8112bc61b37bae Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
-Date: Mon, 29 Sep 2025 13:45:41 +0200
-Subject: [PATCH 3/5] iconloaderlib: Enable enable_forced_themed_icon
+Date: Fri, 17 Oct 2025 09:32:18 +0200
+Subject: [PATCH 3/4] iconloaderlib: res: Enable enable_forced_themed_icon
 
-Change-Id: I173f46a43f159841f748fc4ae8f306a0ecba6a11
+Change-Id: Icefad1fb70583950fb38e1fceeee02bfd09c5913
 ---
  iconloaderlib/res/values/config.xml | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)

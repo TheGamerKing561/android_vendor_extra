@@ -1,7 +1,7 @@
-From bc906a2df911c99ea224439abdd16270f64181e5 Mon Sep 17 00:00:00 2001
+From 5ff9c6c5b0ab9b0e9d4838f06dc20dbe322b89f0 Mon Sep 17 00:00:00 2001
 From: minaripenguin <minaripenguin@users.noreply.github.com>
 Date: Sat, 4 Jan 2025 19:27:02 +0800
-Subject: [PATCH 2/5] iconloaderlib: Update themed icons color palette
+Subject: [PATCH 2/4] iconloaderlib: Update themed icons color palette
 
 * based from nothing os
 

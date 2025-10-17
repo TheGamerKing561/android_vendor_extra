@@ -1,7 +1,7 @@
-From bc9de53f5f7c2eb565e3332ddb4ea78533639097 Mon Sep 17 00:00:00 2001
+From c8699639fda0fa0317c00d896c069a94a00f2ee1 Mon Sep 17 00:00:00 2001
 From: Tommy Webb <tommy@calyxinstitute.org>
 Date: Tue, 11 Jun 2024 18:52:16 +0000
-Subject: [PATCH 1/5] Multiple work profile badge colors for Launcher3
+Subject: [PATCH 1/4] Multiple work profile badge colors for Launcher3
 
 Original-Change-Id: I64f1b425eee5cc7994616050411a881d84ece99d
 Original-Change-Id-2: I9b9f01a8e483ee3de1c11a82e8b569537308596d
