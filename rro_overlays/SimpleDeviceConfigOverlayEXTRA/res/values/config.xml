@@ -5,9 +5,6 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string-array name="configs_device">
-        <!-- Allow more cached apps in the background -->
-        <item>activity_manager/max_cached_processes=64</item>
-
         <!-- Don't pin camera app to save memory -->
         <item>runtime_native_boot/pin_camera=false</item>
 
