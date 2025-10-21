@@ -8,7 +8,6 @@ VENDOR_EXTRA_PATH := vendor/extra
 VENDOR_EXTRA_TARGET_DEVICE := $(shell echo -n $(TARGET_PRODUCT) | sed -e 's/^[a-z]*_//g')
 
 # Inherit vendor/extra configs
-$(call inherit-product, $(VENDOR_EXTRA_PATH)/config/go.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/properties.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/security.mk)
 

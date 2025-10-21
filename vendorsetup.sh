@@ -10,6 +10,13 @@ export NINJA_HIGHMEM_NUM_JOBS=1
 export BUILD_USERNAME=android-build
 export BUILD_HOSTNAME=$(openssl rand -hex 6)
 
+# Dexpreopt
+export WITH_DEXPREOPT_DEBUG_INFO=false
+
+# Enable whole-program R8 Java optimizations for SystemUI and system_server,
+export SYSTEM_OPTIMIZE_JAVA=true
+export SYSTEMUI_OPTIMIZE_JAVA=true
+
 # Make smaller .tar.gz files by excluding debug targets.
 export ART_BUILD_TARGET_DEBUG=false
 export ART_BUILD_HOST_DEBUG=false
