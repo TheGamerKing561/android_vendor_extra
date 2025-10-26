@@ -17,11 +17,6 @@ $(call inherit-product-if-exists, vendor/xiaomi/miuicamera-$(VENDOR_EXTRA_TARGET
 # Inherit Pixel clocks Makefile
 $(call inherit-product, vendor/pixel_clocks/product.mk)
 
-ifneq ($(filter dodge lisa nairo racer tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
-# NFC
-$(call soong_config_set,lineage_extra,product_has_nfc,true)
-endif
-
 # Boot animation
 TARGET_BOOTANIMATION_HALF_RES := true
 
@@ -37,6 +32,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     iperf3
 
+# Kernel
+ifeq ($(filter miatoll,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+OVERRIDE_ENABLE_UFFD_GC := true
+PRODUCT_ENABLE_UFFD_GC := true
+endif
+
 # Overlays
 PRODUCT_PACKAGES += \
     FrameworkOverlayEXTRA \
@@ -46,6 +47,10 @@ PRODUCT_PACKAGES += \
     SimpleDeviceConfigOverlayEXTRA \
     SystemUIOverlayEXTRA \
     UpdaterOverlayEXTRA
+
+ifneq ($(filter dodge lisa nairo racer tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+$(call soong_config_set,lineage_extra,product_has_nfc,true)
+endif
 
 # tinymix
 PRODUCT_PACKAGES += \
