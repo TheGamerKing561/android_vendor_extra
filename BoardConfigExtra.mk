@@ -16,8 +16,12 @@ endif
 
 # Partitions - reserved size
 ifeq ($(PRODUCT_USE_DYNAMIC_PARTITIONS), true)
+ifneq ($(BOARD_ODMIMAGE_FILE_SYSTEM_TYPE), erofs)
 BOARD_ODMIMAGE_PARTITION_RESERVED_SIZE := 30720000
+endif
+ifneq ($(BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE), erofs)
 BOARD_VENDORIMAGE_PARTITION_RESERVED_SIZE := 30720000
+endif
 endif
 
 # Security patch level
