@@ -10,7 +10,7 @@
 include $(VENDOR_EXTRA_PATH)/sepolicy/SEPolicy.mk
 
 # Kernel
-ifneq (,$(filter $(PRODUCT_DEVICE),dodge tiro xaga))
+ifneq (,$(filter $(PRODUCT_DEVICE),cerro dodge tiro xaga))
 KERNEL_LTO := thin
 endif
 
