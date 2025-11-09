@@ -24,11 +24,12 @@ export USE_DEX2OAT_DEBUG=false
 
 # HAX
 export LINEAGE_FIXUP_COMMON_OUT=true
+export TOP=$(gettop)
 
 # Defs
-LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' $(gettop)/vendor/lineage/config/version.mk)
-AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' $(gettop)/vendor/lineage/vars/aosp_target_release)
-VENDOR_EXTRA_PATH=$(gettop)/vendor/extra
+LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/config/version.mk)
+AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' ${TOP}/vendor/lineage/vars/aosp_target_release)
+VENDOR_EXTRA_PATH=${TOP}/vendor/extra
 MKA_JOBS=$(($(nproc) - 5))
 [[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=8
 [[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=15
@@ -52,7 +53,7 @@ function apply_patches() {
 
     [[ ! -d "${patches_dir}" ]] && return
 
-    local root_dir=$(gettop)
+    local root_dir=${TOP}
 
     for project_name in "${patches_dir}"/*/; do
         # Remove trailing slash
@@ -101,9 +102,9 @@ if [[ "${APPLY_PATCHES}" == "true" ]]; then
     gen_release_config_map
 fi
 
-# Call _TOP/infra/vendorsetup.sh
+# Call ${TOP}/infra/vendorsetup.sh
 echo "including infra/vendorsetup.sh"
-. $(gettop)/infra/vendorsetup.sh
+. ${TOP}/infra/vendorsetup.sh
 
 # functions
 function mka_build() {
