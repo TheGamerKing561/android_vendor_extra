@@ -1,0 +1,12 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+aconfig_values {
+    name: "aconfig-values-extra-bp3a-android.hardware.biometrics-all",
+    package: "android.hardware.biometrics",
+    srcs: [
+        "*.textproto",
+    ],
+}
