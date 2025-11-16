@@ -1,8 +1,8 @@
-From bbc8e65f5d48d08ed503749a9314da2453a677b3 Mon Sep 17 00:00:00 2001
+From 89b43085d32c78483c859610651ce96e687e9097 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <daniel.micay@grapheneos.org>
 Date: Fri, 2 Feb 2024 18:54:40 -0500
-Subject: [PATCH 4/8] run full explicit GC in SystemUI and system_server after
- locking
+Subject: [PATCH 04/17] run full explicit GC in SystemUI and system_server
+ after locking
 
 ART has special support for System.gc() and Android already uses this to
 purge memory after unlocking. It makes sense to purge as much as we can
@@ -44,5 +44,5 @@ index c0aa8aeff..6e086c6c2 100644
  
      @Override // Binder interface
 -- 
-2.51.0
+2.51.1
 

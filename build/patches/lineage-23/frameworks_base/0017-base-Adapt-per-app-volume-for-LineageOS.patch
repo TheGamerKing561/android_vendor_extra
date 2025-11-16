@@ -1,0 +1,38 @@
+From 468f85c76019013db8628afd65a21554a438bda6 Mon Sep 17 00:00:00 2001
+From: mikooomich <mikooomichael@gmail.com>
+Date: Fri, 19 Jul 2024 21:08:04 -0400
+Subject: [PATCH 17/17] base: Adapt per app volume for LineageOS
+
+Change-Id: I32aa01fe53fd3501a21b40848da00e86da57c959
+---
+ .../src/com/android/systemui/volume/VolumeDialogImpl.java  | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java b/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
+index b8dc7a4aa..7e3a4a92f 100644
+--- a/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
+@@ -464,8 +464,9 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
+                         mVolumePanelOnLeft = volumePanelOnLeft;
+                         mHandler.post(mControllerCallbackH::onConfigurationChanged);
+                     }
+-                    mShowAppVolume = Settings.System.getIntForUser(mContext.getContentResolver(),
+-                        Settings.System.SHOW_APP_VOLUME,
++                    mShowAppVolume = LineageSettings.System.getIntForUser(
++                        mContext.getContentResolver(),
++                        LineageSettings.System.SHOW_APP_VOLUME,
+                         0, UserHandle.USER_CURRENT) == 1;
+                 }
+             };
+@@ -473,7 +474,7 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
+                     LineageSettings.Secure.getUriFor(LineageSettings.Secure.VOLUME_PANEL_ON_LEFT),
+                     false, settingsObserver);
+             mContext.getContentResolver().registerContentObserver(
+-                    Settings.System.getUriFor(Settings.System.SHOW_APP_VOLUME),
++                    LineageSettings.System.getUriFor(LineageSettings.System.SHOW_APP_VOLUME),
+                     false, settingsObserver);
+             settingsObserver.onChange(true);
+         }
+-- 
+2.51.1
+

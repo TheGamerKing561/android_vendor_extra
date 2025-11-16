@@ -1,0 +1,69 @@
+From 8ff67f2a9333ade80ce60689e138b1230d158366 Mon Sep 17 00:00:00 2001
+From: Pranav Vashi <neobuddy89@gmail.com>
+Date: Sun, 13 Apr 2025 20:25:10 +0530
+Subject: [PATCH 16/17] SystemUI: VolumeDialog: Use settings observer for app
+ volume
+
+Change-Id: Id6e989832986e2423cfe4ace94539e2e0de868c1
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ .../systemui/volume/VolumeDialogImpl.java      | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java b/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
+index 4e4c5fa1b..b8dc7a4aa 100644
+--- a/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
+@@ -382,6 +382,7 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
+     // Optional actions for soundDose
+     private Optional<List<CsdWarningAction>>
+             mCsdWarningNotificationActions = Optional.of(Collections.emptyList());
++    private boolean mShowAppVolume;
+ 
+     public VolumeDialogImpl(
+             Context context,
+@@ -453,7 +454,7 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
+         }
+ 
+         if (!mIsTv) {
+-            ContentObserver volumePanelOnLeftObserver = new ContentObserver(null) {
++            ContentObserver settingsObserver = new ContentObserver(null) {
+                 @Override
+                 public void onChange(boolean selfChange) {
+                     final boolean volumePanelOnLeft = LineageSettings.Secure.getInt(
+@@ -463,12 +464,18 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
+                         mVolumePanelOnLeft = volumePanelOnLeft;
+                         mHandler.post(mControllerCallbackH::onConfigurationChanged);
+                     }
++                    mShowAppVolume = Settings.System.getIntForUser(mContext.getContentResolver(),
++                        Settings.System.SHOW_APP_VOLUME,
++                        0, UserHandle.USER_CURRENT) == 1;
+                 }
+             };
+             mContext.getContentResolver().registerContentObserver(
+                     LineageSettings.Secure.getUriFor(LineageSettings.Secure.VOLUME_PANEL_ON_LEFT),
+-                    false, volumePanelOnLeftObserver);
+-            volumePanelOnLeftObserver.onChange(true);
++                    false, settingsObserver);
++            mContext.getContentResolver().registerContentObserver(
++                    Settings.System.getUriFor(Settings.System.SHOW_APP_VOLUME),
++                    false, settingsObserver);
++            settingsObserver.onChange(true);
+         }
+ 
+         initDimens();
+@@ -1569,10 +1576,7 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
+ 
+     private void initAppVolumes() {
+         clearAppVolumes();
+-        boolean showAppVolume = Settings.System.getIntForUser(mContext.getContentResolver(),
+-            Settings.System.SHOW_APP_VOLUME,
+-            0, UserHandle.USER_CURRENT) == 1;
+-        if (!showAppVolume || mAppVolumeView == null) {
++        if (!mShowAppVolume || mAppVolumeView == null) {
+             return;
+         }
+         boolean appActive = false;
+-- 
+2.51.1
+
