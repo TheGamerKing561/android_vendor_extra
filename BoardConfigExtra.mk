@@ -6,7 +6,7 @@
 # Inherit MiuiCamera Makefile
 -include vendor/xiaomi/miuicamera-$(PRODUCT_DEVICE)/BoardConfig.mk
 
-# Inherit SELinux Makefile
+# Inherit extra Makefile
 include $(VENDOR_EXTRA_PATH)/sepolicy/SEPolicy.mk
 
 # Architecture
@@ -15,18 +15,18 @@ TARGET_ARCH_VARIANT := armv8-2a-dotprod
 endif
 
 # Kernel
-ifneq (,$(filter $(PRODUCT_DEVICE),cerro dodge tiro xaga))
+ifneq (,$(filter $(TARGET_BOARD_PLATFORM),mt6895 pineapple sun))
 KERNEL_LTO := thin
 endif
 
-# Partitions - reserved size
+# Partitions (treble) - reserved size
+EXTRA_TREBLE_PARTITIONS := odm vendor
+EXTRA_TREBLE_RESERVE_SIZE := 104857600 # 100mb * 1024 * 1024
 ifeq ($(PRODUCT_USE_DYNAMIC_PARTITIONS), true)
-ifneq ($(BOARD_ODMIMAGE_FILE_SYSTEM_TYPE), erofs)
-BOARD_ODMIMAGE_PARTITION_RESERVED_SIZE += 52428800
-endif
-ifneq ($(BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE), erofs)
-BOARD_VENDORIMAGE_PARTITION_RESERVED_SIZE += 52428800
-endif
+$(foreach p, $(call to-upper, $(EXTRA_TREBLE_PARTITIONS)), \
+    $(if $(filter-out erofs, $(BOARD_$(p)IMAGE_FILE_SYSTEM_TYPE)), \
+        $(if $(BOARD_$(p)IMAGE_PARTITION_RESERVED_SIZE),, \
+            $(eval BOARD_$(p)IMAGE_PARTITION_RESERVED_SIZE := $(EXTRA_TREBLE_RESERVE_SIZE)))))
 endif
 
 # Security patch level
