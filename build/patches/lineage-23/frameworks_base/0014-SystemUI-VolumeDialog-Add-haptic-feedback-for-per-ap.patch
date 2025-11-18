@@ -1,7 +1,7 @@
-From 77d1b09a307e6d830cad70f3dcb2de83cf84c88a Mon Sep 17 00:00:00 2001
+From 00490e3a560c5a6a591be621404754edc55ff210 Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Sun, 13 Apr 2025 20:14:37 +0530
-Subject: [PATCH 15/17] SystemUI: VolumeDialog: Add haptic feedback for per-app
+Subject: [PATCH 14/19] SystemUI: VolumeDialog: Add haptic feedback for per-app
  volume
 
 Change-Id: I23aa66f9b1b793bf437df4442eae8bfaab49c772

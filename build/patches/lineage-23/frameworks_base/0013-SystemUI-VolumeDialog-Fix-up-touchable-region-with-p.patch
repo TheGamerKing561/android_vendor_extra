@@ -1,7 +1,7 @@
-From 135a0daadac3fcf6f7d2f0e90fb8a65e598b03b6 Mon Sep 17 00:00:00 2001
+From d8bdb0ba215e8dd6c61ad24f696f102192107777 Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Sat, 12 Apr 2025 02:46:57 +0530
-Subject: [PATCH 14/17] SystemUI: VolumeDialog: Fix up touchable region with
+Subject: [PATCH 13/19] SystemUI: VolumeDialog: Fix up touchable region with
  per-app volume
 
 Change-Id: I51889c976b2b9d9eefe5188f332bc384ed2d56f5

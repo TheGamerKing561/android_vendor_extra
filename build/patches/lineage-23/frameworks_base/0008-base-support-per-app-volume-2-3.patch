@@ -1,7 +1,7 @@
-From c8385a9114221ac1f318a9a9b5ffbc878892ef91 Mon Sep 17 00:00:00 2001
+From 856048abe1dda4ca82f16e66bf57827a4d029e52 Mon Sep 17 00:00:00 2001
 From: cjybyjk <cjybyjk@zjnu.edu.cn>
 Date: Mon, 5 Sep 2022 04:14:52 +0000
-Subject: [PATCH 09/17] base: support per-app volume [2/3]
+Subject: [PATCH 08/19] base: support per-app volume [2/3]
 
 @neobuddy89: Adapted for A14 QPR3
 
@@ -27,10 +27,10 @@ Change-Id: Ia6fff3aaa7e0b2a6bfe947899001b7e7ec011581
  create mode 100644 packages/SystemUI/res/drawable/ic_app_volume.xml
 
 diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
-index 315461305..e7dcb727d 100644
+index 26b30c987..cd26aa031 100644
 --- a/core/java/android/provider/Settings.java
 +++ b/core/java/android/provider/Settings.java
-@@ -6537,6 +6537,12 @@ public final class Settings {
+@@ -6531,6 +6531,12 @@ public final class Settings {
           * the setting value. See an example above.
           */
  
@@ -43,7 +43,7 @@ index 315461305..e7dcb727d 100644
          /**
           * Keys we no longer back up under the current schema, but want to continue to
           * process when restoring historical backup datasets.
-@@ -21786,6 +21792,12 @@ public final class Settings {
+@@ -21768,6 +21774,12 @@ public final class Settings {
          @SdkConstant(SdkConstant.SdkConstantType.ACTIVITY_INTENT_ACTION)
          public static final String ACTION_VOLUME =
                  "android.settings.panel.action.VOLUME";

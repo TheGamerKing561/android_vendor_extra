@@ -1,7 +1,7 @@
-From 0c9afd279dec05dfa19ab08a21c8b6c47bb01280 Mon Sep 17 00:00:00 2001
+From 878c4bb70131c495131a77f8f5c2b11df682b345 Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Tue, 13 Feb 2024 22:14:16 +0530
-Subject: [PATCH 12/17] SystemUI: VolumeDialog: Add app rows to volume dialog
+Subject: [PATCH 11/19] SystemUI: VolumeDialog: Add app rows to volume dialog
 
 Expand app rows instead of opening a settings panel.
 Uses the per-app volume API.

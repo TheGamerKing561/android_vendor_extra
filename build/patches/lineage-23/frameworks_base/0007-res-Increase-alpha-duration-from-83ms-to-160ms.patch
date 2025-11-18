@@ -1,0 +1,44 @@
+From f54939e1c13408558b580cd3511d920380ee487b Mon Sep 17 00:00:00 2001
+From: claxten10 <claxten10@gmail.com>
+Date: Wed, 12 Nov 2025 17:59:44 +0530
+Subject: [PATCH 07/19] res: Increase alpha duration from 83ms to 160ms
+
+* 83ms seems to be too quick and creates an "unsmooth" transition, increasing
+  to 160ms which seems to be a sweet spot and looks quite smooth.
+
+Change-Id: Id8052d6d9f593fd7c093cef701593e31cf2f70b3
+Signed-off-by: claxten10 <claxten10@gmail.com>
+---
+ core/res/res/anim/activity_close_exit.xml | 2 +-
+ core/res/res/anim/activity_open_enter.xml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/core/res/res/anim/activity_close_exit.xml b/core/res/res/anim/activity_close_exit.xml
+index f807c26dd..59feaa73f 100644
+--- a/core/res/res/anim/activity_close_exit.xml
++++ b/core/res/res/anim/activity_close_exit.xml
+@@ -28,7 +28,7 @@
+         android:fillAfter="true"
+         android:interpolator="@interpolator/linear"
+         android:startOffset="35"
+-        android:duration="83" />
++        android:duration="160" />
+ 
+     <translate
+         android:fromXDelta="0"
+diff --git a/core/res/res/anim/activity_open_enter.xml b/core/res/res/anim/activity_open_enter.xml
+index 1674dab30..83e0d3bee 100644
+--- a/core/res/res/anim/activity_open_enter.xml
++++ b/core/res/res/anim/activity_open_enter.xml
+@@ -27,7 +27,7 @@
+         android:fillAfter="true"
+         android:interpolator="@interpolator/linear"
+         android:startOffset="50"
+-        android:duration="83" />
++        android:duration="160" />
+ 
+     <translate
+         android:fromXDelta="10%"
+-- 
+2.51.1
+

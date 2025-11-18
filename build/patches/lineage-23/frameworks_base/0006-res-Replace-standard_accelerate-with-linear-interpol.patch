@@ -1,0 +1,30 @@
+From c424b12098b8cf13d8fefdcca654b5ee07da406d Mon Sep 17 00:00:00 2001
+From: claxten10 <claxten10@gmail.com>
+Date: Tue, 11 Nov 2025 19:12:12 +0100
+Subject: [PATCH 06/19] res: Replace standard_accelerate with linear
+ interpolator
+
+* Inspired from Android S.
+
+Change-Id: I2f749c69c71d71c07b315d2adaed7e323583d055
+Signed-off-by: claxten10 <claxten10@gmail.com>
+---
+ core/res/res/anim/activity_open_exit.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/core/res/res/anim/activity_open_exit.xml b/core/res/res/anim/activity_open_exit.xml
+index d98ce93f6..2ba8c8283 100644
+--- a/core/res/res/anim/activity_open_exit.xml
++++ b/core/res/res/anim/activity_open_exit.xml
+@@ -25,7 +25,7 @@
+         android:fillEnabled="true"
+         android:fillBefore="true"
+         android:fillAfter="true"
+-        android:interpolator="@interpolator/standard_accelerate"
++        android:interpolator="@interpolator/linear"
+         android:startOffset="0"
+         android:duration="450" />
+ 
+-- 
+2.51.1
+
