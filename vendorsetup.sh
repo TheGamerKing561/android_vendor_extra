@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Hardcode High Memory Parallel Process
-export NINJA_HIGHMEM_NUM_JOBS=2
+export NINJA_HIGHMEM_NUM_JOBS=3
 
 # Override host metadata to make builds more reproducible and avoid leaking info
 export BUILD_USERNAME=android-build
@@ -45,7 +45,7 @@ LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/confi
 AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' ${TOP}/vendor/lineage/vars/aosp_target_release)
 VENDOR_EXTRA_PATH=${TOP}/vendor/extra
 MKA_JOBS=$(($(nproc) - 5))
-[[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=10
+[[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=12
 [[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=15
 
 # Logging defs
