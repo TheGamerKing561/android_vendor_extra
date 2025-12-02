@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Hardcode High Memory Parallel Process
-export NINJA_HIGHMEM_NUM_JOBS=1
+export NINJA_HIGHMEM_NUM_JOBS=2
 
 # Override host metadata to make builds more reproducible and avoid leaking info
 export BUILD_USERNAME=android-build
