@@ -1,7 +1,7 @@
-From cbb9ed2cf6e9a34e24ff59b48754689844d9b2bc Mon Sep 17 00:00:00 2001
+From 6ffe1f1d10697e81ab76b27bb29fc6c1f0809ab2 Mon Sep 17 00:00:00 2001
 From: Park Ju Hyung <qkrwngud825@gmail.com>
 Date: Sat, 31 Oct 2020 19:15:24 +0900
-Subject: [PATCH 5/5] ui: Pass the exact CPU thread count to -j
+Subject: [PATCH 6/6] ui: Pass the exact CPU thread count to -j
 
 Once the number of jobs exceeds the total CPU thread count,
 the task scheduler starts to inflict excessive context switches,
@@ -27,5 +27,5 @@ index 94b0781..9d4eaf7 100644
  
  	ret.totalRAM = detectTotalRAM(ctx)
 -- 
-2.51.0
+2.52.0
 

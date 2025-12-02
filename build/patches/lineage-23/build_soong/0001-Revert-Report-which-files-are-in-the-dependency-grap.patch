@@ -1,0 +1,213 @@
+From d69ae816880803bdbcc5090c01bdd26c136bc363 Mon Sep 17 00:00:00 2001
+From: Cole Faust <colefaust@google.com>
+Date: Wed, 25 Jun 2025 10:02:22 -0700
+Subject: [PATCH 1/6] Revert "Report which files are in the dependency graph
+ for dist builds."
+
+This reverts commit d6a2999a5a6ba7ef84e4ad37d09be34c80605e06.
+
+This file was never used, Joeo (who added it) left google, and it's
+causing 30+ minute slowdowns on certain builds.
+
+Bug: 427610121
+Bug: 383124666
+Test: Presubmits
+Change-Id: Ib0bbd986a44819e0664bdca05c92aeb44392a3bf
+---
+ ui/build/Android.bp       |   1 -
+ ui/build/build.go         |   1 -
+ ui/build/ninja.go         |  44 -----------------
+ ui/build/source_inputs.go | 100 --------------------------------------
+ 4 files changed, 146 deletions(-)
+ delete mode 100644 ui/build/source_inputs.go
+
+diff --git a/ui/build/Android.bp b/ui/build/Android.bp
+index a868d6a..32ffcec 100644
+--- a/ui/build/Android.bp
++++ b/ui/build/Android.bp
+@@ -55,7 +55,6 @@ bootstrap_go_package {
+         "config.go",
+         "context.go",
+         "staging_snapshot.go",
+-        "source_inputs.go",
+         "dumpvars.go",
+         "environment.go",
+         "exec.go",
+diff --git a/ui/build/build.go b/ui/build/build.go
+index 781ca18..9178eef 100644
+--- a/ui/build/build.go
++++ b/ui/build/build.go
+@@ -534,5 +534,4 @@ func distFile(ctx Context, config Config, src string, subDirs ...string) {
+ // Be careful, anything added here slows down EVERY CI build
+ func runDistActions(ctx Context, config Config) {
+ 	runStagingSnapshot(ctx, config)
+-	runSourceInputs(ctx, config)
+ }
+diff --git a/ui/build/ninja.go b/ui/build/ninja.go
+index e2a568f..8e5810c 100644
+--- a/ui/build/ninja.go
++++ b/ui/build/ninja.go
+@@ -17,7 +17,6 @@ package build
+ import (
+ 	"fmt"
+ 	"os"
+-	"os/exec"
+ 	"path/filepath"
+ 	"sort"
+ 	"strconv"
+@@ -357,46 +356,3 @@ func (c *ninjaStucknessChecker) check(ctx Context, config Config) {
+ 	}
+ 	c.prevModTime = newModTime
+ }
+-
+-// Constructs and runs the Ninja command line to get the inputs of a goal.
+-// For n2 and siso, this will always run ninja, because they don't have the
+-// `-t inputs` command.  This command will use the inputs command's -d option,
+-// to use the dep file iff ninja was the executor. For other executors, the
+-// results will be wrong.
+-func runNinjaInputs(ctx Context, config Config, goal string) ([]string, error) {
+-	var executable string
+-	switch config.ninjaCommand {
+-	case NINJA_N2, NINJA_SISO:
+-		executable = config.PrebuiltBuildTool("ninja")
+-	default:
+-		executable = config.NinjaBin()
+-	}
+-
+-	args := []string{
+-		"-f",
+-		config.CombinedNinjaFile(),
+-		"-t",
+-		"inputs",
+-	}
+-	// Add deps file arg for ninja
+-	// TODO: Update as inputs command is implemented
+-	if config.ninjaCommand == NINJA_NINJA && !config.UseABFS() {
+-		args = append(args, "-d")
+-	}
+-	args = append(args, goal)
+-
+-	// This is just ninja -t inputs, so we won't bother running it in the sandbox,
+-	// so use exec.Command, not soong_ui's command.
+-	cmd := exec.Command(executable, args...)
+-
+-	cmd.Stdin = os.Stdin
+-	cmd.Stderr = os.Stderr
+-
+-	out, err := cmd.Output()
+-	if err != nil {
+-		fmt.Printf("Error getting goal inputs for %s: %s\n", goal, err)
+-		return nil, err
+-	}
+-
+-	return strings.Split(strings.TrimSpace(string(out)), "\n"), nil
+-}
+diff --git a/ui/build/source_inputs.go b/ui/build/source_inputs.go
+deleted file mode 100644
+index d1cc1a2..0000000
+--- a/ui/build/source_inputs.go
++++ /dev/null
+@@ -1,100 +0,0 @@
+-package build
+-
+-import (
+-	"compress/gzip"
+-	"fmt"
+-	"os"
+-	"path/filepath"
+-	"sort"
+-	"strings"
+-
+-	"android/soong/shared"
+-	"android/soong/ui/metrics"
+-)
+-
+-func sortedStringSetKeys(m map[string]bool) []string {
+-	result := make([]string, 0, len(m))
+-	for key := range m {
+-		result = append(result, key)
+-	}
+-	sort.Strings(result)
+-	return result
+-}
+-
+-func addSlash(str string) string {
+-	if len(str) == 0 {
+-		return ""
+-	}
+-	if str[len(str)-1] == '/' {
+-		return str
+-	}
+-	return str + "/"
+-}
+-
+-func hasPrefixStrings(str string, prefixes []string) bool {
+-	for _, prefix := range prefixes {
+-		if strings.HasPrefix(str, prefix) {
+-			return true
+-		}
+-	}
+-	return false
+-}
+-
+-// Output DIST_DIR/source_inputs.txt.gz, which will contain a listing of the files
+-// in the source tree (not including in the out directory) that were declared as ninja
+-// inputs to the build that was just done.
+-func runSourceInputs(ctx Context, config Config) {
+-	ctx.BeginTrace(metrics.RunSoong, "runSourceInputs")
+-	defer ctx.EndTrace()
+-
+-	success := false
+-	outputFilename := shared.JoinPath(config.RealDistDir(), "source_inputs.txt.gz")
+-
+-	outputFile, err := os.Create(outputFilename)
+-	if err != nil {
+-		fmt.Fprintf(os.Stderr, "source_files_used: unable to open file for write: %s\n", outputFilename)
+-		return
+-	}
+-	defer func() {
+-		outputFile.Close()
+-		if !success {
+-			os.Remove(outputFilename)
+-		}
+-	}()
+-
+-	output := gzip.NewWriter(outputFile)
+-	defer output.Close()
+-
+-	// Skip out dir, both absolute and relative. There are some files
+-	// generated during analysis that ninja thinks are inputs not intermediates.
+-	absOut, _ := filepath.Abs(config.OutDir())
+-	excludes := []string{
+-		addSlash(config.OutDir()),
+-		addSlash(absOut),
+-	}
+-
+-	goals := config.NinjaArgs()
+-
+-	result := make(map[string]bool)
+-	for _, goal := range goals {
+-		inputs, err := runNinjaInputs(ctx, config, goal)
+-		if err != nil {
+-			fmt.Fprintf(os.Stderr, "source_files_used: %v\n", err)
+-			return
+-		}
+-
+-		for _, filename := range inputs {
+-			if !hasPrefixStrings(filename, excludes) {
+-				result[filename] = true
+-			}
+-		}
+-	}
+-
+-	for _, filename := range sortedStringSetKeys(result) {
+-		output.Write([]byte(filename))
+-		output.Write([]byte("\n"))
+-	}
+-
+-	output.Flush()
+-	success = true
+-}
+-- 
+2.52.0
+

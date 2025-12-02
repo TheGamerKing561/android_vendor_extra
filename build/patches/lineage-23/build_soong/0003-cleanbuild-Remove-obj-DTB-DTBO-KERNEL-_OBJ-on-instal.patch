@@ -1,7 +1,7 @@
-From e222ba091070002e6bbee089cd0b247ee0af14ee Mon Sep 17 00:00:00 2001
+From a6aee2028f3127f0b64a0d4dcf5fc0da2e6caa43 Mon Sep 17 00:00:00 2001
 From: Jason Edson <jaysonedson@gmail.com>
 Date: Thu, 26 Sep 2019 22:03:37 -0700
-Subject: [PATCH 2/5] cleanbuild: Remove obj/{DTB,DTBO,KERNEL}_OBJ on
+Subject: [PATCH 3/6] cleanbuild: Remove obj/{DTB,DTBO,KERNEL}_OBJ on
  installclean
 
 Change-Id: I9b505803bb6c0d604c22fa5a0ab9046b76136278
@@ -26,5 +26,5 @@ index 4c20690..9fd6934 100644
  		productOut("obj/PACKAGING"),
  		productOut("ramdisk"),
 -- 
-2.51.0
+2.52.0
 

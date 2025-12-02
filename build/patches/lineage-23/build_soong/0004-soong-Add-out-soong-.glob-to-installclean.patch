@@ -1,7 +1,7 @@
-From b5af6d0a51b0b502fd513337ce7e642f8d89f759 Mon Sep 17 00:00:00 2001
+From d4cd64b87cdaf6329725dd1f20b60904c24da99d Mon Sep 17 00:00:00 2001
 From: Ido Ben-Hur <idoybh2@gmail.com>
 Date: Sat, 21 Dec 2024 20:19:58 +0200
-Subject: [PATCH 3/5] soong: Add out/soong/*.glob* to installclean
+Subject: [PATCH 4/6] soong: Add out/soong/*.glob* to installclean
 
 Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
 ---
@@ -22,5 +22,5 @@ index 9fd6934..46e0e89 100644
  	// otherwise we'd have to rebuild any generated files created with
  	// those tools.
 -- 
-2.51.0
+2.52.0
 
