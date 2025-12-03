@@ -1,7 +1,7 @@
-From 878c4bb70131c495131a77f8f5c2b11df682b345 Mon Sep 17 00:00:00 2001
+From 9bf11a4e5663a3c34756994b300e0bb1a49db38d Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Tue, 13 Feb 2024 22:14:16 +0530
-Subject: [PATCH 11/19] SystemUI: VolumeDialog: Add app rows to volume dialog
+Subject: [PATCH 26/34] SystemUI: VolumeDialog: Add app rows to volume dialog
 
 Expand app rows instead of opening a settings panel.
 Uses the per-app volume API.
@@ -688,5 +688,5 @@ index 57153719c..4d826ac17 100644
          void setIcon(int iconRes, Resources.Theme theme) {
              if (icon != null) {
 -- 
-2.51.1
+2.52.0
 

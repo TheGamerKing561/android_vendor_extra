@@ -1,7 +1,7 @@
-From 00490e3a560c5a6a591be621404754edc55ff210 Mon Sep 17 00:00:00 2001
+From 76ecb0e83abc775e0e0010c0dd61f387bc360351 Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Sun, 13 Apr 2025 20:14:37 +0530
-Subject: [PATCH 14/19] SystemUI: VolumeDialog: Add haptic feedback for per-app
+Subject: [PATCH 29/34] SystemUI: VolumeDialog: Add haptic feedback for per-app
  volume
 
 Change-Id: I23aa66f9b1b793bf437df4442eae8bfaab49c772
@@ -33,5 +33,5 @@ index c2c45987a..4e4c5fa1b 100644
                  final float vol = progress * 0.01f;
                  if (D.BUG) Log.d(TAG, "set app " + mRow.packageName + " volume to " + vol);
 -- 
-2.51.1
+2.52.0
 

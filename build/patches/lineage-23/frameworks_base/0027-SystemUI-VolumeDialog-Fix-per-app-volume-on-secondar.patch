@@ -1,7 +1,7 @@
-From 2d763796e326d60f960a25656cbe4f95aa575913 Mon Sep 17 00:00:00 2001
+From 53f99b8c586e06e8394c10c10943a0e5d71d2517 Mon Sep 17 00:00:00 2001
 From: Dhina17 <dhinalogu@gmail.com>
 Date: Thu, 13 Jun 2024 16:01:10 +0530
-Subject: [PATCH 12/19] SystemUI: VolumeDialog: Fix per-app volume on secondary
+Subject: [PATCH 27/34] SystemUI: VolumeDialog: Fix per-app volume on secondary
  users
 
 Change-Id: I3ee1767d8482948f4c5d885b4eb8f0c259cfa4b3
@@ -35,5 +35,5 @@ index 4d826ac17..42a22c81a 100644
              return;
          }
 -- 
-2.51.1
+2.52.0
 

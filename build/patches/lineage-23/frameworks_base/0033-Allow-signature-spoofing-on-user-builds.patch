@@ -1,7 +1,7 @@
-From 5b9784034b3b6124922b1839a83e59498a760a4f Mon Sep 17 00:00:00 2001
+From c6fed3cbd7681e575d9254f1c6617eddd4ef0ddd Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Sat, 16 Mar 2024 20:01:22 +0530
-Subject: [PATCH 18/19] Allow signature spoofing on user builds
+Subject: [PATCH 33/34] Allow signature spoofing on user builds
 
 * This is custom rom breaking google's integrity check.
 
@@ -122,5 +122,5 @@ index d9b9542d8..569383e71 100644
      register_android_server_AdbDebuggingManager(env);
      register_android_server_FaceService(env);
 -- 
-2.51.1
+2.52.0
 

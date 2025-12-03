@@ -1,7 +1,7 @@
-From f54939e1c13408558b580cd3511d920380ee487b Mon Sep 17 00:00:00 2001
+From ef1e632a0c3036d876b593d3acd9af310a432b88 Mon Sep 17 00:00:00 2001
 From: claxten10 <claxten10@gmail.com>
 Date: Wed, 12 Nov 2025 17:59:44 +0530
-Subject: [PATCH 07/19] res: Increase alpha duration from 83ms to 160ms
+Subject: [PATCH 22/34] res: Increase alpha duration from 83ms to 160ms
 
 * 83ms seems to be too quick and creates an "unsmooth" transition, increasing
   to 160ms which seems to be a sweet spot and looks quite smooth.
@@ -40,5 +40,5 @@ index 1674dab30..83e0d3bee 100644
      <translate
          android:fromXDelta="10%"
 -- 
-2.51.1
+2.52.0
 

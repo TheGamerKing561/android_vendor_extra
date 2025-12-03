@@ -1,7 +1,7 @@
-From afbd99aec8ce630c524427fc3abfefff9b34c7b7 Mon Sep 17 00:00:00 2001
+From 2645d0420fef72609cccabb366eac80adb4d0444 Mon Sep 17 00:00:00 2001
 From: ReallySnow <reallysnow233@gmail.com>
 Date: Sat, 7 May 2022 21:35:52 +0800
-Subject: [PATCH 10/19] SystemUI: VolumeDialog: New per-app volume icon
+Subject: [PATCH 25/34] SystemUI: VolumeDialog: New per-app volume icon
 
 Change-Id: I00e3a3b389a5356499f70822478600b490f144f4
 Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
@@ -47,5 +47,5 @@ index 55d4682dd..c65a4c3ba 100644
 +        android:fillAlpha="0.6"/>
  </vector>
 -- 
-2.51.1
+2.52.0
 

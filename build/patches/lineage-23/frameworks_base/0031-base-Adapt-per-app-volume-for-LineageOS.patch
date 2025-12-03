@@ -1,7 +1,7 @@
-From 7f7f926bcfb1900cff67dc2a2fb17d1c6b20d9c9 Mon Sep 17 00:00:00 2001
+From 36370136fb733098da16892c0bcaec437eda2bcc Mon Sep 17 00:00:00 2001
 From: mikooomich <mikooomichael@gmail.com>
 Date: Fri, 19 Jul 2024 21:08:04 -0400
-Subject: [PATCH 16/19] base: Adapt per app volume for LineageOS
+Subject: [PATCH 31/34] base: Adapt per app volume for LineageOS
 
 Change-Id: I32aa01fe53fd3501a21b40848da00e86da57c959
 ---
@@ -34,5 +34,5 @@ index b8dc7a4aa..7e3a4a92f 100644
              settingsObserver.onChange(true);
          }
 -- 
-2.51.1
+2.52.0
 

@@ -1,7 +1,7 @@
-From db1c53288090254a70abb36f7e435d34cf510b90 Mon Sep 17 00:00:00 2001
+From 74f8b248733b1195d93296dfc103ac97a65b5e7f Mon Sep 17 00:00:00 2001
 From: El Dainosor <eldainosor@gmail.com>
 Date: Wed, 3 Aug 2022 10:07:13 -0300
-Subject: [PATCH 09/19] base: make per-app work with multi audio focus
+Subject: [PATCH 24/34] base: make per-app work with multi audio focus
 
 Seems like Google merged this for OEMs to make their own take on multi-audio
 focus, so we'll do an oem approach to make it work with per-app volume.
@@ -68,5 +68,5 @@ index 1604e94e5..8beeaaaab 100644
 +    }
  }
 -- 
-2.51.1
+2.52.0
 
