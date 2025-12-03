@@ -33,10 +33,8 @@ PRODUCT_PACKAGES += \
     iperf3
 
 # Kernel
-ifeq ($(filter miatoll,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 OVERRIDE_ENABLE_UFFD_GC := true
 PRODUCT_ENABLE_UFFD_GC := true
-endif
 
 # Overlays
 PRODUCT_PACKAGES += \

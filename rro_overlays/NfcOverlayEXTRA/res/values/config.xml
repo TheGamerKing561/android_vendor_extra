@@ -6,8 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- List of SKUs where Secure NFC functionality is supported -->
     <string-array name="config_skuSupportsSecureNfc" translatable="false">
-        <!-- Xiaomi SM6250 -->
-        <item>joyeuse</item>
         <!-- Xiaomi SM6375 -->
         <item>moonstone_p_global</item>
         <item>sunstone_global</item>

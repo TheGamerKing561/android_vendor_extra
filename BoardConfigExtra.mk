@@ -28,12 +28,3 @@ $(foreach p, $(call to-upper, $(EXTRA_TREBLE_PARTITIONS)), \
         $(if $(BOARD_$(p)IMAGE_PARTITION_RESERVED_SIZE),, \
             $(eval BOARD_$(p)IMAGE_PARTITION_RESERVED_SIZE := $(EXTRA_TREBLE_RESERVE_SIZE)))))
 endif
-
-# Security patch level
-ifeq ($(PRODUCT_DEVICE),miatoll)
-# Workaround for dirty flash: Freeze vendor & boot SPL
-# to the latest release to avoid clean flashes.
-# https://github.com/ItsVixano-releases/LineageOS_miatoll/releases/tag/20250415
-BOOT_SECURITY_PATCH := 2025-04-05
-VENDOR_SECURITY_PATCH := 2025-04-05
-endif

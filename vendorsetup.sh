@@ -195,7 +195,6 @@ function mka_kernel() {
     declare -A device_kernel_targets=(
         [gemstone]="dtboimage vendorbootimage"
         [lisa]="dtboimage vendor_dlkmimage vendorbootimage"
-        [miatoll]="dtboimage"
         [nairo]="dtboimage vendor_dlkmimage"
         [racer]="dtboimage vendor_dlkmimage"
         [venus]="dtboimage vendor_dlkmimage vendorbootimage"
