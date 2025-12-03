@@ -196,8 +196,8 @@ function mka_kernel() {
         [gemstone]="dtboimage vendorbootimage"
         [lisa]="dtboimage vendor_dlkmimage vendorbootimage"
         [miatoll]="dtboimage"
-        [nairo]="dtboimage vendorimage"
-        [racer]="dtboimage vendorimage"
+        [nairo]="dtboimage vendor_dlkmimage"
+        [racer]="dtboimage vendor_dlkmimage"
         [venus]="dtboimage vendor_dlkmimage vendorbootimage"
         [xaga]="vendor_dlkmimage vendorbootimage"
     )
