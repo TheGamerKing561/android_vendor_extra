@@ -1,7 +1,7 @@
-From 5cb262616a9105c482ea7123f4b17b9e65dfbf93 Mon Sep 17 00:00:00 2001
+From 664a6193422fe8182067c60709587a7cae98faf3 Mon Sep 17 00:00:00 2001
 From: cjybyjk <cjybyjk@zjnu.edu.cn>
 Date: Mon, 5 Sep 2022 04:14:52 +0000
-Subject: [PATCH 23/34] base: support per-app volume [2/3]
+Subject: [PATCH 24/35] base: support per-app volume [2/3]
 
 @neobuddy89: Adapted for A14 QPR3
 

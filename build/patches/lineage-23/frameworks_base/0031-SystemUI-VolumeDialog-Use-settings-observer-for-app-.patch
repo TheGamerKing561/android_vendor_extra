@@ -1,7 +1,7 @@
-From b626b13082a04c3a086589e2a4ad061b37350c7b Mon Sep 17 00:00:00 2001
+From 7961d1ccd35c0e3ff31347748e314289b4dc8864 Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Sun, 13 Apr 2025 20:25:10 +0530
-Subject: [PATCH 30/34] SystemUI: VolumeDialog: Use settings observer for app
+Subject: [PATCH 31/35] SystemUI: VolumeDialog: Use settings observer for app
  volume
 
 Change-Id: Id6e989832986e2423cfe4ace94539e2e0de868c1

@@ -1,7 +1,7 @@
-From d7f9e59d96f2adb9b33c3e7e7af226919f1e1f2e Mon Sep 17 00:00:00 2001
+From 98de49077363f1b3995b439a98af13d03eb8e2a1 Mon Sep 17 00:00:00 2001
 From: Till Kottmann <deletescape@gmail.com>
 Date: Mon, 4 Jun 2018 17:44:56 +0200
-Subject: [PATCH 16/34] Cache pin algorithms in PinSet
+Subject: [PATCH 17/35] Cache pin algorithms in PinSet
 
 Change-Id: I6c2cd0261885b656910feffe76d67e169d8523c8
 Signed-off-by: Pranav <npv12@iitbbs.ac.in>
