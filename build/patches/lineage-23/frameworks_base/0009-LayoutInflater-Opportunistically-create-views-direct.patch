@@ -1,7 +1,7 @@
-From 607f47a93ace27984cf472b4140129f2d32c444a Mon Sep 17 00:00:00 2001
+From abb95e60e7519fe1b27fa560b57b574f0e979dc7 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 6 Apr 2021 15:30:33 -0700
-Subject: [PATCH 10/35] LayoutInflater: Opportunistically create views directly
+Subject: [PATCH 09/26] LayoutInflater: Opportunistically create views directly
  for performance
 
 When opening and closing activities in Settings, a significant amount of
@@ -172,7 +172,7 @@ Change-Id: I8fcc0e05813ff9ecf1eddca3cc6920e747adf4fc
  1 file changed, 171 insertions(+), 46 deletions(-)
 
 diff --git a/core/java/android/view/LayoutInflater.java b/core/java/android/view/LayoutInflater.java
-index 901fc02f0..64f5f4995 100644
+index 333fd537a..273ecfb70 100644
 --- a/core/java/android/view/LayoutInflater.java
 +++ b/core/java/android/view/LayoutInflater.java
 @@ -689,67 +689,75 @@ public abstract class LayoutInflater {
@@ -297,7 +297,7 @@ index 901fc02f0..64f5f4995 100644
          } catch (NoSuchMethodException e) {
              final InflateException ie = new InflateException(
                      getParserStateDescription(viewContext, attrs)
-@@ -1243,4 +1251,121 @@ public abstract class LayoutInflater {
+@@ -1244,4 +1252,121 @@ public abstract class LayoutInflater {
              }
          }
      }

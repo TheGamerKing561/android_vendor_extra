@@ -1,7 +1,7 @@
-From 5ff9c6c5b0ab9b0e9d4838f06dc20dbe322b89f0 Mon Sep 17 00:00:00 2001
+From 080a5e30e991e91ebe07adc359da68439e6ea355 Mon Sep 17 00:00:00 2001
 From: minaripenguin <minaripenguin@users.noreply.github.com>
 Date: Sat, 4 Jan 2025 19:27:02 +0800
-Subject: [PATCH 2/4] iconloaderlib: Update themed icons color palette
+Subject: [PATCH 2/3] iconloaderlib: Update themed icons color palette
 
 * based from nothing os
 
@@ -41,5 +41,5 @@ index b1e7492..f64b3d4 100644
      <color name="themed_badge_icon_color">@android:color/system_accent1_700</color>
      <color name="themed_badge_icon_background_color">@android:color/system_accent1_100</color>
 -- 
-2.51.0
+2.52.0
 

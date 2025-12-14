@@ -1,7 +1,7 @@
-From f63e98f009fb824b2ed0b8e9934a01c3b4175563 Mon Sep 17 00:00:00 2001
+From f98c6601b93f0740f25882e9c61bd09856ff3aa8 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 5 Apr 2021 23:05:02 -0700
-Subject: [PATCH 09/35] SystemServiceRegistry: Replace ArrayMap with HashMap
+Subject: [PATCH 08/26] SystemServiceRegistry: Replace ArrayMap with HashMap
  for performance
 
 When opening and closing activities in Settings, a significant amount of
@@ -117,10 +117,10 @@ Change-Id: I2a5b23793a4fc8aa720eead3ecc7ca4589cb67da
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/core/java/android/app/SystemServiceRegistry.java b/core/java/android/app/SystemServiceRegistry.java
-index 0bbe94342..404c7cb62 100644
+index 5bd84b03f..037444f23 100644
 --- a/core/java/android/app/SystemServiceRegistry.java
 +++ b/core/java/android/app/SystemServiceRegistry.java
-@@ -254,7 +254,6 @@ import android.telephony.MmsManager;
+@@ -258,7 +258,6 @@ import android.telephony.MmsManager;
  import android.telephony.TelephonyFrameworkInitializer;
  import android.telephony.TelephonyRegistryManager;
  import android.transparency.BinaryTransparencyManager;
@@ -128,7 +128,7 @@ index 0bbe94342..404c7cb62 100644
  import android.util.Log;
  import android.util.Slog;
  import android.uwb.UwbFrameworkInitializer;
-@@ -289,6 +288,7 @@ import com.android.internal.os.IDropBoxManagerService;
+@@ -295,6 +294,7 @@ import com.android.internal.os.IDropBoxManagerService;
  import com.android.internal.policy.PhoneLayoutInflater;
  import com.android.internal.util.Preconditions;
  
@@ -136,7 +136,7 @@ index 0bbe94342..404c7cb62 100644
  import java.util.Map;
  import java.util.Objects;
  
-@@ -318,10 +318,10 @@ public final class SystemServiceRegistry {
+@@ -324,10 +324,10 @@ public final class SystemServiceRegistry {
      // Service registry information.
      // This information is never changed once static initialization has completed.
      private static final Map<Class<?>, String> SYSTEM_SERVICE_NAMES =

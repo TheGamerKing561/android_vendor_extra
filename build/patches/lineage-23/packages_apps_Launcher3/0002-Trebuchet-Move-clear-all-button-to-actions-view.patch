@@ -1,4 +1,4 @@
-From 2d1d8708fa156daed21bb91a0f8f69b917f3e587 Mon Sep 17 00:00:00 2001
+From ddf1badf2074edaf340d5e472bd43f35b378f63e Mon Sep 17 00:00:00 2001
 From: Vachounet <vachounet@live.fr>
 Date: Mon, 26 Oct 2020 17:05:18 +0100
 Subject: [PATCH 2/4] Trebuchet: Move clear all button to actions view
@@ -40,12 +40,12 @@ index 0000000..2ad0bb8
 +    <path android:fillColor="#FF000000" android:pathData="M5,13H19V11H5M3,17H17V15H3M7,7V9H21V7" />
 +</vector>
 diff --git a/quickstep/res/layout/overview_actions_container.xml b/quickstep/res/layout/overview_actions_container.xml
-index fcd2e54..9d64455 100644
+index ce54028..1b1a4bd 100644
 --- a/quickstep/res/layout/overview_actions_container.xml
 +++ b/quickstep/res/layout/overview_actions_container.xml
-@@ -35,6 +35,21 @@
-             android:text="@string/action_screenshot"
-             android:theme="@style/ThemeControlHighlightWorkspaceColor" />
+@@ -37,6 +37,21 @@
+             android:drawableStart="@drawable/ic_screenshot"
+             android:text="@string/action_screenshot" />
  
 +        <Space
 +            android:id="@+id/action_clear_all_space"
@@ -64,8 +64,8 @@ index fcd2e54..9d64455 100644
 +
          <Button
              android:id="@+id/action_split"
-             style="@style/OverviewActionButton"
-@@ -59,4 +74,4 @@
+             android:layout_width="wrap_content"
+@@ -57,4 +72,4 @@
          android:layout_gravity="bottom|center_horizontal"
          android:visibility="gone" />
  
@@ -73,10 +73,10 @@ index fcd2e54..9d64455 100644
 \ No newline at end of file
 +</com.android.quickstep.views.OverviewActionsView>
 diff --git a/quickstep/src/com/android/quickstep/fallback/RecentsState.java b/quickstep/src/com/android/quickstep/fallback/RecentsState.java
-index 77aac41..358f36d 100644
+index b6ff5c5..d41ad02 100644
 --- a/quickstep/src/com/android/quickstep/fallback/RecentsState.java
 +++ b/quickstep/src/com/android/quickstep/fallback/RecentsState.java
-@@ -140,7 +140,7 @@ public class RecentsState implements BaseState<RecentsState> {
+@@ -138,7 +138,7 @@ public class RecentsState implements BaseState<RecentsState> {
       * For this state, whether clear all button should be shown.
       */
      public boolean hasClearAllButton() {
@@ -86,7 +86,7 @@ index 77aac41..358f36d 100644
  
      /**
 diff --git a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
-index b86d0c8..52ad63b 100644
+index 6aca760..a420ac5 100644
 --- a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
 +++ b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
 @@ -208,8 +208,7 @@ public class LauncherRecentsView extends RecentsView<QuickstepLauncher, Launcher
@@ -100,10 +100,10 @@ index b86d0c8..52ad63b 100644
                      & ADD_DESK_BUTTON) != 0;
              setDisallowScrollToClearAll(!hasClearAllButton);
 diff --git a/quickstep/src/com/android/quickstep/views/RecentsView.java b/quickstep/src/com/android/quickstep/views/RecentsView.java
-index 3e4b953..f5645ac 100644
+index 6eb2f70..93f18aa 100644
 --- a/quickstep/src/com/android/quickstep/views/RecentsView.java
 +++ b/quickstep/src/com/android/quickstep/views/RecentsView.java
-@@ -127,6 +127,7 @@ import android.view.ViewTreeObserver.OnScrollChangedListener;
+@@ -123,6 +123,7 @@ import android.view.ViewTreeObserver.OnScrollChangedListener;
  import android.view.accessibility.AccessibilityEvent;
  import android.view.accessibility.AccessibilityNodeInfo;
  import android.view.animation.Interpolator;
@@ -111,7 +111,7 @@ index 3e4b953..f5645ac 100644
  import android.widget.ListView;
  import android.widget.OverScroller;
  import android.widget.Toast;
-@@ -556,6 +557,7 @@ public abstract class RecentsView<
+@@ -558,6 +559,7 @@ public abstract class RecentsView<
      private final RecentsModel mModel;
      private final int mSplitPlaceholderSize;
      private final int mSplitPlaceholderInset;
@@ -119,8 +119,8 @@ index 3e4b953..f5645ac 100644
      private final ClearAllButton mClearAllButton;
      @Nullable
      private AddDesktopButton mAddDesktopButton = null;
-@@ -1213,6 +1215,8 @@ public abstract class RecentsView<
-         mActionsView.updateFor3pLauncher(!supportsAppPairs());
+@@ -1237,6 +1239,8 @@ public abstract class RecentsView<
+         mActionsView.updateFor3pLauncher(mIs3PLauncher);
          mSplitSelectStateController = splitController;
          mDesktopRecentsTransitionController = desktopRecentsTransitionController;
 +        mActionClearAllButton = (Button) mActionsView.findViewById(R.id.action_clear_all);
@@ -128,7 +128,7 @@ index 3e4b953..f5645ac 100644
      }
  
      public SplitSelectStateController getSplitSelectController() {
-@@ -1688,7 +1692,7 @@ public abstract class RecentsView<
+@@ -1708,7 +1712,7 @@ public abstract class RecentsView<
       * button fully visible, center page is Clear All button.
       */
      public boolean isClearAllHidden() {
@@ -138,5 +138,5 @@ index 3e4b953..f5645ac 100644
  
      @Override
 -- 
-2.51.0
+2.52.0
 

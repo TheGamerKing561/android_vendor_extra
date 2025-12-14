@@ -1,7 +1,7 @@
-From faefa9162281472b1844ede37c656608b57be160 Mon Sep 17 00:00:00 2001
+From bf71557c17b77f64aee1da4c39fccafe6a5942e6 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 21:00:42 -0700
-Subject: [PATCH 13/35] ripple: Replace with Fluent Design-inspired ripple
+Subject: [PATCH 12/26] ripple: Replace with Fluent Design-inspired ripple
  animation
 
 This is a new GLSL ripple animation inspired by Microsoft's Fluent

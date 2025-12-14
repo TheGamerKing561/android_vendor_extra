@@ -1,7 +1,7 @@
-From ce8f251602286995b2a93e2e138179ecc3474a3f Mon Sep 17 00:00:00 2001
+From 8bc80ec1aad94647dda739fffd643d6b6136a40e Mon Sep 17 00:00:00 2001
 From: Pawit Pornkitprasan <p.pawit@gmail.com>
 Date: Mon, 17 Nov 2014 18:59:57 +0100
-Subject: [PATCH 19/35] AbsListView: Improve scrolling cache
+Subject: [PATCH 18/26] AbsListView: Improve scrolling cache
 
 Scrolling cache helps make short scrolls/flings smooth but will
 cause stutter when long flings are made. This patch disables
@@ -19,10 +19,10 @@ Signed-off-by: Alex Naidis <alex.naidis@linux.com>
  1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/core/java/android/widget/AbsListView.java b/core/java/android/widget/AbsListView.java
-index fc3014a0e..35e74bd86 100644
+index dcacebd7f..1e3a94f2e 100644
 --- a/core/java/android/widget/AbsListView.java
 +++ b/core/java/android/widget/AbsListView.java
-@@ -697,6 +697,7 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
+@@ -699,6 +699,7 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
      private int mMinimumVelocity;
      @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.P, trackingBug = 124051740)
      private int mMaximumVelocity;
@@ -30,7 +30,7 @@ index fc3014a0e..35e74bd86 100644
      private float mVelocityScale = 1.0f;
  
      final boolean[] mIsScrap = new boolean[1];
-@@ -1011,6 +1012,7 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
+@@ -1015,6 +1016,7 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
          mVerticalScrollFactor = configuration.getScaledVerticalScrollFactor();
          mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
          mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
@@ -38,7 +38,7 @@ index fc3014a0e..35e74bd86 100644
          mOverscrollDistance = configuration.getScaledOverscrollDistance();
          mOverflingDistance = configuration.getScaledOverflingDistance();
  
-@@ -4965,7 +4967,7 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
+@@ -4969,7 +4971,7 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
                      // Keep the fling alive a little longer
                      postDelayed(this, FLYWHEEL_TIMEOUT);
                  } else {
@@ -47,7 +47,7 @@ index fc3014a0e..35e74bd86 100644
                      mTouchMode = TOUCH_MODE_SCROLL;
                      reportScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
                  }
-@@ -4985,6 +4987,11 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
+@@ -4989,6 +4991,11 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
          // Use AbsListView#fling(int) instead
          @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.P)
          void start(int initialVelocity) {
@@ -59,7 +59,7 @@ index fc3014a0e..35e74bd86 100644
              int initialY = initialVelocity < 0 ? Integer.MAX_VALUE : 0;
              mLastFlingY = initialY;
              mScroller.setInterpolator(null);
-@@ -5065,6 +5072,10 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
+@@ -5069,6 +5076,10 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
          // To interrupt a fling early you should use smoothScrollBy(0,0) instead
          @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.P)
          void endFling() {
@@ -70,7 +70,7 @@ index fc3014a0e..35e74bd86 100644
              mTouchMode = TOUCH_MODE_REST;
  
              removeCallbacks(this);
-@@ -5073,7 +5084,8 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
+@@ -5077,7 +5088,8 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
              if (!mSuppressIdleStateChangeCall) {
                  reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
              }
