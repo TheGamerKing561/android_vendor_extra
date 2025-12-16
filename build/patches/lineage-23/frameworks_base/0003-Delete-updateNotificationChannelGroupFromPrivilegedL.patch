@@ -1,0 +1,57 @@
+From 55fec4b8c50358a7254548b3bab99432573d2fd3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Mat=C3=ADas=20Hern=C3=A1ndez?= <matiashe@google.com>
+Date: Thu, 3 Jul 2025 17:35:17 +0200
+Subject: [PATCH 03/55] Delete
+ updateNotificationChannelGroupFromPrivilegedListener
+
+This is an unpublished (AIDL only) method and was never used from NLS (or anywhere else).
+
+Bug: 426205822
+Test: build
+Flag: EXEMPT Code deletion
+(cherry picked from commit 6077349a00fdac577592284eadddd18b73c0262e)
+Cherrypick-From: https://googleplex-android-review.googlesource.com/q/commit:6d846a1a76fd2a45cf4cd9575673db2644b153fc
+Merged-In: I65438b1af637f3ba9b75a85f780bdb7867cc4ba8
+Change-Id: I65438b1af637f3ba9b75a85f780bdb7867cc4ba8
+---
+ core/java/android/app/INotificationManager.aidl       |  1 -
+ .../notification/NotificationManagerService.java      | 11 -----------
+ 2 files changed, 12 deletions(-)
+
+diff --git a/core/java/android/app/INotificationManager.aidl b/core/java/android/app/INotificationManager.aidl
+index e6aad2d99..23d1090ed 100644
+--- a/core/java/android/app/INotificationManager.aidl
++++ b/core/java/android/app/INotificationManager.aidl
+@@ -179,7 +179,6 @@ interface INotificationManager
+     void setInterruptionFilter(String pkg, int interruptionFilter, boolean fromUser);
+ 
+     NotificationChannel createConversationNotificationChannelForPackageFromPrivilegedListener(in INotificationListener token, String pkg, in UserHandle user, String parentChannelId, String conversationId);
+-    void updateNotificationChannelGroupFromPrivilegedListener(in INotificationListener token, String pkg, in UserHandle user, in NotificationChannelGroup group);
+     void updateNotificationChannelFromPrivilegedListener(in INotificationListener token, String pkg, in UserHandle user, in NotificationChannel channel);
+     ParceledListSlice getNotificationChannelsFromPrivilegedListener(in INotificationListener token, String pkg, in UserHandle user);
+     ParceledListSlice getNotificationChannelGroupsFromPrivilegedListener(in INotificationListener token, String pkg, in UserHandle user);
+diff --git a/services/core/java/com/android/server/notification/NotificationManagerService.java b/services/core/java/com/android/server/notification/NotificationManagerService.java
+index 01f7a0ed1..a40afda0e 100644
+--- a/services/core/java/com/android/server/notification/NotificationManagerService.java
++++ b/services/core/java/com/android/server/notification/NotificationManagerService.java
+@@ -7270,17 +7270,6 @@ public class NotificationManagerService extends SystemService {
+                     pkg, uid, parentId, conversationId, false, false).copy();
+         }
+ 
+-        @Override
+-        public void updateNotificationChannelGroupFromPrivilegedListener(
+-                INotificationListener token, String pkg, UserHandle user,
+-                NotificationChannelGroup group) throws RemoteException {
+-            Objects.requireNonNull(user);
+-            verifyPrivilegedListener(token, user, false);
+-            createNotificationChannelGroup(
+-                    pkg, getUidForPackageAndUser(pkg, user), group, false, true);
+-            handleSavePolicyFile();
+-        }
+-
+         @Override
+         public void updateNotificationChannelFromPrivilegedListener(INotificationListener token,
+                 String pkg, UserHandle user, NotificationChannel channel) throws RemoteException {
+-- 
+2.52.0
+

@@ -1,4 +1,4 @@
-From a6aee2028f3127f0b64a0d4dcf5fc0da2e6caa43 Mon Sep 17 00:00:00 2001
+From adcd371d2a8e5de98fe32f74ee3e59399a5889d0 Mon Sep 17 00:00:00 2001
 From: Jason Edson <jaysonedson@gmail.com>
 Date: Thu, 26 Sep 2019 22:03:37 -0700
 Subject: [PATCH 3/6] cleanbuild: Remove obj/{DTB,DTBO,KERNEL}_OBJ on
@@ -12,11 +12,11 @@ Signed-off-by: Subhajeet Muhuri <subhajeet.muhuri@aosip.dev>
  1 file changed, 3 insertions(+)
 
 diff --git a/ui/build/cleanbuild.go b/ui/build/cleanbuild.go
-index 4c20690..9fd6934 100644
+index 42bc9a5..663f072 100644
 --- a/ui/build/cleanbuild.go
 +++ b/ui/build/cleanbuild.go
-@@ -134,6 +134,9 @@ func installClean(ctx Context, config Config) {
- 		productOut("recovery_kernel"),
+@@ -133,6 +133,9 @@ func installClean(ctx Context, config Config) {
+ 		productOut("kernel-*"),
  		productOut("data"),
  		productOut("skin"),
 +		productOut("obj/DTB_OBJ"),

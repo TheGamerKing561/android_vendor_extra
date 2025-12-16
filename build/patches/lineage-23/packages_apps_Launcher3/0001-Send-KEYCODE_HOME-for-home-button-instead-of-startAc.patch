@@ -1,0 +1,306 @@
+From 9d572f1991663ffc4498254e1d19eebb45a44705 Mon Sep 17 00:00:00 2001
+From: Tony Wickham <twickham@google.com>
+Date: Fri, 22 Aug 2025 14:24:04 -0700
+Subject: [PATCH 1/5] Send KEYCODE_HOME for home button instead of
+ startActivity directly
+
+Also updated calls to onBackEvent to match new signature of
+including displayId.
+
+Bug: 381339822
+Flag: com.android.launcher3.home_button_uses_keycode_home
+Test: manual, also OverviewCommandHelperTest
+(cherry picked from https://googleplex-android-review.googlesource.com/q/commit:9ba5fcaffa95621af543be20851806f7dec88183)
+Cherrypick-From: https://googleplex-android-review.googlesource.com/q/commit:646dfdffb40a2ee31ea5d9fde44a320436b27ff5
+Merged-In: I6e1272e1526e8b136376852f8ff50e3fa68bbede
+Change-Id: I6e1272e1526e8b136376852f8ff50e3fa68bbede
+---
+ .../launcher3/taskbar/TaskbarManagerImpl.java    |  4 ++--
+ .../taskbar/TaskbarNavButtonController.java      | 16 ++++++++--------
+ .../taskbar/TaskbarScrimViewController.java      |  2 +-
+ .../android/quickstep/OverviewCommandHelper.kt   |  6 +++---
+ .../src/com/android/quickstep/SystemUiProxy.kt   | 10 ++++++++--
+ .../quickstep/TouchInteractionService.java       |  3 ++-
+ .../taskbar/TaskbarNavButtonControllerTest.java  | 15 +++++++++++----
+ .../taskbar/TaskbarScrimViewControllerTest.kt    |  3 ++-
+ .../quickstep/OverviewCommandHelperTest.kt       |  2 ++
+ 9 files changed, 39 insertions(+), 22 deletions(-)
+
+diff --git a/quickstep/src/com/android/launcher3/taskbar/TaskbarManagerImpl.java b/quickstep/src/com/android/launcher3/taskbar/TaskbarManagerImpl.java
+index 50cab8b3a98..9980160feac 100644
+--- a/quickstep/src/com/android/launcher3/taskbar/TaskbarManagerImpl.java
++++ b/quickstep/src/com/android/launcher3/taskbar/TaskbarManagerImpl.java
+@@ -1628,14 +1628,14 @@ public class TaskbarManagerImpl implements DisplayDecorationListener {
+     private void createNavButtonController(int displayId) {
+         if (!isExternalDisplay(displayId)) {
+             mPrimaryNavButtonController = new TaskbarNavButtonController(
+-                    mPrimaryWindowContext,
++                    displayId,
+                     mNavCallbacks,
+                     SystemUiProxy.INSTANCE.get(mBaseContext),
+                     new Handler(),
+                     new ContextualSearchInvoker(mBaseContext));
+         } else {
+             TaskbarNavButtonController navButtonController = new TaskbarNavButtonController(
+-                    getWindowContext(displayId),
++                    displayId,
+                     mNavCallbacks,
+                     SystemUiProxy.INSTANCE.get(mBaseContext),
+                     new Handler(),
+diff --git a/quickstep/src/com/android/launcher3/taskbar/TaskbarNavButtonController.java b/quickstep/src/com/android/launcher3/taskbar/TaskbarNavButtonController.java
+index cd21de4f777..3c7ea3e6d4e 100644
+--- a/quickstep/src/com/android/launcher3/taskbar/TaskbarNavButtonController.java
++++ b/quickstep/src/com/android/launcher3/taskbar/TaskbarNavButtonController.java
+@@ -117,7 +117,7 @@ public class TaskbarNavButtonController implements TaskbarControllers.LoggableTa
+     private static final int SCREEN_UNPIN_COMBO = BUTTON_BACK | BUTTON_RECENTS;
+     private int mLongPressedButtons = 0;
+ 
+-    private final Context mContext;
++    private final int mDisplayId;
+     private final TaskbarNavButtonCallbacks mCallbacks;
+     private final SystemUiProxy mSystemUiProxy;
+     private final Handler mHandler;
+@@ -128,12 +128,12 @@ public class TaskbarNavButtonController implements TaskbarControllers.LoggableTa
+     private final Runnable mResetLongPress = this::resetScreenUnpin;
+ 
+     public TaskbarNavButtonController(
+-            Context context,
++            int displayId,
+             TaskbarNavButtonCallbacks callbacks,
+             SystemUiProxy systemUiProxy,
+             Handler handler,
+             ContextualSearchInvoker contextualSearchInvoker) {
+-        mContext = context;
++        mDisplayId = displayId;
+         mCallbacks = callbacks;
+         mSystemUiProxy = systemUiProxy;
+         mHandler = handler;
+@@ -348,7 +348,7 @@ public class TaskbarNavButtonController implements TaskbarControllers.LoggableTa
+ 
+     private void navigateHome() {
+         TaskUtils.closeSystemWindowsAsync(CLOSE_SYSTEM_WINDOWS_REASON_HOME_KEY);
+-        mCallbacks.onNavigateHome(mContext.getDisplayId());
++        mCallbacks.onNavigateHome(mDisplayId);
+     }
+ 
+     private void navigateToOverview() {
+@@ -357,11 +357,11 @@ public class TaskbarNavButtonController implements TaskbarControllers.LoggableTa
+         }
+         TestLogging.recordEvent(TestProtocol.SEQUENCE_MAIN, "onOverviewToggle");
+         TaskUtils.closeSystemWindowsAsync(CLOSE_SYSTEM_WINDOWS_REASON_RECENTS);
+-        mCallbacks.onToggleOverview(mContext.getDisplayId());
++        mCallbacks.onToggleOverview(mDisplayId);
+     }
+ 
+     public void hideOverview() {
+-        mCallbacks.onHideOverview(mContext.getDisplayId());
++        mCallbacks.onHideOverview(mDisplayId);
+     }
+ 
+     void sendBackKeyEvent(int action, boolean cancelled) {
+@@ -384,7 +384,7 @@ public class TaskbarNavButtonController implements TaskbarControllers.LoggableTa
+             mSystemUiProxy.updateContextualEduStats(/* isTrackpadGesture= */ false,
+                     GestureType.BACK);
+         }
+-        mSystemUiProxy.onBackEvent(keyEvent);
++        mSystemUiProxy.onBackEvent(keyEvent, mDisplayId);
+         mLastSentBackAction = keyEvent != null ? keyEvent.getAction() : ACTION_UP;
+     }
+ 
+@@ -400,7 +400,7 @@ public class TaskbarNavButtonController implements TaskbarControllers.LoggableTa
+         if (longClick) {
+             mSystemUiProxy.notifyAccessibilityButtonLongClicked();
+         } else {
+-            mSystemUiProxy.notifyAccessibilityButtonClicked(mContext.getDisplayId());
++            mSystemUiProxy.notifyAccessibilityButtonClicked(mDisplayId);
+         }
+     }
+ 
+diff --git a/quickstep/src/com/android/launcher3/taskbar/TaskbarScrimViewController.java b/quickstep/src/com/android/launcher3/taskbar/TaskbarScrimViewController.java
+index bf73f02aaba..70f37037dc9 100644
+--- a/quickstep/src/com/android/launcher3/taskbar/TaskbarScrimViewController.java
++++ b/quickstep/src/com/android/launcher3/taskbar/TaskbarScrimViewController.java
+@@ -155,7 +155,7 @@ public class TaskbarScrimViewController implements TaskbarControllers.LoggableTa
+     }
+ 
+     private void onClick() {
+-        SystemUiProxy.INSTANCE.get(mActivity).onBackEvent(null);
++        SystemUiProxy.INSTANCE.get(mActivity).onBackEvent(null, mActivity.getDisplayId());
+     }
+ 
+     @Override
+diff --git a/quickstep/src/com/android/quickstep/OverviewCommandHelper.kt b/quickstep/src/com/android/quickstep/OverviewCommandHelper.kt
+index 7291616d0e5..4c637a32526 100644
+--- a/quickstep/src/com/android/quickstep/OverviewCommandHelper.kt
++++ b/quickstep/src/com/android/quickstep/OverviewCommandHelper.kt
+@@ -23,6 +23,7 @@ import android.os.SystemClock
+ import android.os.Trace
+ import android.util.Log
+ import android.view.Display.DEFAULT_DISPLAY
++import android.view.KeyEvent
+ import android.view.View
+ import android.window.TransitionInfo
+ import androidx.annotation.BinderThread
+@@ -83,6 +84,7 @@ constructor(
+     private val taskbarManager: TaskbarManager,
+     private val taskAnimationManagerRepository: PerDisplayRepository<TaskAnimationManager>,
+     private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime,
++    private val systemUiProxy: SystemUiProxy,
+ ) {
+     private val coroutineScope =
+         CoroutineScope(SupervisorJob() + dispatcherProvider.lightweightBackground)
+@@ -400,9 +402,7 @@ constructor(
+                     // we should still call it on main thread because launcher is waiting for
+                     // ActivityTaskManager to resume it. Also calling startActivity() on bg thread
+                     // could potentially delay resuming launcher. See b/348668521 for more details.
+-                    touchInteractionService.startActivity(
+-                        overviewComponentObserver.getHomeIntent(command.displayId)
+-                    )
++                    systemUiProxy.onKeyEvent(KeyEvent.KEYCODE_HOME, command.displayId)
+                 }
+                 return true
+             }
+diff --git a/quickstep/src/com/android/quickstep/SystemUiProxy.kt b/quickstep/src/com/android/quickstep/SystemUiProxy.kt
+index afbc4d617d3..3eb1b1f0a3b 100644
+--- a/quickstep/src/com/android/quickstep/SystemUiProxy.kt
++++ b/quickstep/src/com/android/quickstep/SystemUiProxy.kt
+@@ -212,9 +212,15 @@ class SystemUiProxy @Inject constructor(@ApplicationContext private val context:
+         }
+     }
+ 
+-    fun onBackEvent(backEvent: KeyEvent?) =
++    fun onBackEvent(backEvent: KeyEvent?, displayId: Int) =
+         executeWithErrorLog({ "Failed call onBackPressed" }) {
+-            systemUiProxy?.onBackEvent(backEvent)
++            systemUiProxy?.onBackEvent(backEvent, displayId)
++        }
++
++    /** SystemUI will run ACTION_DOWN and ACTION_UP KeyEvents for the given keycode. */
++    fun onKeyEvent(keycode: Int, displayId: Int) =
++        executeWithErrorLog({ "Failed call onKeyEvent ${KeyEvent.keyCodeToString(keycode)}" }) {
++            systemUiProxy?.onKeyEvent(keycode, displayId)
+         }
+ 
+     fun injectLongPress(keyCode: Int) =
+diff --git a/quickstep/src/com/android/quickstep/TouchInteractionService.java b/quickstep/src/com/android/quickstep/TouchInteractionService.java
+index b3ce9414cda..4ccb72347c6 100644
+--- a/quickstep/src/com/android/quickstep/TouchInteractionService.java
++++ b/quickstep/src/com/android/quickstep/TouchInteractionService.java
+@@ -858,9 +858,10 @@ public class TouchInteractionService extends Service {
+         Log.d(TAG, "onUserUnlocked: userId=" + getUserId()
+                 + " instance=" + System.identityHashCode(this));
+         mOverviewComponentObserver = OverviewComponentObserver.INSTANCE.get(this);
++        SystemUiProxy systemUiProxy = SystemUiProxy.INSTANCE.get(this);
+         mOverviewCommandHelper = new OverviewCommandHelper(this,
+                 mOverviewComponentObserver, mDisplayRepository, mTaskbarManager,
+-                mTaskAnimationManagerRepository);
++                mTaskAnimationManagerRepository, systemUiProxy);
+         mActionCornerHandler = LauncherComponentProvider.get(
+                 this).getActionCornerHandlerFactory().create(mOverviewCommandHelper);
+         mUserUnlocked = true;
+diff --git a/quickstep/tests/multivalentTests/src/com/android/launcher3/taskbar/TaskbarNavButtonControllerTest.java b/quickstep/tests/multivalentTests/src/com/android/launcher3/taskbar/TaskbarNavButtonControllerTest.java
+index a1b341d763a..b499e269a21 100644
+--- a/quickstep/tests/multivalentTests/src/com/android/launcher3/taskbar/TaskbarNavButtonControllerTest.java
++++ b/quickstep/tests/multivalentTests/src/com/android/launcher3/taskbar/TaskbarNavButtonControllerTest.java
+@@ -20,6 +20,7 @@ import static com.android.window.flags.Flags.FLAG_PREDICTIVE_BACK_THREE_BUTTON_N
+ import static com.google.common.truth.Truth.assertThat;
+ 
+ import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertTrue;
+ import static org.mockito.ArgumentMatchers.any;
+ import static org.mockito.ArgumentMatchers.anyInt;
+ import static org.mockito.ArgumentMatchers.eq;
+@@ -113,7 +114,7 @@ public class TaskbarNavButtonControllerTest {
+         doReturn(mockStatsLogManager).when(mockTaskbarActivityContext).getStatsLogManager();
+         when(mockTaskbarActivityContext.getDisplayId()).thenReturn(DISPLAY_ID);
+         mNavButtonController = new TaskbarNavButtonController(
+-                mockService,
++                DISPLAY_ID,
+                 mCallbacks,
+                 mockSystemUiProxy,
+                 mockHandler,
+@@ -123,7 +124,7 @@ public class TaskbarNavButtonControllerTest {
+     @Test
+     public void testPressBack() {
+         mNavButtonController.onButtonClick(BUTTON_BACK, mockView);
+-        verify(mockSystemUiProxy, times(1)).onBackEvent(null);
++        verify(mockSystemUiProxy, times(1)).onBackEvent(null, DISPLAY_ID);
+     }
+ 
+     @Test
+@@ -347,11 +348,14 @@ public class TaskbarNavButtonControllerTest {
+     public void testPredictiveBackInvoked() {
+         mNavButtonController.init(mockTaskbarControllers);
+         ArgumentCaptor<KeyEvent> keyEventCaptor = ArgumentCaptor.forClass(KeyEvent.class);
++        ArgumentCaptor<Integer> displayIdCaptor = ArgumentCaptor.forClass(Integer.class);
+         mNavButtonController.sendBackKeyEvent(KeyEvent.ACTION_DOWN, false);
+         mNavButtonController.sendBackKeyEvent(KeyEvent.ACTION_UP, false);
+-        verify(mockSystemUiProxy, times(2)).onBackEvent(keyEventCaptor.capture());
++        verify(mockSystemUiProxy, times(2)).onBackEvent(keyEventCaptor.capture(),
++                displayIdCaptor.capture());
+         verifyKeyEvent(keyEventCaptor.getAllValues().getFirst(), KeyEvent.ACTION_DOWN, false);
+         verifyKeyEvent(keyEventCaptor.getAllValues().getLast(), KeyEvent.ACTION_UP, false);
++        assertTrue(displayIdCaptor.getAllValues().stream().allMatch(v -> v == DISPLAY_ID));
+     }
+ 
+     @Test
+@@ -359,11 +363,14 @@ public class TaskbarNavButtonControllerTest {
+     public void testPredictiveBackCancelled() {
+         mNavButtonController.init(mockTaskbarControllers);
+         ArgumentCaptor<KeyEvent> keyEventCaptor = ArgumentCaptor.forClass(KeyEvent.class);
++        ArgumentCaptor<Integer> displayIdCaptor = ArgumentCaptor.forClass(Integer.class);
+         mNavButtonController.sendBackKeyEvent(KeyEvent.ACTION_DOWN, false);
+         mNavButtonController.sendBackKeyEvent(KeyEvent.ACTION_UP, true);
+-        verify(mockSystemUiProxy, times(2)).onBackEvent(keyEventCaptor.capture());
++        verify(mockSystemUiProxy, times(2)).onBackEvent(keyEventCaptor.capture(),
++                displayIdCaptor.capture());
+         verifyKeyEvent(keyEventCaptor.getAllValues().getFirst(), KeyEvent.ACTION_DOWN, false);
+         verifyKeyEvent(keyEventCaptor.getAllValues().getLast(), KeyEvent.ACTION_UP, true);
++        assertTrue(displayIdCaptor.getAllValues().stream().allMatch(v -> v == DISPLAY_ID));
+     }
+ 
+     @Test
+diff --git a/quickstep/tests/multivalentTests/src/com/android/launcher3/taskbar/TaskbarScrimViewControllerTest.kt b/quickstep/tests/multivalentTests/src/com/android/launcher3/taskbar/TaskbarScrimViewControllerTest.kt
+index ba53dcdc2b8..5ea22ec50bc 100644
+--- a/quickstep/tests/multivalentTests/src/com/android/launcher3/taskbar/TaskbarScrimViewControllerTest.kt
++++ b/quickstep/tests/multivalentTests/src/com/android/launcher3/taskbar/TaskbarScrimViewControllerTest.kt
+@@ -45,6 +45,7 @@ import com.google.common.truth.Truth.assertThat
+ import org.junit.Rule
+ import org.junit.Test
+ import org.junit.runner.RunWith
++import org.mockito.kotlin.any
+ import org.mockito.kotlin.anyOrNull
+ import org.mockito.kotlin.doAnswer
+ import org.mockito.kotlin.spy
+@@ -59,7 +60,7 @@ class TaskbarScrimViewControllerTest {
+         TaskbarWindowSandboxContext.create(
+             SandboxParams({
+                 spy(SystemUiProxy(ApplicationProvider.getApplicationContext())) {
+-                    doAnswer { backPressed = true }.whenever(it).onBackEvent(anyOrNull())
++                    doAnswer { backPressed = true }.whenever(it).onBackEvent(anyOrNull(), any())
+                 }
+             })
+         )
+diff --git a/quickstep/tests/multivalentTests/src/com/android/quickstep/OverviewCommandHelperTest.kt b/quickstep/tests/multivalentTests/src/com/android/quickstep/OverviewCommandHelperTest.kt
+index d98cb989b52..e90f3629881 100644
+--- a/quickstep/tests/multivalentTests/src/com/android/quickstep/OverviewCommandHelperTest.kt
++++ b/quickstep/tests/multivalentTests/src/com/android/quickstep/OverviewCommandHelperTest.kt
+@@ -69,6 +69,7 @@ class OverviewCommandHelperTest {
+ 
+     private val displayRepository: DisplayRepository = mock()
+     private val executeCommandDisplayIds = mutableListOf<Int>()
++    private val systemUiProxy: SystemUiProxy = mock()
+ 
+     private val recentView: RecentsView<*, *> = mock()
+     private val stateManager: StateManager<LauncherState, StatefulActivity<LauncherState>> = mock()
+@@ -112,6 +113,7 @@ class OverviewCommandHelperTest {
+                     taskAnimationManagerRepository =
+                         FakePerDisplayRepository<TaskAnimationManager> { _ -> taskAnimationManager },
+                     elapsedRealtime = ::elapsedRealtime,
++                    systemUiProxy = systemUiProxy,
+                 )
+             )
+     }
+-- 
+2.52.0
+

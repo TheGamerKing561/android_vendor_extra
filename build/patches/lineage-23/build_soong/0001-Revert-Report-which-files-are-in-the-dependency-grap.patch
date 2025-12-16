@@ -1,4 +1,4 @@
-From d69ae816880803bdbcc5090c01bdd26c136bc363 Mon Sep 17 00:00:00 2001
+From e096df7270f37e363dce549400fcda04b9aff23d Mon Sep 17 00:00:00 2001
 From: Cole Faust <colefaust@google.com>
 Date: Wed, 25 Jun 2025 10:02:22 -0700
 Subject: [PATCH 1/6] Revert "Report which files are in the dependency graph
@@ -22,10 +22,10 @@ Change-Id: Ib0bbd986a44819e0664bdca05c92aeb44392a3bf
  delete mode 100644 ui/build/source_inputs.go
 
 diff --git a/ui/build/Android.bp b/ui/build/Android.bp
-index a868d6a..32ffcec 100644
+index e118ced..3ff24cd 100644
 --- a/ui/build/Android.bp
 +++ b/ui/build/Android.bp
-@@ -55,7 +55,6 @@ bootstrap_go_package {
+@@ -56,7 +56,6 @@ bootstrap_go_package {
          "config.go",
          "context.go",
          "staging_snapshot.go",
@@ -34,17 +34,17 @@ index a868d6a..32ffcec 100644
          "environment.go",
          "exec.go",
 diff --git a/ui/build/build.go b/ui/build/build.go
-index 781ca18..9178eef 100644
+index a8a2190..120bf8e 100644
 --- a/ui/build/build.go
 +++ b/ui/build/build.go
-@@ -534,5 +534,4 @@ func distFile(ctx Context, config Config, src string, subDirs ...string) {
+@@ -541,5 +541,4 @@ func distFile(ctx Context, config Config, src string, subDirs ...string) {
  // Be careful, anything added here slows down EVERY CI build
  func runDistActions(ctx Context, config Config) {
  	runStagingSnapshot(ctx, config)
 -	runSourceInputs(ctx, config)
  }
 diff --git a/ui/build/ninja.go b/ui/build/ninja.go
-index e2a568f..8e5810c 100644
+index 47975d1..136b925 100644
 --- a/ui/build/ninja.go
 +++ b/ui/build/ninja.go
 @@ -17,7 +17,6 @@ package build
@@ -55,7 +55,7 @@ index e2a568f..8e5810c 100644
  	"path/filepath"
  	"sort"
  	"strconv"
-@@ -357,46 +356,3 @@ func (c *ninjaStucknessChecker) check(ctx Context, config Config) {
+@@ -360,46 +359,3 @@ func (c *ninjaStucknessChecker) check(ctx Context, config Config) {
  	}
  	c.prevModTime = newModTime
  }
