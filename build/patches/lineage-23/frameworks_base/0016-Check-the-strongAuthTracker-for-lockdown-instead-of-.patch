@@ -1,7 +1,7 @@
-From b93b488534f4c95e4c3a6966c5e248975791be62 Mon Sep 17 00:00:00 2001
+From c6926fe1ecde27b4a37c2d58819faca8913bd5af Mon Sep 17 00:00:00 2001
 From: beverlyt <beverlyt@google.com>
 Date: Mon, 15 Sep 2025 15:57:25 +0000
-Subject: [PATCH 16/55] Check the strongAuthTracker for lockdown instead of
+Subject: [PATCH 16/56] Check the strongAuthTracker for lockdown instead of
  LockPatternUtils
 
 LockPatternUtils and the StrongAuthTracker check for

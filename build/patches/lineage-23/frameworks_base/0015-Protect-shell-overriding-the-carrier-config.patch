@@ -1,7 +1,7 @@
-From 802c9eedf7e7c246c7adabcff8312722c72d163d Mon Sep 17 00:00:00 2001
+From 8f2d0b97b6e9acd7bbd1eab218128534b834608d Mon Sep 17 00:00:00 2001
 From: Jayachandran C <jayachandranc@google.com>
 Date: Tue, 2 Sep 2025 05:56:47 +0000
-Subject: [PATCH 15/55] Protect shell overriding the carrier config
+Subject: [PATCH 15/56] Protect shell overriding the carrier config
 
 Bug: 441823943
 Flag: EXEMPT Bugfix

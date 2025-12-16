@@ -1,7 +1,7 @@
-From d0befdea56d6c24dd151d369c0a495d902344a4c Mon Sep 17 00:00:00 2001
+From 8b0248b39e3942d4668dc3738fe39281bbbc8296 Mon Sep 17 00:00:00 2001
 From: claxten10 <claxten10@gmail.com>
 Date: Wed, 12 Nov 2025 17:59:44 +0530
-Subject: [PATCH 52/55] res: Increase alpha duration from 83ms to 160ms
+Subject: [PATCH 52/56] res: Increase alpha duration from 83ms to 160ms
 
 * 83ms seems to be too quick and creates an "unsmooth" transition, increasing
   to 160ms which seems to be a sweet spot and looks quite smooth.

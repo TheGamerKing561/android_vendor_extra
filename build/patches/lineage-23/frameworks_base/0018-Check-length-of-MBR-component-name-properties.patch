@@ -1,7 +1,7 @@
-From d6455be78ef82c6e42ae3a8171a6cbb007e53b1d Mon Sep 17 00:00:00 2001
+From 87992cb405a96e5762038ddad050bd8274042aa3 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Marc=20B=C3=A4chinger?= <bachinger@google.com>
 Date: Wed, 10 Sep 2025 14:47:32 +0000
-Subject: [PATCH 18/55] Check length of MBR component name properties
+Subject: [PATCH 18/56] Check length of MBR component name properties
 
 Test: Can't be tested on main as PackageManager prevents it
 Flag: EXEMPT BUGFIX

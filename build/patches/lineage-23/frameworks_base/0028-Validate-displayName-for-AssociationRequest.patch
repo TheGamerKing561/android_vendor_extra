@@ -1,7 +1,7 @@
-From d3b684d3ec3f6455f85811693bf0120a40e56b35 Mon Sep 17 00:00:00 2001
+From 556f122d3c0aa2f502e054d3134c25f5a2765668 Mon Sep 17 00:00:00 2001
 From: Evan Chen <evanxinchen@google.com>
 Date: Tue, 23 Sep 2025 18:17:07 +0000
-Subject: [PATCH 28/55] Validate displayName for AssociationRequest
+Subject: [PATCH 28/56] Validate displayName for AssociationRequest
 
 validate the length of displayName in the constructor, setDisplayName
 and the builder

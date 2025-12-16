@@ -1,7 +1,7 @@
-From 42fc8f86d10fe089de5e69bfe5a436b264424e1b Mon Sep 17 00:00:00 2001
+From 41840fb8cade07a3a433189a4a72c3c732839180 Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Sat, 16 Mar 2024 20:01:22 +0530
-Subject: [PATCH 54/55] Allow signature spoofing on user builds
+Subject: [PATCH 55/56] Allow signature spoofing on user builds
 
 * This is custom rom breaking google's integrity check.
 

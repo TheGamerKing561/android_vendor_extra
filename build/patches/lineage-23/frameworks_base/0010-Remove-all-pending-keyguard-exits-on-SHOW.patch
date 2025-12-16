@@ -1,7 +1,7 @@
-From 4f509ac91b7821da449922331fe883b120ef70a0 Mon Sep 17 00:00:00 2001
+From a57099c7f9bac30bc49d813f5f2e1846043c68df Mon Sep 17 00:00:00 2001
 From: Matt Pietal <mpietal@google.com>
 Date: Wed, 30 Jul 2025 16:11:30 +0000
-Subject: [PATCH 10/55] Remove all pending keyguard exits on SHOW
+Subject: [PATCH 10/56] Remove all pending keyguard exits on SHOW
 
 Noticed during rapid requests to enabled/disable keyguard,
 prevent any preexisting requests to hide or dismiss keyguard

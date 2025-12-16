@@ -1,7 +1,7 @@
-From b68ed3a8c81e8847b0f656e9e17e43eb8001f013 Mon Sep 17 00:00:00 2001
+From 12131e3664bbd7b2a6e4ce69b4f6724861b28bed Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Mat=C3=ADas=20Hern=C3=A1ndez?= <matiashe@google.com>
 Date: Mon, 21 Jul 2025 07:51:44 -0700
-Subject: [PATCH 12/55] Prevent accidental creation of PackagePreferences for
+Subject: [PATCH 12/56] Prevent accidental creation of PackagePreferences for
  non-existing packages
 
 This could be caused by (indirectly) invoking PreferencesHelper.getOrCreatePackagePreferences with an INVALID_UID (e.g. as the result of NMS passing along the result of getUidForPackageAndUser for a missing package). This was never intended -- API calls can result in the creation of PackagePreferences (since the structure is lazily initialized) but only for present packages. In most cases this was prevented by other checks (e.g. canNotifyAsPackage, which fails if missing) but specifically for the "fromPrivilegedListener" methods there was no similar enforcement.

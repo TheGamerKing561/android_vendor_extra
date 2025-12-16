@@ -1,7 +1,7 @@
-From 182d7ef848a1cc95ce43f88dcc5185cae10d1ce2 Mon Sep 17 00:00:00 2001
+From 031a2938893a5f7e705346ba15da46f0793c5d9c Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Sat, 16 Oct 2021 05:28:30 -0700
-Subject: [PATCH 41/55] display: Render screen-off fade animation in linear
+Subject: [PATCH 41/56] display: Render screen-off fade animation in linear
  sRGB space
 
 The sRGB transfer function is a piecewise function with linear and gamma

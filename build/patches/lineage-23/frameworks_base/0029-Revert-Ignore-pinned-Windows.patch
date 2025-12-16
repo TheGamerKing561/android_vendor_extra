@@ -1,7 +1,7 @@
-From 390cbbe34ffc4cb612a4e72d6394c600cdb282e1 Mon Sep 17 00:00:00 2001
+From 8db45e4f0eef054b295ce5bac9b440b90adf7408 Mon Sep 17 00:00:00 2001
 From: Achim Thesmann <achim@google.com>
 Date: Mon, 20 Oct 2025 14:15:14 -0700
-Subject: [PATCH 29/55] Revert "Ignore pinned Windows"
+Subject: [PATCH 29/56] Revert "Ignore pinned Windows"
 
 Revert submission 32704936-b406880479
 

@@ -1,7 +1,7 @@
-From cde39bbdb4b43c05783dc9b68e545aae9b0bf4d9 Mon Sep 17 00:00:00 2001
+From 543670d53ca9413d16aa93bc814b6d67e427c96a Mon Sep 17 00:00:00 2001
 From: claxten10 <claxten10@gmail.com>
 Date: Tue, 11 Nov 2025 18:35:00 +0100
-Subject: [PATCH 50/55] res: Replace fixed dp with a percentage of screen
+Subject: [PATCH 50/56] res: Replace fixed dp with a percentage of screen
 
 * Inspired from T transitions, where instead of setting a fixed 96dp, it used
   a percentage of screen.

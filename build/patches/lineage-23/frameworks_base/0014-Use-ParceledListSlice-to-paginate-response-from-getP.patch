@@ -1,7 +1,7 @@
-From 1947743a722394774bc38a99282e5b98dbc67614 Mon Sep 17 00:00:00 2001
+From 54159a535c02513e25a7ecac607e301695f39c61 Mon Sep 17 00:00:00 2001
 From: yutingfang <yutingfang@google.com>
 Date: Tue, 12 Aug 2025 16:48:55 -0700
-Subject: [PATCH 14/55] Use ParceledListSlice to paginate response from
+Subject: [PATCH 14/56] Use ParceledListSlice to paginate response from
  getPackagesForOpsForDevice binder API
 
 In a previous similar security bug fix ag/31434165 we imposed a

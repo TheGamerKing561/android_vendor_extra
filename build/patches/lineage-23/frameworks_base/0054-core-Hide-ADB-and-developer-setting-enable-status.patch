@@ -1,7 +1,7 @@
-From 8e5bf020e5a0b320730b77baa187fb79049696c9 Mon Sep 17 00:00:00 2001
+From dd70084d631d677d334082bb6d1c1f83b094a157 Mon Sep 17 00:00:00 2001
 From: someone5678 <nemui3353@gmail.com>
 Date: Sat, 12 Aug 2023 17:01:41 +0800
-Subject: [PATCH 53/55] core: Hide ADB and developer setting enable status
+Subject: [PATCH 54/56] core: Hide ADB and developer setting enable status
 
 * Some apps check whether ADB or developer setting is enabled
 * Return 0 to selected apps when those apps getInt

@@ -1,7 +1,7 @@
-From c6df39ebb6086f01ee778141394dde02d413397c Mon Sep 17 00:00:00 2001
+From a7b56b26cfec799a456d2d1b390d0c3127fc65ea Mon Sep 17 00:00:00 2001
 From: Piotr Pawliczek <pawliczek@google.com>
 Date: Wed, 24 Sep 2025 13:53:22 -0700
-Subject: [PATCH 21/55] Do not use BIND_INCLUDE_CAPABILITIES when bind
+Subject: [PATCH 21/56] Do not use BIND_INCLUDE_CAPABILITIES when bind
  PrintService
 
 This is backport of ag/31156800 to 25Q2 security staging branch. This

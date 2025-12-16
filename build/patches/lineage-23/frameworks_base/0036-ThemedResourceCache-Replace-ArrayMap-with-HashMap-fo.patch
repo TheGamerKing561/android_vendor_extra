@@ -1,7 +1,7 @@
-From 2b7c9d4584e56753fef81b8c47e8b091e5de0723 Mon Sep 17 00:00:00 2001
+From 11fb8c918b5b9bff60c0a82e73e53c830a3bf65e Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Wed, 24 Mar 2021 18:56:33 -0700
-Subject: [PATCH 36/55] ThemedResourceCache: Replace ArrayMap with HashMap for
+Subject: [PATCH 36/56] ThemedResourceCache: Replace ArrayMap with HashMap for
  performance
 
 When opening and closing activities in Settings, a significant amount of

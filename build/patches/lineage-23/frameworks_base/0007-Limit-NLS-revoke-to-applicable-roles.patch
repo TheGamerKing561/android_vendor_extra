@@ -1,7 +1,7 @@
-From 62da149e7dfdc68e4896e7b8de656af5291daaf8 Mon Sep 17 00:00:00 2001
+From ae32ae53335afa49ee3f096bf1e14ef09484d017 Mon Sep 17 00:00:00 2001
 From: Guojing Yuan <guojing@google.com>
 Date: Tue, 8 Jul 2025 18:56:34 +0000
-Subject: [PATCH 07/55] [CDM] Limit NLS revoke to applicable roles.
+Subject: [PATCH 07/56] Limit NLS revoke to applicable roles.
 
 Bug: 421919075
 Flag: EXEMPT bugfix

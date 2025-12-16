@@ -1,7 +1,7 @@
-From 516e4e99e139ce3f0464e9372cb2ebc2e35e62e9 Mon Sep 17 00:00:00 2001
+From 99efe5bfd80982e7aa03f233fd1e871183229dba Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Mat=C3=ADas=20Hern=C3=A1ndez?= <matiashe@google.com>
 Date: Fri, 4 Jul 2025 18:18:06 +0200
-Subject: [PATCH 04/55] Cap the number of channels that an NLS can create for
+Subject: [PATCH 04/56] Cap the number of channels that an NLS can create for
  other packages
 
 Also tweaked createConversationNotificationChannelForPackage to fix several edge conditions that could result in NPEs.

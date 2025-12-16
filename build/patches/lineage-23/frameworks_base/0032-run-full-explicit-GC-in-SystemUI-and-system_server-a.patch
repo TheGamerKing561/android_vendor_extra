@@ -1,7 +1,7 @@
-From 57801fd6339214a1be09b2ecf2914f7635e5f99e Mon Sep 17 00:00:00 2001
+From 9b0c3690e54c1213f026681105e6ab60473c1fe3 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <daniel.micay@grapheneos.org>
 Date: Fri, 2 Feb 2024 18:54:40 -0500
-Subject: [PATCH 32/55] run full explicit GC in SystemUI and system_server
+Subject: [PATCH 32/56] run full explicit GC in SystemUI and system_server
  after locking
 
 ART has special support for System.gc() and Android already uses this to

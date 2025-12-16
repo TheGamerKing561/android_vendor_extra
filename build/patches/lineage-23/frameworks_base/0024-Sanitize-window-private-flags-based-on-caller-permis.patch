@@ -1,7 +1,7 @@
-From b6520094e707df2b4c8c732b4ed0824d02f02451 Mon Sep 17 00:00:00 2001
+From e73b521d704cf9921313bf4faf2501919ab064f8 Mon Sep 17 00:00:00 2001
 From: Surbhi Kadam <surbhikadam@google.com>
 Date: Mon, 8 Sep 2025 20:45:12 -0700
-Subject: [PATCH 24/55] Sanitize window private flags based on caller
+Subject: [PATCH 24/56] Sanitize window private flags based on caller
  permissions.
 
 Introduces `sanitizePrivateFlags` to check if the calling application has the necessary permissions to set certain `LayoutParams.privateFlags`. Specifically, `PRIVATE_FLAG_IS_ROUNDED_CORNERS_OVERLAY` and `PRIVATE_FLAG_TRUSTED_OVERLAY` require `INTERNAL_SYSTEM_WINDOW`, and `PRIVATE_FLAG_INTERCEPT_GLOBAL_DRAG_AND_DROP` requires `MANAGE_ACTIVITY_TASKS`. These flags are removed if the caller lacks the required permissions during window relayout.

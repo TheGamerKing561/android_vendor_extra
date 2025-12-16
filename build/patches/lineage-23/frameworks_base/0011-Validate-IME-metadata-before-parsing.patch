@@ -1,7 +1,7 @@
-From 89de48793c849b2c6e391672c5f8b208adc5f8bb Mon Sep 17 00:00:00 2001
+From 03f7f2ee4cce08345c2eae7457194dc457fa2352 Mon Sep 17 00:00:00 2001
 From: Taran Singh <tarandeep@google.com>
 Date: Thu, 17 Jul 2025 05:13:19 +0000
-Subject: [PATCH 11/55] Validate IME metadata before parsing
+Subject: [PATCH 11/56] Validate IME metadata before parsing
 
 Malicious IMEs can load an extremely large metaData for inputmethod xml
 which can lead to IMMS running out of memory while contructing

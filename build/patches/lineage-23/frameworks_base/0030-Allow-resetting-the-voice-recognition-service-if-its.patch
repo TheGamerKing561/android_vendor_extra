@@ -1,7 +1,7 @@
-From 5db784274a7f3f14bc3a341715f355d26297ff9f Mon Sep 17 00:00:00 2001
+From 64587056a4adb717b4379283fcab1904bfb17907 Mon Sep 17 00:00:00 2001
 From: Omar Eissa <oeissa@google.com>
 Date: Wed, 27 Aug 2025 13:10:46 +0000
-Subject: [PATCH 30/55] Allow resetting the voice recognition service if its
+Subject: [PATCH 30/56] Allow resetting the voice recognition service if its
  package uninstalled
 
 Previously, if voice interaction service is set on the device, and the

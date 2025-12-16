@@ -1,7 +1,7 @@
-From dfed7b0fa0ea12529c784fd24c67ee3a32e3cbc1 Mon Sep 17 00:00:00 2001
+From 2612112761856fb66db7055ef8c2f25cee0dee8b Mon Sep 17 00:00:00 2001
 From: Ioana Alexandru <aioana@google.com>
 Date: Wed, 24 Sep 2025 17:52:01 +0200
-Subject: [PATCH 26/55] Enforce a hard limit for the size of images to be
+Subject: [PATCH 26/56] Enforce a hard limit for the size of images to be
  decoded
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

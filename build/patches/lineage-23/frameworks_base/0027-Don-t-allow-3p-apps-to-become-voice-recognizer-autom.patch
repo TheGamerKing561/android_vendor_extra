@@ -1,7 +1,7 @@
-From f654f950abeb9c34d59d657dbb9a50d381bddd00 Mon Sep 17 00:00:00 2001
+From a48f27e78a7f1155858038ed74f7bd6c2e15fada Mon Sep 17 00:00:00 2001
 From: Omar Eissa <oeissa@google.com>
 Date: Wed, 27 Aug 2025 13:55:24 +0000
-Subject: [PATCH 27/55] Don't allow 3p apps to become voice recognizer
+Subject: [PATCH 27/56] Don't allow 3p apps to become voice recognizer
  automatically
 
 Currently, If there is no default recognizer set using config_systemSpeechRecognizer, any 3p app defining recongition service could become the default recognizer automatically without user selection. Make sure that we only automatically select system apps rather random 3p app.

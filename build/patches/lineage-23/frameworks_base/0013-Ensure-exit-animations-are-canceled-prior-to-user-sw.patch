@@ -1,7 +1,7 @@
-From df68c41ffda7d6714ab1ebcb31dca82d9c4dd230 Mon Sep 17 00:00:00 2001
+From c265be78b80dc1bd438afdd005126bb19bf5af86 Mon Sep 17 00:00:00 2001
 From: Matt Pietal <mpietal@google.com>
 Date: Wed, 20 Aug 2025 17:58:26 +0000
-Subject: [PATCH 13/55] Ensure exit animations are canceled prior to user
+Subject: [PATCH 13/56] Ensure exit animations are canceled prior to user
  switch
 
 On user switch, remove any pending requests and set a flag to indicate

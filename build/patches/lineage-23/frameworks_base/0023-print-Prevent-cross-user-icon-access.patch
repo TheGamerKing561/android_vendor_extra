@@ -1,7 +1,7 @@
-From bc895a0cb65a537cad1f6385849f02297ebe7b88 Mon Sep 17 00:00:00 2001
+From f16f6a89a1b79a82163e8c0fedca70619b8a35e8 Mon Sep 17 00:00:00 2001
 From: Nathan Muggli <nmuggli@google.com>
 Date: Tue, 16 Sep 2025 14:40:44 -0600
-Subject: [PATCH 23/55] print: Prevent cross-user icon access
+Subject: [PATCH 23/56] print: Prevent cross-user icon access
 
 A specially crafted URI could cause Uri.getEncodedUserInfo to return an
 incorrect value.  Instead, use the more robust getUserIdFromAuthority.
