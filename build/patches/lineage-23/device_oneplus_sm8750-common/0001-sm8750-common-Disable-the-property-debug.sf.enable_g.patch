@@ -1,0 +1,27 @@
+From 30146eb61bedcbc582efe7f52ebf2c189128f2a1 Mon Sep 17 00:00:00 2001
+From: quic_swarbu <quic_swarbu@quicinc.com>
+Date: Thu, 23 May 2024 12:26:28 +0530
+Subject: [PATCH] sm8750-common: Disable the property
+ debug.sf.enable_gl_backpressure
+
+Change-Id: Ib328ee094d7c164b50007703ab7610661c2ec017
+---
+ vendor.prop | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/vendor.prop b/vendor.prop
+index a5f2c65..31fe844 100644
+--- a/vendor.prop
++++ b/vendor.prop
+@@ -139,7 +139,7 @@ debug.sf.earlyGl.app.duration=13666666
+ debug.sf.earlyGl.sf.duration=10500000
+ debug.sf.early.sf.duration=10500000
+ debug.sf.enable_advanced_sf_phase_offset=1
+-debug.sf.enable_gl_backpressure=1
++debug.sf.enable_gl_backpressure=0
+ debug.sf.enable_hwc_vds=0
+ debug.sf.late.app.duration=13666666
+ debug.sf.late.sf.duration=10500000
+-- 
+2.52.0
+
