@@ -1,7 +1,7 @@
-From 4a35af97568b8b2b568d5c5a1fa919224113a98f Mon Sep 17 00:00:00 2001
+From 5c9795e86f19a82a51fb427a8f3a35b12b69ee3c Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Fri, 28 Oct 2022 23:18:18 +0530
-Subject: [PATCH 5/5] Launcher3: Refresh themed icons after OTA update
+Subject: [PATCH 5/6] Launcher3: Refresh themed icons after OTA update
 
 Change-Id: I17e78fe5962c0ee5dafa907337811cf97578d008
 Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>

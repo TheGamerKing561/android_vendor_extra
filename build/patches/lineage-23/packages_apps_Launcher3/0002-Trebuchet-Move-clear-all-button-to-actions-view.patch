@@ -1,7 +1,7 @@
-From e376bf55ead7ccddf49e2491486a53be29962694 Mon Sep 17 00:00:00 2001
+From 80219f56231e2a7261117bfd22bf71ce3968279f Mon Sep 17 00:00:00 2001
 From: Vachounet <vachounet@live.fr>
 Date: Mon, 26 Oct 2020 17:05:18 +0100
-Subject: [PATCH 3/5] Trebuchet: Move clear all button to actions view
+Subject: [PATCH 2/6] Trebuchet: Move clear all button to actions view
 
 [AndyCGYan: Instead of removing the original, hide it in a simple way]
 [ItsVixano: Match Android 16 QPR1 theme]

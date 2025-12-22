@@ -1,7 +1,7 @@
-From 189b3c00e233a967c948fed316908df60446d32e Mon Sep 17 00:00:00 2001
+From db23cee3f75414563a76a98129231208cf3db2dc Mon Sep 17 00:00:00 2001
 From: John Galt <johngaltfirstrun@gmail.com>
 Date: Tue, 9 Dec 2025 07:53:37 -0500
-Subject: [PATCH 5/5] fix all apps blur
+Subject: [PATCH 4/6] fix all apps blur
 
 getBottomSheetDepth is returning 0 due to old changes or mismerge. This
 is temporary
