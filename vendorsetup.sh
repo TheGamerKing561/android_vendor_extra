@@ -150,7 +150,7 @@ function mka_build() {
 
     if [[ -z "${DEVICE}" ]]; then
         LOGE "Please define --device value"
-        return 0
+        return 1
     fi
 
     # Build
@@ -161,10 +161,10 @@ function mka_build() {
 
     [[ "${DIRTY_BUILD}" != "true" ]] && mka installclean
 
-    while ! mka bacon -j${MKA_JOBS}; do
+    if ! mka bacon -j${MKA_JOBS}; then
         LOGE "bacon failed!"
-        return 0
-    done
+        return 1
+    fi
 
     LOGI "Done!"
 }
@@ -186,7 +186,7 @@ function mka_kernel() {
 
     if [[ -z "${DEVICE}" ]]; then
         LOGE "Please define --device value"
-        return 0
+        return 1
     fi
 
     # Build
@@ -203,10 +203,10 @@ function mka_kernel() {
 
     kernel_targets="bootimage ${device_kernel_targets[$DEVICE]}"
 
-    while ! mka ${kernel_targets} -j${MKA_JOBS}; do
+    if ! mka ${kernel_targets} -j${MKA_JOBS}; then
         LOGE "${kernel_targets} failed!"
-        return 0
-    done
+        return 1
+    fi
 
     LOGI "Done!"
 }
