@@ -27,6 +27,16 @@ ifeq ($(TARGET_FORCE_PREBUILT_KERNEL), true)
 include kernel/lineage/prebuilts/BoardConfigKernel.mk
 endif
 
+# Kernel (serial)
+#   modprobe cdc-acm
+#   putty -serial /dev/ttyACM0 -sercfg 115200
+#   or
+#   while true; do test -e /dev/ttyACM0 && sleep 0.1 && cat /dev/ttyACM0 | grep -vE "^\s?\n$"; done
+ifeq ($(WITH_USB_SERIAL), true)
+BOARD_KERNEL_CMDLINE += console=ttyGS0
+TARGET_KERNEL_CONFIG_EXT += $(VENDOR_EXTRA_PATH)/kernel/configs/usbserial.config
+endif
+
 # Partitions (treble) - reserved size
 EXTRA_TREBLE_PARTITIONS := odm vendor
 EXTRA_TREBLE_RESERVE_SIZE := 104857600 # 100mb * 1024 * 1024
