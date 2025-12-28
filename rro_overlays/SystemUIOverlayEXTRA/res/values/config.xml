@@ -3,7 +3,7 @@
      SPDX-FileCopyrightText: The LineageOS Project
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
     <!-- ComponentName for the file browsing app that the system would expect to be used for
          screenshots. The icon for this app will be shown to the user when informing them that a
          screenshot has been saved to a different profile (e.g. work profile). If blank, a default

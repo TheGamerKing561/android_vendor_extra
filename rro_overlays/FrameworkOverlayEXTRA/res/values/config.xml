@@ -3,21 +3,7 @@
      SPDX-FileCopyrightText: The LineageOS Project
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!--  Maximum number of supported users -->
-    <integer name="config_multiuserMaximumUsers">16</integer>
-
-    <!-- Whether safe headphone hearing is enforced by any regulation (e.g.
-         EN50332-3, EN50332-2) or not (country specific). -->
-    <bool name="config_safe_media_volume_enabled">false</bool>
-
-    <!-- The amount to scale fullscreen snapshots for Overview and snapshot starting windows. -->
-    <item name="config_highResTaskSnapshotScale" format="float" type="dimen">0.7</item>
-
-    <!-- The max scale for the wallpaper when it's zoomed in -->
-    <item name="config_wallpaperMaxScale" format="float" type="dimen">1</item>
-
-    <!-- These are system packages exempted from privacy indicator -->
+<resources>
     <string-array name="config_locationExtraPackageNames" translatable="false">
         <!-- Bluetooth -->
         <item>com.android.bluetooth</item>
@@ -42,4 +28,25 @@
         <!-- Settings -->
         <item>com.android.settings</item>
     </string-array>
+
+    <!--  Maximum number of supported users, including all types of users (profiles, guests, demo,
+          etc.).
+          Setting to 1 enforces a single-user device.
+          For devices that support multiple users, the limit here should be based on overall
+          device storage capabilities and therefore could be set very high.
+          To limit the number of any particular user type, e.g. for UX considerations, set the
+          appropriate maximum in {@link com.android.internal.R.xml#config_user_types}.
+          Normally, storage shouldn't be the limiting factor, so this value should be at least as
+          large as the sum of all individual user type maxima. -->
+    <integer name="config_multiuserMaximumUsers">16</integer>
+
+    <!-- Whether safe headphone hearing is enforced by any regulation (e.g.
+         EN50332-3, EN50332-2) or not (country specific). -->
+    <bool name="config_safe_media_volume_enabled">false</bool>
+
+    <!-- The amount to scale fullscreen snapshots for Overview and snapshot starting windows. -->
+    <item name="config_highResTaskSnapshotScale" format="float" type="dimen">0.7</item>
+
+    <!-- The max scale for the wallpaper when it's zoomed in -->
+    <item name="config_wallpaperMaxScale" format="float" type="dimen">1</item>
 </resources>

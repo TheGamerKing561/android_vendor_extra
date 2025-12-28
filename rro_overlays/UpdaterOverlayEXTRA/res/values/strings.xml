@@ -3,7 +3,7 @@
      SPDX-FileCopyrightText: The LineageOS Project
      SPDX-License-Identifier: Apache-2.0
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
     <!--
         Optional placeholders replaced at runtime:
           {device} - Device name
@@ -12,7 +12,7 @@
     -->
     <string name="updater_server_url" translatable="false">https://files.itsvixano.me/lineage/{device}/ota.json</string>
 
-    <string name="menu_changelog_url" translatable="false">https://files.itsvixano.me/lineage/<xliff:g id="device_name">%1$s</xliff:g></string>
+    <string xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" name="menu_changelog_url" translatable="false">https://files.itsvixano.me/lineage/<xliff:g id="device_name">%1$s</xliff:g></string>
 
-    <string name="blocked_update_info_url" translatable="false">https://wiki.itsvixano.me/devices/<xliff:g id="device_name">%1$s</xliff:g>/upgrade</string>
+    <string xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" name="blocked_update_info_url" translatable="false">https://wiki.itsvixano.me/devices/<xliff:g id="device_name">%1$s</xliff:g>/upgrade</string>
 </resources>
