@@ -38,6 +38,7 @@ export SKIP_ABI_CHECKS=true
 
 # HAX
 export LINEAGE_FIXUP_COMMON_OUT=true
+export SOONG_PARTIAL_COMPILE=true
 export TOP=$(gettop)
 
 # Defs
