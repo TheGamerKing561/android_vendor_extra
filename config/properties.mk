@@ -28,6 +28,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
     ro.surface_flinger.game_default_frame_rate_override=$(TARGET_GAME_DEFAULT_FRAME_RATE) \
     debug.sf.enable_egl_image_tracker=0
 
+# Enable Material Design 3 Expressive
+PRODUCT_PRODUCT_PROPERTIES += \
+    is_expressive_design_enabled=true
+
 # hwui
 PRODUCT_PRODUCT_PROPERTIES += \
     debug.hwui.skia_tracing_enabled=false \
