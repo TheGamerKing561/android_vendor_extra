@@ -1,0 +1,48 @@
+From 22f4c3a0f1e30a43897f3222c087a0849f95f18a Mon Sep 17 00:00:00 2001
+From: Ghosuto <clash.raja10@gmail.com>
+Date: Sat, 25 Nov 2023 00:51:40 +0100
+Subject: [PATCH 2/4] iconloaderlib: Fix themed icon background color tint
+
+Signed-off-by: Ghosuto <clash.raja10@gmail.com>
+Signed-off-by: Dmitrii <bankersenator@gmail.com>
+---
+ iconloaderlib/res/values-night-v31/colors.xml | 6 +++---
+ iconloaderlib/res/values-night/colors.xml     | 8 ++++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/iconloaderlib/res/values-night-v31/colors.xml b/iconloaderlib/res/values-night-v31/colors.xml
+index 6e50d77..e378d5b 100644
+--- a/iconloaderlib/res/values-night-v31/colors.xml
++++ b/iconloaderlib/res/values-night-v31/colors.xml
+@@ -18,8 +18,8 @@
+ -->
+ <resources>
+     <color name="themed_icon_color">@android:color/system_accent1_200</color>
+-    <color name="themed_icon_background_color">@android:color/system_accent2_800</color>
+-    <color name="themed_icon_adaptive_background_color">@android:color/system_accent1_800</color>
++    <color name="themed_icon_background_color">@android:color/system_neutral1_800</color>
++    <color name="themed_icon_adaptive_background_color">@android:color/system_neutral1_800</color>
+     <color name="themed_badge_icon_color">@android:color/system_accent2_800</color>
+-    <color name="themed_badge_icon_background_color">@android:color/system_accent1_200</color>
++    <color name="themed_badge_icon_background_color">@android:color/system_neutral2_200</color>
+ </resources>
+diff --git a/iconloaderlib/res/values-night/colors.xml b/iconloaderlib/res/values-night/colors.xml
+index 9de7074..321f09c 100644
+--- a/iconloaderlib/res/values-night/colors.xml
++++ b/iconloaderlib/res/values-night/colors.xml
+@@ -17,8 +17,8 @@
+ */
+ -->
+ <resources>
+-    <color name="themed_icon_color">#A8C7FA</color>
+-    <color name="themed_icon_background_color">#003355</color>
+-    <color name="themed_badge_icon_color">#003355</color>
+-    <color name="themed_badge_icon_background_color">#A8C7FA</color>
++    <color name="themed_icon_color">@android:color/system_accent1_200</color>
++    <color name="themed_icon_background_color">@android:color/system_neutral1_800</color>
++    <color name="themed_badge_icon_color">@android:color/system_accent2_800</color>
++    <color name="themed_badge_icon_background_color">@android:color/system_neutral2_200</color>
+ </resources>
+-- 
+2.52.0
+

@@ -1,0 +1,53 @@
+From 2cf6b392db73f81792dc97574757297677639705 Mon Sep 17 00:00:00 2001
+From: John Galt <johngaltfirstrun@gmail.com>
+Date: Tue, 16 Dec 2025 12:41:44 -0500
+Subject: [PATCH 4/4] iconloaderlib: fix dark/light theme inverted forced
+ themed icons
+
+Google developer and bug churn goes brrrrr...
+
+Thanks Google for the worst quarterly release since A15 qpr2.
+---
+ .../launcher3/icons/mono/MonoThemedBitmap.kt  | 26 ++++++++++++++++---
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/iconloaderlib/src/com/android/launcher3/icons/mono/MonoThemedBitmap.kt b/iconloaderlib/src/com/android/launcher3/icons/mono/MonoThemedBitmap.kt
+index 159ae54..9e7af19 100644
+--- a/iconloaderlib/src/com/android/launcher3/icons/mono/MonoThemedBitmap.kt
++++ b/iconloaderlib/src/com/android/launcher3/icons/mono/MonoThemedBitmap.kt
+@@ -51,10 +51,28 @@ class MonoThemedBitmap(
+             }
+     }
+ 
+-    fun getUpdatedColors(ctx: Context): IntArray =
+-        if (luminanceDelta != null)
+-            ColorAdapter(luminanceDelta).adaptedColorProvider(colorProvider)(ctx)
+-        else colorProvider(ctx)
++    fun getUpdatedColors(ctx: Context): IntArray {
++        val colors =
++            if (luminanceDelta != null) {
++                ColorAdapter(luminanceDelta).adaptedColorProvider(colorProvider)(ctx)
++            } else {
++                colorProvider(ctx)
++            }
++
++        // Forced themed icons are currently inverted relative to app-provided monochrome
++        // icons, so swap bg/fg unconditionally for that path.
++        return if (luminanceDelta != null) swapBgFg(colors) else colors
++    }
++
++    private fun swapBgFg(colors: IntArray): IntArray {
++        if (colors.size < 2)
++            return colors
++
++        return colors.clone().also {
++            it[0] = colors[1]
++            it[1] = colors[0]
++        }
++    }
+ 
+     companion object {
+         const val DOUBLE_BYTE_SIZE = 8
+-- 
+2.52.0
+

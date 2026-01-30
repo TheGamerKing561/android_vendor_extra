@@ -1,0 +1,26 @@
+From 567575564fbf13ddd776a81fa1d67b728d9017ef Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Mon, 22 Dec 2025 20:56:19 +0100
+Subject: [PATCH 5/5] Launcher3: Reduce padding on all app screen
+
+Change-Id: I7c23b8be01692839f12f6aaaa27e372e1b1d7bf8
+---
+ .../launcher3/allapps/search/AppsSearchContainerLayout.java     | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java b/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
+index 84855f0fabe..895a1c829fe 100644
+--- a/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
++++ b/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
+@@ -195,7 +195,7 @@ public class AppsSearchContainerLayout extends ExtendedEditText
+     @Override
+     public void setInsets(Rect insets) {
+         MarginLayoutParams mlp = (MarginLayoutParams) getLayoutParams();
+-        mlp.topMargin = insets.top;
++        mlp.topMargin = insets.top / 5;
+         requestLayout();
+     }
+ 
+-- 
+2.52.0
+

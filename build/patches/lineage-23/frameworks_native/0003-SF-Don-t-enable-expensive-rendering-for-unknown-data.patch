@@ -1,4 +1,4 @@
-From 00a32bf9a94c1be01774c4d27e4c4493cb2b1561 Mon Sep 17 00:00:00 2001
+From 5204f6db402e47552c7dbae6dde18efef3f8a252 Mon Sep 17 00:00:00 2001
 From: Adithya R <gh0strider.2k18.reborn@gmail.com>
 Date: Sat, 31 Dec 2022 08:31:30 +0000
 Subject: [PATCH 3/3] SF: Don't enable expensive rendering for unknown
@@ -14,10 +14,10 @@ Change-Id: I079c520f63a65c77ba3162664656e607eafff991
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/services/surfaceflinger/CompositionEngine/src/Output.cpp b/services/surfaceflinger/CompositionEngine/src/Output.cpp
-index 87fd00d..92f41cb 100644
+index 68092957ef1..ac01f1eeea8 100644
 --- a/services/surfaceflinger/CompositionEngine/src/Output.cpp
 +++ b/services/surfaceflinger/CompositionEngine/src/Output.cpp
-@@ -1419,7 +1419,8 @@ std::optional<base::unique_fd> Output::composeSurfaces(
+@@ -1449,7 +1449,8 @@ std::optional<base::unique_fd> Output::composeSurfaces(
              std::any_of(clientCompositionLayers.begin(), clientCompositionLayers.end(),
                          [outputDataspace =
                                   clientCompositionDisplay.outputDataspace](const auto& layer) {
@@ -28,5 +28,5 @@ index 87fd00d..92f41cb 100644
      if (expensiveRenderingExpected) {
          setExpensiveRenderingExpected(true);
 -- 
-2.51.0
+2.52.0
 

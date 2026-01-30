@@ -1,0 +1,28 @@
+From 3279a7c0e9dbfd4db053a98922f7cff19e515993 Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Tue, 2 Nov 2021 14:44:13 -0400
+Subject: [PATCH 1/4] iconloaderlib: Invalidate icon cache between OS releases
+
+[neobuddy89: Updated for A15 QPR2]
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+Signed-off-by: Dmitrii <bankersenator@gmail.com>
+---
+ iconloaderlib/src/com/android/launcher3/icons/IconProvider.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/iconloaderlib/src/com/android/launcher3/icons/IconProvider.java b/iconloaderlib/src/com/android/launcher3/icons/IconProvider.java
+index 770bd82..68e1cfc 100644
+--- a/iconloaderlib/src/com/android/launcher3/icons/IconProvider.java
++++ b/iconloaderlib/src/com/android/launcher3/icons/IconProvider.java
+@@ -270,7 +270,7 @@ public class IconProvider {
+      */
+     public void updateSystemState() {
+         mSystemState = mContext.getResources().getConfiguration().getLocales().toLanguageTags()
+-                + "," + Build.VERSION.SDK_INT;
++                + "," + Build.VERSION.INCREMENTAL;
+     }
+ 
+     /**
+-- 
+2.52.0
+
