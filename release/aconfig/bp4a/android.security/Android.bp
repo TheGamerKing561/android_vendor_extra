@@ -4,7 +4,7 @@
 //
 
 aconfig_values {
-    name: "aconfig-values-extra-bp3a-android.security-all",
+    name: "aconfig-values-extra-bp4a-android.security-all",
     package: "android.security",
     srcs: [
         "*_flag_values.textproto",
