@@ -4,18 +4,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Hardcode High Memory Parallel Process
-export NINJA_HIGHMEM_NUM_JOBS=3
+export NINJA_HIGHMEM_NUM_JOBS=1
 
 # Override host metadata to make builds more reproducible and avoid leaking info
 export BUILD_USERNAME=android-build
-export BUILD_HOSTNAME=$(openssl rand -hex 6)
+export BUILD_HOSTNAME=123456789abc
 
 # Dexpreopt
 export WITH_DEXPREOPT_DEBUG_INFO=false
-
-# Enable whole-program R8 Java optimizations for SystemUI and system_server,
-export SYSTEM_OPTIMIZE_JAVA=true
-export SYSTEMUI_OPTIMIZE_JAVA=true
 
 # Make smaller .tar.gz files by excluding debug targets.
 export ART_BUILD_TARGET_DEBUG=false
@@ -38,7 +34,6 @@ export SKIP_ABI_CHECKS=true
 
 # HAX
 export LINEAGE_FIXUP_COMMON_OUT=true
-export SOONG_PARTIAL_COMPILE=true
 export TOP=$(gettop)
 
 # Defs
@@ -46,8 +41,7 @@ LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/confi
 AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' ${TOP}/vendor/lineage/vars/aosp_target_release)
 VENDOR_EXTRA_PATH=${TOP}/vendor/extra
 MKA_JOBS=$(($(nproc) - 5))
-[[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=12
-[[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=15
+[[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=10
 
 # Logging defs
 function LOGI() {
