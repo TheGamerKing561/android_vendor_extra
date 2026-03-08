@@ -17,7 +17,7 @@ TARGET_GAME_DEFAULT_FRAME_RATE ?= 60
 ifneq ($(filter lisa nairo racer,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 TARGET_GAME_DEFAULT_FRAME_RATE := 90
 endif
-ifneq ($(filter cerro gemstone tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+ifneq ($(filter cerro dodge gemstone piloti tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 TARGET_GAME_DEFAULT_FRAME_RATE := 120
 endif
 ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
@@ -27,8 +27,8 @@ endif
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.surface_flinger.game_default_frame_rate_override=$(TARGET_GAME_DEFAULT_FRAME_RATE)
 
-ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 # Display
+ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.sys.activity_anim_perf_override=true
 endif
