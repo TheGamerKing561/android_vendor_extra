@@ -1,0 +1,75 @@
+From 6e89e18ebafd6783a56a2957795b7928d35f9cf6 Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Mon, 23 Mar 2026 13:45:37 +0100
+Subject: [PATCH 5/9] Revert "Finish recents animation when starting home
+ through LauncherWithoutFocusInputConsumer"
+
+This reverts commit 7a6f62167e67f390117987f7d9f3df0ab093c3c8.
+
+Change-Id: I16aef854551944db1b082564dcb8f4f038b42a74
+---
+ .../src/com/android/quickstep/InputConsumerUtils.kt      | 1 -
+ .../LauncherWithoutFocusInputConsumer.java               | 9 ---------
+ 2 files changed, 10 deletions(-)
+
+diff --git a/quickstep/src/com/android/quickstep/InputConsumerUtils.kt b/quickstep/src/com/android/quickstep/InputConsumerUtils.kt
+index ece5b39..56f255b 100644
+--- a/quickstep/src/com/android/quickstep/InputConsumerUtils.kt
++++ b/quickstep/src/com/android/quickstep/InputConsumerUtils.kt
+@@ -772,7 +772,6 @@ object InputConsumerUtils {
+                 deviceState,
+                 gestureState,
+                 inputMonitorCompat,
+-                taskAnimationManager,
+                 disableHorizontalSwipe,
+             )
+         }
+diff --git a/quickstep/src/com/android/quickstep/inputconsumers/LauncherWithoutFocusInputConsumer.java b/quickstep/src/com/android/quickstep/inputconsumers/LauncherWithoutFocusInputConsumer.java
+index 011247f..b8a4677 100644
+--- a/quickstep/src/com/android/quickstep/inputconsumers/LauncherWithoutFocusInputConsumer.java
++++ b/quickstep/src/com/android/quickstep/inputconsumers/LauncherWithoutFocusInputConsumer.java
+@@ -31,8 +31,6 @@ import com.android.launcher3.views.ActivityContext;
+ import com.android.quickstep.GestureState;
+ import com.android.quickstep.InputConsumer;
+ import com.android.quickstep.RecentsAnimationDeviceState;
+-import com.android.quickstep.TaskAnimationManager;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.TriggerSwipeUpTouchTracker;
+ import com.android.systemui.shared.system.InputMonitorCompat;
+ 
+@@ -44,21 +42,18 @@ public class LauncherWithoutFocusInputConsumer implements InputConsumer,
+     private final InputMonitorCompat mInputMonitor;
+     private final TriggerSwipeUpTouchTracker mTriggerSwipeUpTracker;
+     private final GestureState mGestureState;
+-    private final TaskAnimationManager mTaskAnimationManager;
+ 
+     public LauncherWithoutFocusInputConsumer(
+             Context context,
+             RecentsAnimationDeviceState deviceState,
+             GestureState gestureState,
+             InputMonitorCompat inputMonitor,
+-            TaskAnimationManager taskAnimationManager,
+             boolean disableHorizontalSwipe) {
+         mContext = context;
+         mGestureState = gestureState;
+         mInputMonitor = inputMonitor;
+         mTriggerSwipeUpTracker = new TriggerSwipeUpTouchTracker(context, disableHorizontalSwipe,
+                 deviceState.getNavBarPosition(), this);
+-        mTaskAnimationManager = taskAnimationManager;
+     }
+ 
+     @Override
+@@ -92,10 +87,6 @@ public class LauncherWithoutFocusInputConsumer implements InputConsumer,
+     @Override
+     public void onSwipeUp(boolean wasFling, PointF finalVelocity) {
+         startHomeIntentSafely(mContext, mGestureState.getHomeIntent(), null, TAG);
+-        mTaskAnimationManager.finishRunningRecentsAnimation(
+-                /* toHome= */ true,
+-                /* reason= */ new ActiveGestureLog.CompoundString(
+-                        "LauncherWithoutFocusInputConsumer: finish recents animation onSwipeUp"));
+         ActivityContext activity = ActivityContext.lookupContext(mContext);
+         int state = (mGestureState != null && mGestureState.getEndTarget() != null)
+                 ? mGestureState.getEndTarget().containerType
+-- 
+2.53.0
+

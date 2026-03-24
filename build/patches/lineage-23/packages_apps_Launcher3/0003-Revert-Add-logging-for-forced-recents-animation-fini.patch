@@ -1,0 +1,781 @@
+From 8bbd560463ff9c37ed595722e4eb0ca4496c51c6 Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Mon, 23 Mar 2026 12:50:38 +0100
+Subject: [PATCH 3/9] Revert "Add logging for forced recents animation
+ finishes"
+
+This reverts commit 295f991320348997edb1c1b5a8af401960ea3dfa.
+
+Change-Id: I6175d765c6c5efc0a5b022572f7d3da21585b302
+---
+ .../android/quickstep/AbsSwipeUpHandler.java  | 57 +++-------------
+ .../quickstep/FallbackSwipeHandler.java       |  7 +-
+ .../quickstep/LauncherSwipeHandlerV2.java     |  7 +-
+ .../quickstep/RecentsAnimationCallbacks.java  |  7 +-
+ .../quickstep/RecentsAnimationController.java | 50 ++++++--------
+ .../quickstep/TaskAnimationManager.java       | 68 +++++--------------
+ .../DeviceLockedInputConsumer.java            | 12 +---
+ .../OtherActivityInputConsumer.java           | 17 +----
+ .../ProgressDelegateInputConsumer.java        |  9 +--
+ .../ResetGestureInputConsumer.kt              |  6 +-
+ .../util/SplitSelectStateController.java      |  6 +-
+ .../SplitWithKeyboardShortcutController.java  |  9 ++-
+ .../android/quickstep/views/RecentsView.java  | 22 ++----
+ .../window/RecentsWindowSwipeHandler.java     |  7 +-
+ .../util/ActiveGestureProtoLogProxy.java      | 22 ++----
+ .../quickstep/AbsSwipeUpHandlerTestCase.java  |  8 +--
+ 16 files changed, 83 insertions(+), 231 deletions(-)
+
+diff --git a/quickstep/src/com/android/quickstep/AbsSwipeUpHandler.java b/quickstep/src/com/android/quickstep/AbsSwipeUpHandler.java
+index cac4a95..a24650d 100644
+--- a/quickstep/src/com/android/quickstep/AbsSwipeUpHandler.java
++++ b/quickstep/src/com/android/quickstep/AbsSwipeUpHandler.java
+@@ -641,12 +641,7 @@ public abstract class AbsSwipeUpHandler<
+             if (snapshots != null) {
+                 mRecentsView.switchToScreenshot(snapshots, () -> {
+                     if (mRecentsAnimationController != null) {
+-                        mRecentsAnimationController.finish(
+-                                /* toHome= */ true,
+-                                /* onFinishComplete= */ () -> {},
+-                                new ActiveGestureLog.CompoundString(
+-                                        "AbsSwipeUpHandler.onActivityInit: switch to screenshot on "
+-                                                + "recents animation canceled"));
++                        mRecentsAnimationController.finish(/* toHome= */ true, () -> {});
+                     }
+                     mRecentsView.onRecentsAnimationComplete();
+                 });
+@@ -766,11 +761,9 @@ public abstract class AbsSwipeUpHandler<
+ 
+     private void onDeferredActivityLaunch() {
+         mContainerInterface.switchRunningTaskViewToScreenshot(
+-                null, () -> mTaskAnimationManager.finishRunningRecentsAnimation(
+-                        /* toHome= */ true,
+-                        /* reason= */ new ActiveGestureLog.CompoundString(
+-                                "AbsSwipeUpHandler.onDeferredActivityLaunch: "
+-                                        + "switching running task view to screenshot")));
++                null, () -> {
++                    mTaskAnimationManager.finishRunningRecentsAnimation(true /* toHome */);
++                });
+     }
+ 
+     private void setupRecentsViewUi() {
+@@ -2332,11 +2325,7 @@ public abstract class AbsSwipeUpHandler<
+     @UiThread
+     private void resumeLastTask() {
+         if (mRecentsAnimationController != null) {
+-            mRecentsAnimationController.finish(
+-                    /* toHome= */ false,
+-                    /* onFinishComplete= */ null,
+-                    /* reason= */ new ActiveGestureLog.CompoundString(
+-                            "AbsSwipeUpHandler.resumeLastTask"));
++            mRecentsAnimationController.finish(false /* toRecents */, null);
+         }
+         doLogGesture(LAST_TASK, null);
+         reset();
+@@ -2345,11 +2334,7 @@ public abstract class AbsSwipeUpHandler<
+     @UiThread
+     private void finishRejectHome() {
+         if (mRecentsAnimationController != null) {
+-            mRecentsAnimationController.finish(
+-                    /* toHome=  */ false,
+-                    /* onFinishComplete= */ null,
+-                    /* reason= */ new ActiveGestureLog.CompoundString(
+-                            "AbsSwipeUpHandler.finishRejectHome"));
++            mRecentsAnimationController.finish(false /* toRecents */, null);
+         }
+         doLogGesture(REJECT_HOME, null);
+         reset();
+@@ -2386,11 +2371,7 @@ public abstract class AbsSwipeUpHandler<
+         // Finish the controller here, since we won't get onTaskAppeared() for a task that already
+         // appeared.
+         if (mRecentsAnimationController != null) {
+-            mRecentsAnimationController.finish(
+-                    /* toHome= */ false,
+-                    /* onfinishComplete= */ null,
+-                    /* reason= */ new ActiveGestureLog.CompoundString(
+-                            "AbsSwipeUpHandler.onRestartPreviouslyAppearedTask"));
++            mRecentsAnimationController.finish(false, null);
+         }
+         reset();
+     }
+@@ -2733,11 +2714,7 @@ public abstract class AbsSwipeUpHandler<
+             mContainerInterface.onLaunchTaskFailed();
+             Toast.makeText(mContext, R.string.activity_not_available, LENGTH_SHORT).show();
+             if (mRecentsAnimationController != null) {
+-                mRecentsAnimationController.finish(
+-                        /* toHome= */ true,
+-                        /* onFinishComplete= */ null,
+-                        /* reason= */ new ActiveGestureLog.CompoundString(
+-                                "AbsSwipeUpHander.startNewTask: missing task to launch"));
++                mRecentsAnimationController.finish(true /* toRecents */, null);
+             }
+             mCanceled = false;
+             return;
+@@ -2767,12 +2744,7 @@ public abstract class AbsSwipeUpHandler<
+             } else {
+                 mContainerInterface.onLaunchTaskFailed();
+                 if (mRecentsAnimationController != null) {
+-                    mRecentsAnimationController.finish(
+-                            /* toHome= */ true,
+-                            /* onFinishComplete= */ null,
+-                            /* reason= */ new ActiveGestureLog.CompoundString(
+-                                    "AbsSwipeUpHander.startNewTask: "
+-                                            + "launchWithoutAnimation failed"));
++                    mRecentsAnimationController.finish(true /* toRecents */, null);
+                 }
+             }
+             return Unit.INSTANCE;
+@@ -2962,10 +2934,7 @@ public abstract class AbsSwipeUpHandler<
+                             }
+                             if (mRecentsAnimationController != null) {
+                                 mRecentsAnimationController.finish(
+-                                        /* toHome= */ false,
+-                                        /* onFinishComplete= */ () -> splashView.setAlpha(1),
+-                                        /* reason= */ new ActiveGestureLog.CompoundString(
+-                                                "AbsSwipeUpHandler.animateSplashScreenExit"));
++                                        /* toRecents= */ false, () -> splashView.setAlpha(1));
+                             }
+                         }
+                     });
+@@ -2976,11 +2945,7 @@ public abstract class AbsSwipeUpHandler<
+             Runnable onFinishComplete, ActiveGestureLog.CompoundString failureReason) {
+         ActiveGestureProtoLogProxy.logOnInvalidTasksAppeared(failureReason);
+         if (mRecentsAnimationController != null) {
+-            mRecentsAnimationController.finish(
+-                    /* toHome= */ false,
+-                    onFinishComplete,
+-                    new ActiveGestureLog.CompoundString(
+-                            "AbsSwipeUpHandler.onInvalidTasksAppeared"));
++            mRecentsAnimationController.finish(/* toRecents= */ false, onFinishComplete);
+         }
+     }
+ 
+diff --git a/quickstep/src/com/android/quickstep/FallbackSwipeHandler.java b/quickstep/src/com/android/quickstep/FallbackSwipeHandler.java
+index 77cb727..afa3756 100644
+--- a/quickstep/src/com/android/quickstep/FallbackSwipeHandler.java
++++ b/quickstep/src/com/android/quickstep/FallbackSwipeHandler.java
+@@ -67,7 +67,6 @@ import com.android.launcher3.util.DisplayController;
+ import com.android.launcher3.util.MSDLPlayerWrapper;
+ import com.android.quickstep.fallback.FallbackRecentsView;
+ import com.android.quickstep.fallback.RecentsState;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.RectFSpringAnim;
+ import com.android.quickstep.util.SurfaceTransaction.SurfaceProperties;
+ import com.android.quickstep.util.TransformParams;
+@@ -205,11 +204,7 @@ public class FallbackSwipeHandler extends
+             mRecentsView.cleanupRemoteTargets();
+         }
+         mRecentsAnimationController.finish(
+-                /* toHome= */mAppCanEnterPip,
+-                recentsCallback,
+-                /* sendUserLeaveHint= */ true,
+-                /* reason= */ new ActiveGestureLog.CompoundString(
+-                        "FallbackSwipeHandler.finishRecentsControllerToHome"));
++                mAppCanEnterPip /* toRecents */, recentsCallback, true /* sendUserLeaveHint */);
+     }
+ 
+     @Override
+diff --git a/quickstep/src/com/android/quickstep/LauncherSwipeHandlerV2.java b/quickstep/src/com/android/quickstep/LauncherSwipeHandlerV2.java
+index a0192b7..1fce4d3 100644
+--- a/quickstep/src/com/android/quickstep/LauncherSwipeHandlerV2.java
++++ b/quickstep/src/com/android/quickstep/LauncherSwipeHandlerV2.java
+@@ -48,7 +48,6 @@ import com.android.launcher3.views.ClipIconView;
+ import com.android.launcher3.views.FloatingIconView;
+ import com.android.launcher3.views.FloatingView;
+ import com.android.launcher3.widget.LauncherAppWidgetHostView;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.RectFSpringAnim;
+ import com.android.quickstep.util.ScalingWorkspaceRevealAnim;
+ import com.android.quickstep.util.TaskViewSimulator;
+@@ -319,11 +318,7 @@ public class LauncherSwipeHandlerV2 extends AbsSwipeUpHandler<
+             mRecentsView.cleanupRemoteTargets();
+         }
+         mRecentsAnimationController.finish(
+-                /* toHome= */true,
+-                callback,
+-                /* sendUserLeaveHint= */ true,
+-                /* reason= */ new ActiveGestureLog.CompoundString(
+-                        "LauncherSwipeHandlerV2.finishRecentsControllerToHome"));
++                true /* toRecents */, callback, true /* sendUserLeaveHint */);
+     }
+ 
+     private class FloatingViewHomeAnimationFactory extends LauncherHomeAnimationFactory {
+diff --git a/quickstep/src/com/android/quickstep/RecentsAnimationCallbacks.java b/quickstep/src/com/android/quickstep/RecentsAnimationCallbacks.java
+index 4d9f352..b31a219 100644
+--- a/quickstep/src/com/android/quickstep/RecentsAnimationCallbacks.java
++++ b/quickstep/src/com/android/quickstep/RecentsAnimationCallbacks.java
+@@ -36,7 +36,6 @@ import androidx.annotation.UiThread;
+ 
+ import com.android.launcher3.Utilities;
+ import com.android.launcher3.util.Preconditions;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.ActiveGestureProtoLogProxy;
+ import com.android.quickstep.views.RecentsViewContainer;
+ import com.android.quickstep.window.RecentsWindowManager;
+@@ -118,10 +117,8 @@ public class RecentsAnimationCallbacks implements
+         mController = new RecentsAnimationController(animationController,
+                 this::onAnimationFinished);
+         if (mCancelled) {
+-            Utilities.postAsyncCallback(
+-                    MAIN_EXECUTOR.getHandler(),
+-                    () -> mController.finishAnimationToApp(new ActiveGestureLog.CompoundString(
+-                            "RecentsAnimationCallback.onAnimationStart: mCancelled=true")));
++            Utilities.postAsyncCallback(MAIN_EXECUTOR.getHandler(),
++                    mController::finishAnimationToApp);
+         } else {
+             RemoteAnimationTarget[] nonAppTargets;
+             final ArrayList<RemoteAnimationTarget> apps = new ArrayList<>();
+diff --git a/quickstep/src/com/android/quickstep/RecentsAnimationController.java b/quickstep/src/com/android/quickstep/RecentsAnimationController.java
+index ca50fbe..e6c2050 100644
+--- a/quickstep/src/com/android/quickstep/RecentsAnimationController.java
++++ b/quickstep/src/com/android/quickstep/RecentsAnimationController.java
+@@ -27,14 +27,12 @@ import android.view.WindowManagerGlobal;
+ import android.window.PictureInPictureSurfaceTransaction;
+ import android.window.WindowAnimationState;
+ 
+-import androidx.annotation.NonNull;
+ import androidx.annotation.UiThread;
+ 
+ import com.android.internal.jank.Cuj;
+ import com.android.internal.os.IResultReceiver;
+ import com.android.launcher3.util.Preconditions;
+ import com.android.launcher3.util.RunnableList;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.ActiveGestureProtoLogProxy;
+ import com.android.systemui.shared.recents.model.ThumbnailData;
+ import com.android.systemui.shared.system.ActivityManagerWrapper;
+@@ -98,17 +96,19 @@ public class RecentsAnimationController {
+     }
+ 
+     @UiThread
+-    public void finishAnimationToApp(@NonNull ActiveGestureLog.CompoundString reason) {
+-        finishController(/* toHome= */ false, null, /* sendUserLeaveHint= */ false, reason);
++    public void finishAnimationToHome() {
++        finishController(true /* toHome */, null, false /* sendUserLeaveHint */);
+     }
+ 
+-    /** See {@link #finish(boolean, Runnable, boolean, ActiveGestureLog.CompoundString)} */
+     @UiThread
+-    public void finish(
+-            boolean toHome,
+-            Runnable onFinishComplete,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
+-        finish(toHome, onFinishComplete, /* sendUserLeaveHint= */ false, reason);
++    public void finishAnimationToApp() {
++        finishController(false /* toHome */, null, false /* sendUserLeaveHint */);
++    }
++
++    /** See {@link #finish(boolean, Runnable, boolean)} */
++    @UiThread
++    public void finish(boolean toHome, Runnable onFinishComplete) {
++        finish(toHome, onFinishComplete, false /* sendUserLeaveHint */);
+     }
+ 
+     /**
+@@ -119,31 +119,19 @@ public class RecentsAnimationController {
+      *                          picture-in-picture mode upon being paused.
+      */
+     @UiThread
+-    public void finish(
+-            boolean toHome,
+-            Runnable onFinishComplete,
+-            boolean sendUserLeaveHint,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
++    public void finish(boolean toHome, Runnable onFinishComplete, boolean sendUserLeaveHint) {
+         Preconditions.assertUIThread();
+-        finishController(toHome, onFinishComplete, sendUserLeaveHint, reason);
++        finishController(toHome, onFinishComplete, sendUserLeaveHint);
+     }
+ 
+     @UiThread
+-    public void finishController(
+-            boolean toHome,
+-            Runnable callback,
+-            boolean sendUserLeaveHint,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
+-        finishController(toHome, callback, sendUserLeaveHint, /* forceFinish= */ false, reason);
++    public void finishController(boolean toHome, Runnable callback, boolean sendUserLeaveHint) {
++        finishController(toHome, callback, sendUserLeaveHint, false /* forceFinish */);
+     }
+ 
+     @UiThread
+-    public void finishController(
+-            boolean toHome,
+-            Runnable callback,
+-            boolean sendUserLeaveHint,
+-            boolean forceFinish,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
++    public void finishController(boolean toHome, Runnable callback, boolean sendUserLeaveHint,
++            boolean forceFinish) {
+         mPendingFinishCallbacks.add(callback);
+         if (!forceFinish && mFinishRequested) {
+             // If finish has already been requested, then add the callback to the pending list.
+@@ -151,7 +139,7 @@ public class RecentsAnimationController {
+             // trigger the callback to be called immediately
+             return;
+         }
+-        ActiveGestureProtoLogProxy.logFinishRecentsAnimation(toHome, reason);
++        ActiveGestureProtoLogProxy.logFinishRecentsAnimation(toHome);
+         // Finish not yet requested
+         mFinishRequested = true;
+         mFinishTargetIsLauncher = toHome;
+@@ -161,7 +149,9 @@ public class RecentsAnimationController {
+                 @Override
+                 public void send(int i, Bundle bundle) throws RemoteException {
+                     ActiveGestureProtoLogProxy.logFinishRecentsAnimationCallback();
+-                    MAIN_EXECUTOR.execute(mPendingFinishCallbacks::executeAllAndDestroy);
++                    MAIN_EXECUTOR.execute(() -> {
++                        mPendingFinishCallbacks.executeAllAndDestroy();
++                    });
+                 }
+             });
+             InteractionJankMonitorWrapper.end(Cuj.CUJ_LAUNCHER_QUICK_SWITCH);
+diff --git a/quickstep/src/com/android/quickstep/TaskAnimationManager.java b/quickstep/src/com/android/quickstep/TaskAnimationManager.java
+index 58d205e..001b0ad 100644
+--- a/quickstep/src/com/android/quickstep/TaskAnimationManager.java
++++ b/quickstep/src/com/android/quickstep/TaskAnimationManager.java
+@@ -50,7 +50,6 @@ import com.android.launcher3.taskbar.TaskbarInteractor;
+ import com.android.launcher3.util.DaggerSingletonObject;
+ import com.android.launcher3.util.DisplayController;
+ import com.android.quickstep.dagger.QuickstepBaseAppComponent;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.ActiveGestureProtoLogProxy;
+ import com.android.quickstep.util.SystemUiFlagUtils;
+ import com.android.quickstep.views.RecentsView;
+@@ -177,13 +176,8 @@ public class TaskAnimationManager implements RecentsAnimationCallbacks.RecentsAn
+             }
+         }
+         // But force-finish it anyways
+-        finishRunningRecentsAnimation(
+-                /* toHome= */ false,
+-                /* forceFinish= */ true,
+-                /* forceFinishCb= */ null,
+-                /* reason= */ new ActiveGestureLog.CompoundString(
+-                        "TaskAnimationManager.startRecentsAnimation: "
+-                                + "force finishing previous animation"));
++        finishRunningRecentsAnimation(false /* toHome */, true /* forceFinish */,
++                null /* forceFinishCb */);
+ 
+         if (mCallbacks != null) {
+             // If mCallbacks still != null, that means we are getting this startRecentsAnimation()
+@@ -249,11 +243,7 @@ public class TaskAnimationManager implements RecentsAnimationCallbacks.RecentsAn
+                         // Only finish if the end target is RECENTS. Otherwise, if the target is
+                         // NEW_TASK, startActivityFromRecents will be skipped.
+                         if (mLastGestureState.getEndTarget() == RECENTS) {
+-                            finishRunningRecentsAnimation(
+-                                    /* toHome= */ false,
+-                                    /* reason= */ new ActiveGestureLog.CompoundString(
+-                                            "TaskAnimationManager.startRecentsAnimation: launching "
+-                                                    + "RecentsActivity on top of 3P launcher"));
++                            finishRunningRecentsAnimation(false /* toHome */);
+                         }
+                     });
+                 }
+@@ -431,12 +421,9 @@ public class TaskAnimationManager implements RecentsAnimationCallbacks.RecentsAn
+         boolean isLocked = SystemUiFlagUtils.isLocked(newSysUIFlags);
+         if (wasLocked != isLocked && isLocked) {
+             // Finish the running recents animation when locking the device.
+-            finishRunningRecentsAnimation(
+-                    /* toHome= */(mController != null && mController.getFinishTargetIsLauncher())
+-                            || mDisplayId != DEFAULT_DISPLAY,
+-                    /* reason= */ new ActiveGestureLog.CompoundString(
+-                            "TaskAnimationManager.onSystemUiFlagsChanged: "
+-                                    + "force finishing recents animation of device locked"));
++            finishRunningRecentsAnimation(/* toHome */
++                    (mController != null && mController.getFinishTargetIsLauncher())
++                            || mDisplayId != DEFAULT_DISPLAY);
+         }
+     }
+ 
+@@ -478,17 +465,12 @@ public class TaskAnimationManager implements RecentsAnimationCallbacks.RecentsAn
+     /**
+      * Finishes the running recents animation.
+      */
+-    public void finishRunningRecentsAnimation(
+-            boolean toHome, @NonNull ActiveGestureLog.CompoundString reason) {
+-        finishRunningRecentsAnimation(
+-                toHome, /* forceFinish= */ false, /* forceFinishCb= */ null, reason);
++    public void finishRunningRecentsAnimation(boolean toHome) {
++        finishRunningRecentsAnimation(toHome, false /* forceFinish */, null /* forceFinishCb */);
+     }
+     public void finishRunningRecentsAnimation(
+-            boolean toHome,
+-            boolean forceFinish,
+-            Runnable forceFinishCb,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
+-        finishRunningRecentsAnimation(toHome, forceFinish, forceFinishCb, mController, reason);
++            boolean toHome, boolean forceFinish, Runnable forceFinishCb) {
++        finishRunningRecentsAnimation(toHome, forceFinish, forceFinishCb, mController);
+     }
+ 
+     /**
+@@ -499,28 +481,16 @@ public class TaskAnimationManager implements RecentsAnimationCallbacks.RecentsAn
+             boolean toHome,
+             boolean forceFinish,
+             @Nullable Runnable forceFinishCb,
+-            @Nullable RecentsAnimationController controller,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
++            @Nullable RecentsAnimationController controller) {
+         if (controller != null) {
+-            ActiveGestureProtoLogProxy.logFinishRunningRecentsAnimation(toHome, reason);
+-            ActiveGestureLog.CompoundString reasonString = new ActiveGestureLog.CompoundString(
+-                    "TaskAnimationManager.finishRunningRecentsAnimation: ")
+-                    .append(reason);
++            ActiveGestureProtoLogProxy.logFinishRunningRecentsAnimation(toHome);
+             if (forceFinish) {
+-                controller.finishController(
+-                        toHome,
+-                        forceFinishCb,
+-                        /* sendUserLeaveHint= */ false,
+-                        /* forceFinish= */ true,
+-                        reasonString);
++                controller.finishController(toHome, forceFinishCb, false /* sendUserLeaveHint */,
++                        true /* forceFinish */);
+             } else {
+-                Utilities.postAsyncCallback(
+-                        MAIN_EXECUTOR.getHandler(),
+-                        () -> controller.finishController(
+-                                toHome,
+-                                /* callback= */ null,
+-                                /* sendUserLeaveHint= */ false,
+-                                reasonString));
++                Utilities.postAsyncCallback(MAIN_EXECUTOR.getHandler(), toHome
++                        ? controller::finishAnimationToHome
++                        : controller::finishAnimationToApp);
+             }
+         }
+     }
+@@ -567,9 +537,7 @@ public class TaskAnimationManager implements RecentsAnimationCallbacks.RecentsAn
+                         /* toHome= */ false,
+                         /* forceFinish= */ true,
+                         /* forceFinishCb= */ null,
+-                        controller,
+-                        /* reason= */ new ActiveGestureLog.CompoundString(
+-                                "TaskAnimationManager.onLauncherDestroyed"));
++                        controller);
+                 mLauncherDestroyCallbackSet = false;
+             }
+         });
+diff --git a/quickstep/src/com/android/quickstep/inputconsumers/DeviceLockedInputConsumer.java b/quickstep/src/com/android/quickstep/inputconsumers/DeviceLockedInputConsumer.java
+index f6dc611..c67828e 100644
+--- a/quickstep/src/com/android/quickstep/inputconsumers/DeviceLockedInputConsumer.java
++++ b/quickstep/src/com/android/quickstep/inputconsumers/DeviceLockedInputConsumer.java
+@@ -55,7 +55,6 @@ import com.android.quickstep.RecentsAnimationTargets;
+ import com.android.quickstep.RemoteAnimationTargets;
+ import com.android.quickstep.RotationTouchHelper;
+ import com.android.quickstep.TaskAnimationManager;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.SurfaceTransaction.SurfaceProperties;
+ import com.android.quickstep.util.TransformParams;
+ import com.android.quickstep.util.TransformParams.BuilderProxy;
+@@ -279,10 +278,7 @@ public class DeviceLockedInputConsumer implements InputConsumer,
+ 
+     private void finishRecentsAnimationForShell(boolean dismissTask) {
+         mCancelWhenRecentsStart = false;
+-        mTaskAnimationManager.finishRunningRecentsAnimation(
+-                /* toHome= */ dismissTask,
+-                /* reason= */ new ActiveGestureLog.CompoundString(
+-                        "DeviceLockedInputConsumer.finishRecentsAnimationForShell"));
++        mTaskAnimationManager.finishRunningRecentsAnimation(dismissTask /* toHome */);
+         if (dismissTask) {
+             mHomeLaunched = true;
+         }
+@@ -291,11 +287,7 @@ public class DeviceLockedInputConsumer implements InputConsumer,
+     private void endRemoteAnimation() {
+         if (!mHomeLaunched && mRecentsAnimationController != null) {
+             mRecentsAnimationController.finishController(
+-                    /* toHome= */ false,
+-                    /* callback= */ null,
+-                    /* sendUserLeaveHint= */ false,
+-                    /* reason= */ new ActiveGestureLog.CompoundString(
+-                            "DeviceLockedInputConsumer.endRemoteAnimation"));
++                    false /* toHome */, null /* callback */, false /* sendUserLeaveHint */);
+         }
+     }
+ 
+diff --git a/quickstep/src/com/android/quickstep/inputconsumers/OtherActivityInputConsumer.java b/quickstep/src/com/android/quickstep/inputconsumers/OtherActivityInputConsumer.java
+index 65a76e5..19fe1b8 100644
+--- a/quickstep/src/com/android/quickstep/inputconsumers/OtherActivityInputConsumer.java
++++ b/quickstep/src/com/android/quickstep/inputconsumers/OtherActivityInputConsumer.java
+@@ -59,7 +59,6 @@ import com.android.quickstep.RecentsAnimationDeviceState;
+ import com.android.quickstep.RecentsAnimationTargets;
+ import com.android.quickstep.RotationTouchHelper;
+ import com.android.quickstep.TaskAnimationManager;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.ActiveGestureProtoLogProxy;
+ import com.android.quickstep.util.CachedEventDispatcher;
+ import com.android.quickstep.util.MotionPauseDetector;
+@@ -526,14 +525,8 @@ public class OtherActivityInputConsumer extends ContextWrapper implements InputC
+                     // The animation started, but with no movement, in this case, there will be no
+                     // animateToProgress so we have to manually finish here. In the case of
+                     // ACTION_CANCEL, someone else may be doing something so finish synchronously.
+-                    mTaskAnimationManager.finishRunningRecentsAnimation(
+-                            /* toHome= */ false,
+-                            /* forceFinish= */ isCanceled,
+-                            mForceFinishRecentsTransitionCallback,
+-                            /* reason= */ new ActiveGestureLog.CompoundString(
+-                                    "OtherActivityInputConsumer.finishTouchTracking: "
+-                                            + "recents animation started, but window move touch "
+-                                            + "slop not passed"));
++                    mTaskAnimationManager.finishRunningRecentsAnimation(false /* toHome */,
++                            isCanceled /* forceFinish */, mForceFinishRecentsTransitionCallback);
+                 } else {
+                     // The animation hasn't started yet, so insert a replacement handler into the
+                     // callbacks which immediately finishes the animation after it starts.
+@@ -632,11 +625,7 @@ public class OtherActivityInputConsumer extends ContextWrapper implements InputC
+                 if (DEBUG) {
+                     Log.d(TAG, "FinishImmediatelyHandler: running callback");
+                 }
+-                controller.finish(
+-                        /* toHome= */ false,
+-                        /* onFinishComplete= */ null,
+-                        /* reason= */ new ActiveGestureLog.CompoundString(
+-                                "OtherActivityInputConsumer.FinishImmediatelyHandler"));
++                controller.finish(false /* toRecents */, null);
+             });
+         }
+     }
+diff --git a/quickstep/src/com/android/quickstep/inputconsumers/ProgressDelegateInputConsumer.java b/quickstep/src/com/android/quickstep/inputconsumers/ProgressDelegateInputConsumer.java
+index 2d0f26b..52afd0d 100644
+--- a/quickstep/src/com/android/quickstep/inputconsumers/ProgressDelegateInputConsumer.java
++++ b/quickstep/src/com/android/quickstep/inputconsumers/ProgressDelegateInputConsumer.java
+@@ -52,7 +52,6 @@ import com.android.quickstep.RecentsAnimationCallbacks;
+ import com.android.quickstep.RecentsAnimationController;
+ import com.android.quickstep.RecentsAnimationTargets;
+ import com.android.quickstep.TaskAnimationManager;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.SurfaceTransaction;
+ import com.android.quickstep.util.SurfaceTransaction.SurfaceProperties;
+ import com.android.systemui.shared.recents.model.ThumbnailData;
+@@ -241,12 +240,8 @@ public class ProgressDelegateInputConsumer implements InputConsumer,
+     private void onFlingFinished() {
+         boolean endToHome = mFlingEndsOnHome == null ? true : mFlingEndsOnHome;
+         if (mRecentsAnimationController != null) {
+-            mRecentsAnimationController.finishController(
+-                    /* toHome= */ endToHome,
+-                    /* callback= */ null,
+-                    /* sendUserLeaveHint= */ false,
+-                    /* reason= */ new ActiveGestureLog.CompoundString(
+-                            "ProgressDelegateInputConsumer.onFlingFinished"));
++            mRecentsAnimationController.finishController(endToHome /* toHome */,
++                    null /* callback */, false /* sendUserLeaveHint */);
+         } else if (endToHome) {
+             startHomeIntentSafely(mContext, null, TAG, getDisplayId());
+         }
+diff --git a/quickstep/src/com/android/quickstep/inputconsumers/ResetGestureInputConsumer.kt b/quickstep/src/com/android/quickstep/inputconsumers/ResetGestureInputConsumer.kt
+index c3b25b2..96e7943 100644
+--- a/quickstep/src/com/android/quickstep/inputconsumers/ResetGestureInputConsumer.kt
++++ b/quickstep/src/com/android/quickstep/inputconsumers/ResetGestureInputConsumer.kt
+@@ -19,7 +19,6 @@ import android.view.MotionEvent
+ import com.android.launcher3.taskbar.TaskbarActivityContext
+ import com.android.quickstep.InputConsumer
+ import com.android.quickstep.TaskAnimationManager
+-import com.android.quickstep.util.ActiveGestureLog
+ import java.util.function.Supplier
+ 
+ /** A NO_OP input consumer which also resets any pending gesture */
+@@ -38,10 +37,7 @@ class ResetGestureInputConsumer(
+         ) {
+             val tac = activityContextSupplier.get()
+             taskAnimationManager.finishRunningRecentsAnimation(
+-                /* toHome= */ tac != null && !tac.isInApp,
+-                /* reason= */ ActiveGestureLog.CompoundString(
+-                    "ResetGestureInputConsumer: recents animation started"
+-                ),
++                /* toHome= */ tac != null && !tac.isInApp
+             )
+         }
+     }
+diff --git a/quickstep/src/com/android/quickstep/util/SplitSelectStateController.java b/quickstep/src/com/android/quickstep/util/SplitSelectStateController.java
+index 683a995..06e2f65 100644
+--- a/quickstep/src/com/android/quickstep/util/SplitSelectStateController.java
++++ b/quickstep/src/com/android/quickstep/util/SplitSelectStateController.java
+@@ -986,11 +986,9 @@ public class SplitSelectStateController {
+                         mRecentsAnimationController = controller;
+                         animation.start(targets, () ->
+                             controller.finish(
+-                                    /* toHome= */ true,
++                                    true /* toRecents */,
+                                     updateTaskbarRunnable,
+-                                    /* sendUserLeaveHint= */ false,
+-                                    /* reason= */ new ActiveGestureLog.CompoundString(
+-                                            "SplitSelectStateController.enterSplitController")));
++                                    false /* sendUserLeaveHint */));
+                     }
+                 });
+ 
+diff --git a/quickstep/src/com/android/quickstep/util/SplitWithKeyboardShortcutController.java b/quickstep/src/com/android/quickstep/util/SplitWithKeyboardShortcutController.java
+index b328c18..ab27cea 100644
+--- a/quickstep/src/com/android/quickstep/util/SplitWithKeyboardShortcutController.java
++++ b/quickstep/src/com/android/quickstep/util/SplitWithKeyboardShortcutController.java
+@@ -154,17 +154,16 @@ public class SplitWithKeyboardShortcutController {
+                 @Override
+                 public void onAnimationStart(Animator animation) {
+                     controller.finish(
+-                            /* toHome= */ true,
+-                            /* onFinishComplete= */ () -> {
++                            true /* toRecents */,
++                            () -> {
+                                 TaskbarInteractor taskbarInteractor =
+                                         mLauncher.getTaskbarInteractor();
+                                 if (taskbarInteractor != null) {
+                                     taskbarInteractor.updateTaskbarLauncherStateGoingHome();
+                                 }
++
+                             },
+-                            /* sendUserLeaveHint= */ false,
+-                            /* reason= */ new ActiveGestureLog.CompoundString(
+-                                    "SplitWithKeyboardShortcutRecentsAnimationListener"));
++                            false /* sendUserLeaveHint */);
+                 }
+ 
+                 @Override
+diff --git a/quickstep/src/com/android/quickstep/views/RecentsView.java b/quickstep/src/com/android/quickstep/views/RecentsView.java
+index 111c99b..38f8a53 100644
+--- a/quickstep/src/com/android/quickstep/views/RecentsView.java
++++ b/quickstep/src/com/android/quickstep/views/RecentsView.java
+@@ -222,7 +222,6 @@ import com.android.quickstep.recents.data.RecentsRotationStateRepositoryImpl;
+ import com.android.quickstep.recents.di.RecentsDependencies;
+ import com.android.quickstep.recents.viewmodel.RecentsViewData;
+ import com.android.quickstep.recents.viewmodel.RecentsViewModel;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.ActiveGestureProtoLogProxy;
+ import com.android.quickstep.util.AnimUtils;
+ import com.android.quickstep.util.DesktopTask;
+@@ -6135,9 +6134,7 @@ public abstract class RecentsView<
+      * NOTE: Whatever value gets passed through to the toHome param may need to also be set on
+      * {@link #mRecentsAnimationController#setWillFinishToHome}.
+      */
+-    public void finishRecentsAnimation(
+-            boolean toHome,
+-            boolean shouldPip,
++    public void finishRecentsAnimation(boolean toHome, boolean shouldPip,
+             @Nullable Runnable onFinishComplete) {
+         Log.d(TAG, "finishRecentsAnimation - mRecentsAnimationController: "
+                 + mRecentsAnimationController + ", toHome: " + toHome + ", shouldPip: " + shouldPip
+@@ -6176,17 +6173,12 @@ public abstract class RecentsView<
+         if (enableOverviewBackgroundWallpaperBlur()) {
+             mBlurUtils.setDrawLiveTileBelowRecents(false);
+         }
+-        mRecentsAnimationController.finish(
+-                toHome,
+-                /* onFinishComplete= */ () -> {
+-                    if (onFinishComplete != null) {
+-                        onFinishComplete.run();
+-                    }
+-                    onRecentsAnimationComplete();
+-                },
+-                sendUserLeaveHint,
+-                /* reason= */ new ActiveGestureLog.CompoundString(
+-                        "RecentsView.finishRecentsAnimation"));
++        mRecentsAnimationController.finish(toHome, () -> {
++            if (onFinishComplete != null) {
++                onFinishComplete.run();
++            }
++            onRecentsAnimationComplete();
++        }, sendUserLeaveHint);
+     }
+ 
+     /**
+diff --git a/quickstep/src/com/android/quickstep/window/RecentsWindowSwipeHandler.java b/quickstep/src/com/android/quickstep/window/RecentsWindowSwipeHandler.java
+index 083129d..e14bca3 100644
+--- a/quickstep/src/com/android/quickstep/window/RecentsWindowSwipeHandler.java
++++ b/quickstep/src/com/android/quickstep/window/RecentsWindowSwipeHandler.java
+@@ -78,7 +78,6 @@ import com.android.quickstep.RotationTouchHelper;
+ import com.android.quickstep.TaskAnimationManager;
+ import com.android.quickstep.fallback.FallbackRecentsView;
+ import com.android.quickstep.fallback.RecentsState;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.RectFSpringAnim;
+ import com.android.quickstep.util.SurfaceTransaction.SurfaceProperties;
+ import com.android.quickstep.util.TransformParams;
+@@ -253,11 +252,7 @@ public class RecentsWindowSwipeHandler extends AbsSwipeUpHandler<RecentsWindowMa
+             mRecentsView.cleanupRemoteTargets();
+         }
+         mRecentsAnimationController.finish(
+-                /* toHome= */ true,
+-                recentsCallback,
+-                /* sendUserLeaveHint= */ true,
+-                /* reason= */ new ActiveGestureLog.CompoundString(
+-                        "RecentsWindowSwipeHandler.finishRecentsControllerToHome"));
++                true /* toRecents */, recentsCallback, true /* sendUserLeaveHint */);
+     }
+ 
+     @Override
+diff --git a/quickstep/src_protolog/com/android/quickstep/util/ActiveGestureProtoLogProxy.java b/quickstep/src_protolog/com/android/quickstep/util/ActiveGestureProtoLogProxy.java
+index 5cd951a..9cdc9e5 100644
+--- a/quickstep/src_protolog/com/android/quickstep/util/ActiveGestureProtoLogProxy.java
++++ b/quickstep/src_protolog/com/android/quickstep/util/ActiveGestureProtoLogProxy.java
+@@ -257,17 +257,12 @@ public class ActiveGestureProtoLogProxy {
+                 taskIndex);
+     }
+ 
+-    public static void logFinishRecentsAnimation(
+-            boolean toHome, @NonNull ActiveGestureLog.CompoundString reason) {
++    public static void logFinishRecentsAnimation(boolean toRecents) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                "RecentsAnimationController.finishRecentsAnimation: toHome=%b, reason=", toHome)
+-                        .append(reason),
++                "finishRecentsAnimation: %b", toRecents),
+                 /* gestureEvent= */ FINISH_RECENTS_ANIMATION);
+         if (!isProtoLogInitialized()) return;
+-        ProtoLog.d(ACTIVE_GESTURE_LOG,
+-                "RecentsAnimationController.finishRecentsAnimation: toHome=%b, reason=%s",
+-                toHome,
+-                reason.toString());
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "finishRecentsAnimation: %b", toRecents);
+     }
+ 
+     public static void logSetEndTarget(@NonNull String target) {
+@@ -402,16 +397,11 @@ public class ActiveGestureProtoLogProxy {
+                         + "received unknown event %s", displayId, event);
+     }
+ 
+-    public static void logFinishRunningRecentsAnimation(
+-            boolean toHome, @NonNull ActiveGestureLog.CompoundString reason) {
++    public static void logFinishRunningRecentsAnimation(boolean toHome) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                "TaskAnimationManager.finishRunningRecentsAnimation: toHome=%b, reason=", toHome)
+-                .append(reason));
++                "finishRunningRecentsAnimation: %b", toHome));
+         if (!isProtoLogInitialized()) return;
+-        ProtoLog.d(ACTIVE_GESTURE_LOG,
+-                "TaskAnimationManager.finishRunningRecentsAnimation: toHome=%b, reason=%s",
+-                toHome,
+-                reason.toString());
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "finishRunningRecentsAnimation: %b", toHome);
+     }
+ 
+     public static void logOnRecentsAnimationStartCancelled() {
+diff --git a/quickstep/tests/multivalentTests/src/com/android/quickstep/AbsSwipeUpHandlerTestCase.java b/quickstep/tests/multivalentTests/src/com/android/quickstep/AbsSwipeUpHandlerTestCase.java
+index 16b741a..114963b 100644
+--- a/quickstep/tests/multivalentTests/src/com/android/quickstep/AbsSwipeUpHandlerTestCase.java
++++ b/quickstep/tests/multivalentTests/src/com/android/quickstep/AbsSwipeUpHandlerTestCase.java
+@@ -82,7 +82,6 @@ import com.android.launcher3.util.Executors;
+ import com.android.launcher3.util.MSDLPlayerWrapper;
+ import com.android.launcher3.util.SandboxApplication;
+ import com.android.launcher3.util.SystemUiController;
+-import com.android.quickstep.util.ActiveGestureLog;
+ import com.android.quickstep.util.ContextInitListener;
+ import com.android.quickstep.util.MotionPauseDetector;
+ import com.android.quickstep.util.RecentsOrientedState;
+@@ -710,14 +709,11 @@ public abstract class AbsSwipeUpHandlerTestCase<
+         ArgumentCaptor<Runnable> finishCallback = ArgumentCaptor.forClass(Runnable.class);
+         // Check if the 2 parameter method is called.
+         verify(mRecentsAnimationController, atLeast(0)).finish(
+-                anyBoolean(), finishCallback.capture(), any(ActiveGestureLog.CompoundString.class));
++                anyBoolean(), finishCallback.capture());
+         if (finishCallback.getAllValues().isEmpty()) {
+             // Check if the 3 parameter method is called.
+             verify(mRecentsAnimationController).finish(
+-                    anyBoolean(),
+-                    finishCallback.capture(),
+-                    anyBoolean(),
+-                    any(ActiveGestureLog.CompoundString.class));
++                    anyBoolean(), finishCallback.capture(), anyBoolean());
+         }
+         if (finishCallback.getValue() != null) {
+             finishCallback.getValue().run();
+-- 
+2.53.0
+

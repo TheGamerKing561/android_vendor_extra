@@ -1,0 +1,1540 @@
+From 38ed4cc3268e22748898a5ac05f01ca323b8c31c Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Mon, 23 Mar 2026 12:50:31 +0100
+Subject: [PATCH 2/9] Revert "Fallback to Log instead of ProtoLog when it is
+ unavailable."
+
+This reverts commit e9c4dc5ccaeb5e948fa1b6a5dec438b3eebc292b.
+
+Change-Id: I2eea81fc5ee1d01993ca216ed1dd62a6874c4a3e
+---
+ .../OverviewCommandHelperProtoLogProxy.java   | 218 +++----
+ .../util/StateManagerProtoLogProxy.java       |  81 +--
+ .../util/ActiveGestureProtoLogProxy.java      | 611 +++++++++---------
+ .../util/RecentsWindowProtoLogProxy.java      |  52 +-
+ .../launcher3/statemanager/StateManager.java  |  60 +-
+ 5 files changed, 472 insertions(+), 550 deletions(-)
+
+diff --git a/quickstep/src_protolog/com/android/launcher3/util/OverviewCommandHelperProtoLogProxy.java b/quickstep/src_protolog/com/android/launcher3/util/OverviewCommandHelperProtoLogProxy.java
+index 4316038..ec8e544 100644
+--- a/quickstep/src_protolog/com/android/launcher3/util/OverviewCommandHelperProtoLogProxy.java
++++ b/quickstep/src_protolog/com/android/launcher3/util/OverviewCommandHelperProtoLogProxy.java
+@@ -19,226 +19,166 @@ package com.android.launcher3.util;
+ import static com.android.quickstep.util.QuickstepProtoLogGroup.OVERVIEW_COMMAND_HELPER;
+ import static com.android.quickstep.util.QuickstepProtoLogGroup.isProtoLogInitialized;
+ 
+-import android.util.Log;
+-
+ import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
+ 
+ import com.android.internal.protolog.ProtoLog;
+-import com.android.quickstep.util.QuickstepProtoLogGroup;
+ 
+ /**
+  * Proxy class used for OverviewCommandHelper ProtoLog support. (e.g. for 3 button nav)
+  */
+ public class OverviewCommandHelperProtoLogProxy {
+-    private static final QuickstepProtoLogGroup PROTO_LOG_GROUP = OVERVIEW_COMMAND_HELPER;
+-
+-    private static boolean willProtoLog() {
+-        return isProtoLogInitialized();
+-    }
+-
+-    private static void logToLogcatIfNeeded(String message, Object... args) {
+-        if (!willProtoLog() || !PROTO_LOG_GROUP.isLogToLogcat()) {
+-            Log.d(PROTO_LOG_GROUP.getTag(), String.format(message, args));
+-        }
+-    }
+-
+-    private static void logEToLogcatIfNeeded(String message, Object... args) {
+-        if (!willProtoLog() || !PROTO_LOG_GROUP.isLogToLogcat()) {
+-            Log.e(PROTO_LOG_GROUP.getTag(), String.format(message, args));
+-        }
+-    }
+ 
+     public static void logCommandQueueFull(@NonNull Object type, @NonNull Object commandQueue) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "command not added: %s - queue is full (%s).", type,
+-                    commandQueue);
+-        }
+-        logToLogcatIfNeeded("command not added: %s - queue is full (%s).", type, commandQueue);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
++                "command not added: %s - queue is full (%s).",
++                type,
++                commandQueue);
+     }
+ 
+     public static void logCommandAdded(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "command added: %s", command);
+-        }
+-        logToLogcatIfNeeded("command added: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "command added: %s", command);
+     }
+ 
+     public static void logCommandExecuted(@NonNull Object command, int queueSize) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "execute: %s - queue size: %d", command, queueSize);
+-        }
+-        logToLogcatIfNeeded("execute: %s - queue size: %d", command, queueSize);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
++                "execute: %s - queue size: %d",
++                command,
++                queueSize);
+     }
+ 
+     public static void logCommandNotExecuted(@NonNull Object command, int queueSize) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "command not executed: %s - queue size: %d", command,
+-                    queueSize);
+-        }
+-        logToLogcatIfNeeded("command not executed: %s - queue size: %d", command, queueSize);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
++                "command not executed: %s - queue size: %d",
++                command,
++                queueSize);
+     }
+ 
+     public static void logClearPendingCommands(@NonNull Object commandQueue) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "clearing pending commands: %s", commandQueue);
+-        }
+-        logToLogcatIfNeeded("clearing pending commands: %s", commandQueue);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
++                "clearing pending commands: %s", commandQueue);
+     }
+ 
+     public static void logNoPendingCommands() {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "no pending commands to be executed.");
+-        }
+-        logToLogcatIfNeeded("no pending commands to be executed.");
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "no pending commands to be executed.");
+     }
+ 
+     public static void logExecutingCommand(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "executing command: %s", command);
+-        }
+-        logToLogcatIfNeeded("executing command: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "executing command: %s", command);
+     }
+ 
+     public static void logExecutingCommand(@NonNull Object command, @Nullable Object recentsView) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "executing command: %s - visibleRecentsView: %s", command,
+-                    recentsView);
+-        }
+-        logToLogcatIfNeeded("executing command: %s - visibleRecentsView: %s", command, recentsView);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
++                "executing command: %s - visibleRecentsView: %s",
++                command,
++                recentsView);
+     }
+ 
+     public static void logExecutedCommandWithResult(@NonNull Object command, boolean isCompleted) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "command executed: %s with result: %b", command,
+-                    isCompleted);
+-        }
+-        logToLogcatIfNeeded("command executed: %s with result: %b", command, isCompleted);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "command executed: %s with result: %b",
++                command,
++                isCompleted);
+     }
+ 
+     public static void logWaitingForCommandCallback(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "waiting for command callback: %s", command);
+-        }
+-        logToLogcatIfNeeded("waiting for command callback: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "waiting for command callback: %s", command);
+     }
+ 
+     public static void logLaunchingTaskCallback(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "launching task callback: %s", command);
+-        }
+-        logToLogcatIfNeeded("launching task callback: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "launching task callback: %s", command);
+     }
+ 
+     public static void logLaunchingTaskWaitingForCallback(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "launching task - waiting for callback: %s", command);
+-        }
+-        logToLogcatIfNeeded("launching task - waiting for callback: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "launching task - waiting for callback: %s", command);
+     }
+ 
+     public static void logSwitchingToOverviewStateStart(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "switching to Overview state - onAnimationStart: %s",
+-                    command);
+-        }
+-        logToLogcatIfNeeded("switching to Overview state - onAnimationStart: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "switching to Overview state - onAnimationStart: %s",
++                command);
+     }
+ 
+     public static void logSwitchingToOverviewStateEnd(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "switching to Overview state - onAnimationEnd: %s",
+-                    command);
+-        }
+-        logToLogcatIfNeeded("switching to Overview state - onAnimationEnd: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "switching to Overview state - onAnimationEnd: %s",
++                command);
+     }
+ 
+     public static void logSwitchingToOverviewStateWaiting(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "switching to Overview state - waiting: %s", command);
+-        }
+-        logToLogcatIfNeeded("switching to Overview state - waiting: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "switching to Overview state - waiting: %s", command);
+     }
+ 
+     public static void logRecentsAnimStarted(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "recents animation started: %s", command);
+-        }
+-        logToLogcatIfNeeded("recents animation started: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "recents animation started: %s", command);
+     }
+ 
+     public static void logOnInitBackgroundStateUI(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "recents animation started - onInitBackgroundStateUI: %s",
+-                    command);
+-        }
+-        logToLogcatIfNeeded("recents animation started - onInitBackgroundStateUI: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
++                "recents animation started - onInitBackgroundStateUI: %s", command);
+     }
+ 
+     public static void logRecentsAnimCanceled(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "recents animation canceled: %s", command);
+-        }
+-        logToLogcatIfNeeded("recents animation canceled: %s", command);
+-    }
+-
+-    public static void logSwitchingViaRecentsAnim(@NonNull Object command,
+-            @NonNull Object endTarget) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "switching via recents animation - onGestureStarted: %s with end target: %s",
+-                    command, endTarget);
+-        }
+-        logToLogcatIfNeeded(
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "recents animation canceled: %s", command);
++    }
++
++    public static void logSwitchingViaRecentsAnim(
++            @NonNull Object command, @NonNull Object endTarget) {
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
+                 "switching via recents animation - onGestureStarted: %s with end target: %s",
+                 command, endTarget);
+     }
+ 
+     public static void logSwitchingViaRecentsAnimComplete(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "switching via recents animation - onTransitionComplete: %s", command);
+-        }
+-        logToLogcatIfNeeded("switching via recents animation - onTransitionComplete: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
++                "switching via recents animation - onTransitionComplete: %s", command);
+     }
+ 
+     public static void logCommandFinishedButNotScheduled(@Nullable Object nextCommandInQueue,
+             @NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "next task not scheduled. First pending command type is %s - command type is:"
+-                            + " %s", nextCommandInQueue, command);
+-        }
+-        logToLogcatIfNeeded(
+-                "next task not scheduled. First pending command type is %s - command type is:"
+-                        + " %s", nextCommandInQueue, command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
++                "next task not scheduled. First pending command type is %s - command type is: %s",
++                nextCommandInQueue,
++                command);
+     }
+ 
+     public static void logCommandFinishedSuccessfully(@NonNull Object command) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "command executed successfully: %s", command);
+-        }
+-        logToLogcatIfNeeded("command executed successfully: %s", command);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER, "command executed successfully: %s", command);
+     }
+ 
+     public static void logCommandCanceled(@NonNull Object command, @Nullable Throwable throwable) {
+-        if (willProtoLog()) {
+-            ProtoLog.e(PROTO_LOG_GROUP, "command canceled: %s - %s", command, throwable);
+-        }
+-        logEToLogcatIfNeeded("command canceled: %s - %s", command, throwable);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.e(OVERVIEW_COMMAND_HELPER, "command canceled: %s - %s", command, throwable);
+     }
+ 
+     public static void logOnNewIntent(boolean alreadyOnHome, boolean shouldMoveToDefaultScreen,
+             String intentAction, boolean internalStateHandled) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "Launcher.onNewIntent: alreadyOnHome: %b, shouldMoveToDefaultScreen: %b, "
+-                            + "intentAction: %s, internalStateHandled: %b", alreadyOnHome,
+-                    shouldMoveToDefaultScreen, intentAction, internalStateHandled);
+-        }
+-        logToLogcatIfNeeded(
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(OVERVIEW_COMMAND_HELPER,
+                 "Launcher.onNewIntent: alreadyOnHome: %b, shouldMoveToDefaultScreen: %b, "
+-                        + "intentAction: %s, internalStateHandled: %b", alreadyOnHome,
+-                shouldMoveToDefaultScreen, intentAction, internalStateHandled);
++                        + "intentAction: %s, internalStateHandled: %b",
++                alreadyOnHome,
++                shouldMoveToDefaultScreen,
++                intentAction,
++                internalStateHandled);
+     }
+ }
+diff --git a/quickstep/src_protolog/com/android/launcher3/util/StateManagerProtoLogProxy.java b/quickstep/src_protolog/com/android/launcher3/util/StateManagerProtoLogProxy.java
+index 914228f..e85b7e8 100644
+--- a/quickstep/src_protolog/com/android/launcher3/util/StateManagerProtoLogProxy.java
++++ b/quickstep/src_protolog/com/android/launcher3/util/StateManagerProtoLogProxy.java
+@@ -19,85 +19,68 @@ package com.android.launcher3.util;
+ import static com.android.quickstep.util.QuickstepProtoLogGroup.LAUNCHER_STATE_MANAGER;
+ import static com.android.quickstep.util.QuickstepProtoLogGroup.isProtoLogInitialized;
+ 
+-import android.util.Log;
+ import android.window.DesktopModeFlags.DesktopModeFlag;
+ 
+ import androidx.annotation.NonNull;
+ 
+ import com.android.internal.protolog.ProtoLog;
+ import com.android.launcher3.Flags;
+-import com.android.quickstep.util.QuickstepProtoLogGroup;
+ 
+ /**
+  * Proxy class used for StateManager ProtoLog support.
+  */
+ public class StateManagerProtoLogProxy {
+-    private static final boolean IS_STATE_MANAGER_PROTOLOG_ENABLED = new DesktopModeFlag(
+-            Flags::enableStateManagerProtoLog, true).isTrue();
+ 
+-    private static final QuickstepProtoLogGroup PROTO_LOG_GROUP = LAUNCHER_STATE_MANAGER;
++    private static final boolean IS_STATE_MANAGER_PROTOLOG_ENABLED =
++            new DesktopModeFlag(Flags::enableStateManagerProtoLog, true).isTrue();
++    private static final boolean IS_LOGGING_TO_LOGCAT =
++            IS_STATE_MANAGER_PROTOLOG_ENABLED && LAUNCHER_STATE_MANAGER.isLogToLogcat();
+ 
+-    private static boolean willProtoLog() {
+-        return IS_STATE_MANAGER_PROTOLOG_ENABLED && isProtoLogInitialized();
++    public static boolean isLoggingToLogcat() {
++        return IS_LOGGING_TO_LOGCAT;
+     }
+ 
+-    private static void logToLogcatIfNeeded(String message, Object... args) {
+-        if (!willProtoLog() || !PROTO_LOG_GROUP.isLogToLogcat()) {
+-            Log.d(PROTO_LOG_GROUP.getTag(), String.format(message, args));
+-        }
+-    }
+-
+-    public static void logGoToState(@NonNull Object fromState, @NonNull Object toState,
+-            @NonNull String trace) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "StateManager.goToState: fromState: %s, toState: %s, partial trace:\n%s",
+-                    fromState, toState, trace);
+-        }
+-        logToLogcatIfNeeded(
++    public static void logGoToState(
++            @NonNull Object fromState, @NonNull Object toState, @NonNull String trace) {
++        if (!IS_STATE_MANAGER_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(LAUNCHER_STATE_MANAGER,
+                 "StateManager.goToState: fromState: %s, toState: %s, partial trace:\n%s",
+-                fromState, toState, trace);
++                fromState,
++                toState,
++                trace);
+     }
+ 
+-    public static void logCreateAtomicAnimation(@NonNull Object fromState, @NonNull Object toState,
+-            @NonNull String trace) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "StateManager.createAtomicAnimation: "
+-                    + "fromState: %s, toState: %s, partial trace:\n%s", fromState, toState, trace);
+-        }
+-        logToLogcatIfNeeded("StateManager.createAtomicAnimation: "
+-                + "fromState: %s, toState: %s, partial trace:\n%s", fromState, toState, trace);
++    public static void logCreateAtomicAnimation(
++            @NonNull Object fromState, @NonNull Object toState, @NonNull String trace) {
++        if (!IS_STATE_MANAGER_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(LAUNCHER_STATE_MANAGER, "StateManager.createAtomicAnimation: "
++                        + "fromState: %s, toState: %s, partial trace:\n%s",
++                fromState,
++                toState,
++                trace);
+     }
+ 
+     public static void logOnStateTransitionStart(@NonNull Object state) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "StateManager.onStateTransitionStart: state: %s", state);
+-        }
+-        logToLogcatIfNeeded("StateManager.onStateTransitionStart: state: %s", state);
++        if (!IS_STATE_MANAGER_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(LAUNCHER_STATE_MANAGER, "StateManager.onStateTransitionStart: state: %s", state);
+     }
+ 
+     public static void logOnStateTransitionEnd(@NonNull Object state) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "StateManager.onStateTransitionEnd: state: %s", state);
+-        }
+-        logToLogcatIfNeeded("StateManager.onStateTransitionEnd: state: %s", state);
++        if (!IS_STATE_MANAGER_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(LAUNCHER_STATE_MANAGER, "StateManager.onStateTransitionEnd: state: %s", state);
+     }
+ 
+     public static void logOnRepeatStateSetAborted(@NonNull Object state) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "StateManager.onRepeatStateSetAborted: state: %s", state);
+-        }
+-        logToLogcatIfNeeded("StateManager.onRepeatStateSetAborted: state: %s", state);
++        if (!IS_STATE_MANAGER_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(LAUNCHER_STATE_MANAGER,
++                "StateManager.onRepeatStateSetAborted: state: %s", state);
+     }
+ 
+     public static void logCancelAnimation(boolean animationOngoing, @NonNull String trace) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "StateManager.cancelAnimation: animation ongoing: %b, partial trace:\n%s",
+-                    animationOngoing, trace);
+-        }
+-        logToLogcatIfNeeded(
++        if (!IS_STATE_MANAGER_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(LAUNCHER_STATE_MANAGER,
+                 "StateManager.cancelAnimation: animation ongoing: %b, partial trace:\n%s",
+-                animationOngoing, trace);
++                animationOngoing,
++                trace);
+     }
+ }
+diff --git a/quickstep/src_protolog/com/android/quickstep/util/ActiveGestureProtoLogProxy.java b/quickstep/src_protolog/com/android/quickstep/util/ActiveGestureProtoLogProxy.java
+index d2cf63b..5cd951a 100644
+--- a/quickstep/src_protolog/com/android/quickstep/util/ActiveGestureProtoLogProxy.java
++++ b/quickstep/src_protolog/com/android/quickstep/util/ActiveGestureProtoLogProxy.java
+@@ -61,577 +61,556 @@ import com.android.internal.protolog.common.IProtoLogGroup;
+  * to avoid confusion.
+  */
+ public class ActiveGestureProtoLogProxy {
+-    private static final QuickstepProtoLogGroup PROTO_LOG_GROUP = ACTIVE_GESTURE_LOG;
+-
+-    private static boolean willProtoLog() {
+-        return isProtoLogInitialized();
+-    }
+ 
+     public static void logLauncherDestroyed() {
+         ActiveGestureLog.INSTANCE.addLog("Launcher destroyed", LAUNCHER_DESTROYED);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Launcher destroyed");
+-        }
++        if (isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "Launcher destroyed");
+     }
+ 
+     public static void logAbsSwipeUpHandlerOnRecentsAnimationCanceled() {
+         ActiveGestureLog.INSTANCE.addLog(
+                 /* event= */ "AbsSwipeUpHandler.onRecentsAnimationCanceled",
+                 /* gestureEvent= */ CANCEL_RECENTS_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "AbsSwipeUpHandler.onRecentsAnimationCanceled");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "AbsSwipeUpHandler.onRecentsAnimationCanceled");
+     }
+ 
+     public static void logAbsSwipeUpHandlerOnRecentsAnimationFinished() {
+         ActiveGestureLog.INSTANCE.addLog(
+                 /* event= */ "RecentsAnimationCallbacks.onAnimationFinished",
+                 ON_FINISH_RECENTS_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "AbsSwipeUpHandler.onAnimationFinished");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "AbsSwipeUpHandler.onAnimationFinished");
+     }
+ 
+     public static void logAbsSwipeUpHandlerCancelCurrentAnimation() {
+-        ActiveGestureLog.INSTANCE.addLog("AbsSwipeUpHandler.cancelCurrentAnimation",
++        ActiveGestureLog.INSTANCE.addLog(
++                "AbsSwipeUpHandler.cancelCurrentAnimation",
+                 ActiveGestureErrorDetector.GestureEvent.CANCEL_CURRENT_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "AbsSwipeUpHandler.cancelCurrentAnimation");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "AbsSwipeUpHandler.cancelCurrentAnimation");
+     }
+ 
+     public static void logAbsSwipeUpHandlerOnTasksAppeared() {
+         ActiveGestureLog.INSTANCE.addLog("AbsSwipeUpHandler.onTasksAppeared: "
+                 + "force finish recents animation complete; clearing state callback.");
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "AbsSwipeUpHandler.onTasksAppeared: "
+-                    + "force finish recents animation complete; clearing state callback.");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "AbsSwipeUpHandler.onTasksAppeared: "
++                + "force finish recents animation complete; clearing state callback.");
+     }
+ 
+     public static void logHandOffAnimation() {
+         ActiveGestureLog.INSTANCE.addLog("AbsSwipeUpHandler.handOffAnimation");
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "AbsSwipeUpHandler.handOffAnimation");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "AbsSwipeUpHandler.handOffAnimation");
+     }
+ 
+     public static void logRecentsAnimationCallbacksOnAnimationCancelled() {
+         ActiveGestureLog.INSTANCE.addLog(
+                 /* event= */ "RecentsAnimationCallbacks.onAnimationCanceled",
+                 /* gestureEvent= */ ON_CANCEL_RECENTS_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "RecentsAnimationCallbacks.onAnimationCanceled");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "RecentsAnimationCallbacks.onAnimationCanceled");
+     }
+ 
+     public static void logRecentsAnimationCallbacksOnTasksAppeared() {
+         ActiveGestureLog.INSTANCE.addLog("RecentsAnimationCallbacks.onTasksAppeared",
+                 ActiveGestureErrorDetector.GestureEvent.TASK_APPEARED);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "RecentsAnimationCallbacks.onTasksAppeared");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "RecentsAnimationCallbacks.onTasksAppeared");
+     }
+ 
+     public static void logStartRecentsAnimation() {
+         ActiveGestureLog.INSTANCE.addLog(
+                 /* event= */ "TaskAnimationManager.startRecentsAnimation",
+                 /* gestureEvent= */ START_RECENTS_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "TaskAnimationManager.startRecentsAnimation");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "TaskAnimationManager.startRecentsAnimation");
+     }
+ 
+     public static void logLaunchingSideTaskFailed() {
+         ActiveGestureLog.INSTANCE.addLog("Unable to launch side task (no recents)");
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Unable to launch side task (no recents)");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "Unable to launch side task (no recents)");
+     }
+ 
+     public static void logContinueRecentsAnimation() {
+         ActiveGestureLog.INSTANCE.addLog(/* event= */ "continueRecentsAnimation");
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "continueRecentsAnimation");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "continueRecentsAnimation");
+     }
+ 
+     public static void logCleanUpRecentsAnimationSkipped() {
+         ActiveGestureLog.INSTANCE.addLog(
+                 /* event= */ "cleanUpRecentsAnimation skipped due to wrong callbacks");
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "cleanUpRecentsAnimation skipped due to wrong callbacks");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "cleanUpRecentsAnimation skipped due to wrong callbacks");
+     }
+ 
+     public static void logCleanUpRecentsAnimation() {
+         ActiveGestureLog.INSTANCE.addLog(/* event= */ "cleanUpRecentsAnimation");
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "cleanUpRecentsAnimation");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "cleanUpRecentsAnimation");
+     }
+ 
+     public static void logOnInputEventUserLocked(int displayId) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "TIS.onInputEvent(displayId=%d): Cannot process input event: user is locked",
+                 displayId));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "TIS.onInputEvent(displayId=%d): Cannot process input event: user is locked",
+-                    displayId);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "TIS.onInputEvent(displayId=%d): Cannot process input event: user is locked",
++                displayId);
+     }
+ 
+     public static void logOnInputIgnoringFollowingEvents(int displayId) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                        "TIS.onMotionEvent(displayId=%d): A new gesture has been started, "
+-                                + "but a previously-requested recents animation hasn't started. "
+-                                + "Ignoring all following motion events.", displayId),
++                "TIS.onMotionEvent(displayId=%d): A new gesture has been started, "
++                        + "but a previously-requested recents animation hasn't started. "
++                        + "Ignoring all following motion events.", displayId),
+                 RECENTS_ANIMATION_START_PENDING);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "TIS.onMotionEvent(displayId=%d): A new gesture has been started, "
+-                            + "but a previously-requested recents animation hasn't started. "
+-                            + "Ignoring all following motion events.", displayId);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "TIS.onMotionEvent(displayId=%d): A new gesture has been started, "
++                        + "but a previously-requested recents animation hasn't started. "
++                        + "Ignoring all following motion events.", displayId);
+     }
+ 
+     public static void logOnInputEventThreeButtonNav(int displayId) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "TIS.onInputEvent(displayId=%d): Cannot process input event: "
+                         + "using 3-button nav and event is not a trackpad event", displayId));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "TIS.onInputEvent(displayId=%d): Cannot process input event: "
+-                            + "using 3-button nav and event is not a trackpad event", displayId);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "TIS.onInputEvent(displayId=%d): Cannot process input event: "
++                        + "using 3-button nav and event is not a trackpad event", displayId);
+     }
+ 
+     public static void logPreloadRecentsAnimation() {
+         ActiveGestureLog.INSTANCE.addLog("preloadRecentsAnimation");
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "preloadRecentsAnimation");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "preloadRecentsAnimation");
+     }
+ 
+     public static void logRecentTasksMissing() {
+         ActiveGestureLog.INSTANCE.addLog("Null mRecentTasks", RECENT_TASKS_MISSING);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Null mRecentTasks");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "Null mRecentTasks");
+     }
+ 
+     public static void logFinishRecentsAnimationCallback() {
+         ActiveGestureLog.INSTANCE.addLog("finishRecentsAnimation-callback");
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "finishRecentsAnimation-callback");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "finishRecentsAnimation-callback");
+     }
+ 
+     public static void logOnScrollerAnimationAborted() {
+         ActiveGestureLog.INSTANCE.addLog("scroller animation aborted",
+                 ActiveGestureErrorDetector.GestureEvent.SCROLLER_ANIMATION_ABORTED);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "scroller animation aborted");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "scroller animation aborted");
+     }
+ 
+     public static void logInputConsumerBecameActive(@NonNull String consumerName) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("%s became active", consumerName));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "%s became active", consumerName);
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "%s became active", consumerName));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "%s became active", consumerName);
+     }
+ 
+     public static void logTaskLaunchFailed(int launchedTaskId) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "Launch failed, task (id=%d) finished mid transition", launchedTaskId));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Launch failed, task (id=%d) finished mid transition",
+-                    launchedTaskId);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "Launch failed, task (id=%d) finished mid transition", launchedTaskId);
+     }
+ 
+     public static void logOnPageEndTransition(int nextPageIndex) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "onPageEndTransition: current page index updated: %d", nextPageIndex));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "onPageEndTransition: current page index updated: %d",
+-                    nextPageIndex);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "onPageEndTransition: current page index updated: %d", nextPageIndex);
+     }
+ 
+     public static void logQuickSwitchFromHomeFallback(int taskIndex) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "Quick switch from home fallback case: The TaskView at index %d is missing.",
+-                taskIndex), QUICK_SWITCH_FROM_HOME_FALLBACK);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "Quick switch from home fallback case: The TaskView at index %d is missing.",
+-                    taskIndex);
+-        }
++                        taskIndex),
++                QUICK_SWITCH_FROM_HOME_FALLBACK);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "Quick switch from home fallback case: The TaskView at index %d is missing.",
++                taskIndex);
+     }
+ 
+     public static void logQuickSwitchFromHomeFailed(int taskIndex) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "Quick switch from home failed: TaskViews at indices %d and 0 are missing.",
+-                taskIndex), QUICK_SWITCH_FROM_HOME_FAILED);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "Quick switch from home failed: TaskViews at indices %d and 0 are missing.",
+-                    taskIndex);
+-        }
++                        taskIndex),
++                QUICK_SWITCH_FROM_HOME_FAILED);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "Quick switch from home failed: TaskViews at indices %d and 0 are missing.",
++                taskIndex);
+     }
+ 
+-    public static void logFinishRecentsAnimation(boolean toHome,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
++    public static void logFinishRecentsAnimation(
++            boolean toHome, @NonNull ActiveGestureLog.CompoundString reason) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                        "RecentsAnimationController.finishRecentsAnimation: toHome=%b, reason=",
+-                        toHome).append(reason),
++                "RecentsAnimationController.finishRecentsAnimation: toHome=%b, reason=", toHome)
++                        .append(reason),
+                 /* gestureEvent= */ FINISH_RECENTS_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "RecentsAnimationController.finishRecentsAnimation: toHome=%b, reason=%s",
+-                    toHome, reason.toString());
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "RecentsAnimationController.finishRecentsAnimation: toHome=%b, reason=%s",
++                toHome,
++                reason.toString());
+     }
+ 
+     public static void logSetEndTarget(@NonNull String target) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("setEndTarget %s", target), /* gestureEvent= */
+-                SET_END_TARGET);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "setEndTarget %s", target);
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "setEndTarget %s", target), /* gestureEvent= */ SET_END_TARGET);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "setEndTarget %s", target);
+     }
+ 
+     public static void logStartHomeIntent(@NonNull String reason) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("OverviewComponentObserver.startHomeIntent: %s",
+-                        reason));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "OverviewComponentObserver.startHomeIntent: %s", reason);
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "OverviewComponentObserver.startHomeIntent: %s", reason));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "OverviewComponentObserver.startHomeIntent: %s", reason);
+     }
+ 
+     public static void logRunningTaskPackage(@NonNull String packageName) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("Current running task package name=%s",
+-                        packageName));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Current running task package name=%s", packageName);
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "Current running task package name=%s", packageName));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "Current running task package name=%s", packageName);
+     }
+ 
+     public static void logSysuiStateFlags(@NonNull String stateFlags) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("Current SystemUi state flags=%s", stateFlags));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Current SystemUi state flags=%s", stateFlags);
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "Current SystemUi state flags=%s", stateFlags));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "Current SystemUi state flags=%s", stateFlags);
+     }
+ 
+     public static void logSetInputConsumer(@NonNull String consumerName, @NonNull String reason) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("setInputConsumer: %s. reason(s):%s",
+-                        consumerName, reason));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "setInputConsumer: %s. reason(s):%s", consumerName, reason);
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "setInputConsumer: %s. reason(s):%s", consumerName, reason));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "setInputConsumer: %s. reason(s):%s", consumerName, reason);
+     }
+ 
+-    public static void logUpdateGestureStateRunningTask(@NonNull String otherTaskPackage,
+-            @NonNull String runningTaskPackage) {
++    public static void logUpdateGestureStateRunningTask(
++            @NonNull String otherTaskPackage, @NonNull String runningTaskPackage) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "Changing active task to %s because the previous task running on top of this "
+-                        + "one (%s) was excluded from recents", otherTaskPackage,
++                        + "one (%s) was excluded from recents",
++                otherTaskPackage,
+                 runningTaskPackage));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "Changing active task to %s because the previous task running on top of this "
+-                            + "one (%s) was excluded from recents", otherTaskPackage,
+-                    runningTaskPackage);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "Changing active task to %s because the previous task running on top of this "
++                        + "one (%s) was excluded from recents",
++                otherTaskPackage,
++                runningTaskPackage);
+     }
+ 
+-    public static void logOnInputEventActionUp(int x, int y, int action,
+-            @NonNull String classification, int displayId) {
++    public static void logOnInputEventActionUp(
++            int x, int y, int action, @NonNull String classification, int displayId) {
+         String actionString = MotionEvent.actionToString(action);
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("onMotionEvent(%d, %d): %s, %s, displayId=%d",
+-                        x, y, actionString, classification, displayId),
+-                /* gestureEvent= */ action == ACTION_DOWN ? MOTION_DOWN : MOTION_UP);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "onMotionEvent(%d, %d): %s, %s, displayId=%d", x, y,
+-                    actionString, classification, displayId);
+-        }
+-    }
+-
+-    public static void logOnInputEventActionMove(@NonNull String action,
+-            @NonNull String classification, int pointerCount, int displayId) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                "onMotionEvent: %s, %s, pointerCount: %d, displayId=%d", action, classification,
+-                pointerCount, displayId), MOTION_MOVE);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "onMotionEvent: %s, %s, pointerCount: %d, displayId=%d",
+-                    action, classification, pointerCount, displayId);
+-        }
++                "onMotionEvent(%d, %d): %s, %s, displayId=%d",
++                        x,
++                        y,
++                        actionString,
++                        classification,
++                        displayId),
++                /* gestureEvent= */ action == ACTION_DOWN
++                        ? MOTION_DOWN
++                        : MOTION_UP);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "onMotionEvent(%d, %d): %s, %s, displayId=%d",
++                x,
++                y,
++                actionString,
++                classification,
++                displayId);
++    }
++
++    public static void logOnInputEventActionMove(
++            @NonNull String action,
++            @NonNull String classification,
++            int pointerCount,
++            int displayId) {
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                        "onMotionEvent: %s, %s, pointerCount: %d, displayId=%d",
++                        action,
++                        classification,
++                        pointerCount,
++                        displayId),
++                MOTION_MOVE);
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "onMotionEvent: %s, %s, pointerCount: %d, displayId=%d",
++                action,
++                classification,
++                pointerCount,
++                displayId);
+     }
+ 
+-    public static void logOnInputEventGenericAction(@NonNull String action,
+-            @NonNull String classification, int displayId) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("onMotionEvent: %s, %s, displayId=%d", action,
+-                        classification, displayId));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "onMotionEvent: %s, %s, displayId=%d", action,
+-                    classification, displayId);
+-        }
++    public static void logOnInputEventGenericAction(
++            @NonNull String action, @NonNull String classification, int displayId) {
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "onMotionEvent: %s, %s, displayId=%d", action, classification, displayId));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "onMotionEvent: %s, %s, displayId=%d", action, classification, displayId);
+     }
+ 
+-    public static void logOnInputEventNavModeSwitched(int displayId, @NonNull String startNavMode,
+-            @NonNull String currentNavMode) {
++    public static void logOnInputEventNavModeSwitched(
++            int displayId, @NonNull String startNavMode, @NonNull String currentNavMode) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                "TIS.onInputEvent(displayId=%d): Navigation mode switched mid-gesture (%s"
+-                        + " -> %s); " + "cancelling gesture.", displayId, startNavMode,
+-                currentNavMode), NAVIGATION_MODE_SWITCHED);
++                "TIS.onInputEvent(displayId=%d): Navigation mode switched mid-gesture (%s -> %s); "
++                        + "cancelling gesture.",
++                        displayId,
++                        startNavMode,
++                        currentNavMode),
++                NAVIGATION_MODE_SWITCHED);
+         if (!isProtoLogInitialized()) return;
+         ProtoLog.d(ACTIVE_GESTURE_LOG,
+                 "TIS.onInputEvent(displayId=%d): Navigation mode switched mid-gesture (%s -> %s); "
+-                        + "cancelling gesture.", displayId, startNavMode, currentNavMode);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "TIS.onInputEvent(displayId=%d): Navigation mode switched mid-gesture (%s -> "
+-                            + "%s); " + "cancelling gesture.", displayId, startNavMode,
+-                    currentNavMode);
+-        }
++                        + "cancelling gesture.",
++                displayId,
++                startNavMode,
++                currentNavMode);
+     }
+ 
+     public static void logUnknownInputEvent(int displayId, @NonNull String event) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "TIS.onInputEvent(displayId=%d): Cannot process input event: "
+                         + "received unknown event %s", displayId, event));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "TIS.onInputEvent(displayId=%d): Cannot process input event: "
+-                            + "received unknown event %s", displayId, event);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "TIS.onInputEvent(displayId=%d): Cannot process input event: "
++                        + "received unknown event %s", displayId, event);
+     }
+ 
+-    public static void logFinishRunningRecentsAnimation(boolean toHome,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
++    public static void logFinishRunningRecentsAnimation(
++            boolean toHome, @NonNull ActiveGestureLog.CompoundString reason) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                "TaskAnimationManager.finishRunningRecentsAnimation: toHome=%b, reason=",
+-                toHome).append(reason));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "TaskAnimationManager.finishRunningRecentsAnimation: toHome=%b, reason=%s",
+-                    toHome, reason.toString());
+-        }
++                "TaskAnimationManager.finishRunningRecentsAnimation: toHome=%b, reason=", toHome)
++                .append(reason));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "TaskAnimationManager.finishRunningRecentsAnimation: toHome=%b, reason=%s",
++                toHome,
++                reason.toString());
+     }
+ 
+     public static void logOnRecentsAnimationStartCancelled() {
+         ActiveGestureLog.INSTANCE.addLog("RecentsAnimationCallbacks.onAnimationStart (canceled): 0",
+                 /* gestureEvent= */ ON_START_RECENTS_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "RecentsAnimationCallbacks.onAnimationStart (canceled): 0");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "RecentsAnimationCallbacks.onAnimationStart (canceled): 0");
+     }
+ 
+     public static void logOnRecentsAnimationStart(int appCount) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                        "RecentsAnimationCallbacks.onAnimationStart: %d", appCount),
++                "RecentsAnimationCallbacks.onAnimationStart: %d", appCount),
+                 /* gestureEvent= */ ON_START_RECENTS_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "RecentsAnimationCallbacks.onAnimationStart: %d", appCount);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "RecentsAnimationCallbacks.onAnimationStart: %d", appCount);
+     }
+ 
+     public static void logStartRecentsAnimationCallback(@NonNull String callback) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "TaskAnimationManager.startRecentsAnimation(%s): "
+-                        + "Setting mRecentsAnimationStartPending = false", callback));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "TaskAnimationManager.startRecentsAnimation(%s): "
+-                    + "Setting mRecentsAnimationStartPending = false", callback);
+-        }
++                        + "Setting mRecentsAnimationStartPending = false",
++                callback));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "TaskAnimationManager.startRecentsAnimation(%s): "
++                        + "Setting mRecentsAnimationStartPending = false",
++                callback);
+     }
+ 
+     public static void logSettingRecentsAnimationStartPending(boolean value) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "TaskAnimationManager.startRecentsAnimation: "
+-                        + "Setting mRecentsAnimationStartPending = %b", value));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "TaskAnimationManager.startRecentsAnimation: "
+-                    + "Setting mRecentsAnimationStartPending = %b", value);
+-        }
++                        + "Setting mRecentsAnimationStartPending = %b",
++                value));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "TaskAnimationManager.startRecentsAnimation: "
++                        + "Setting mRecentsAnimationStartPending = %b",
++                value);
+     }
+ 
+     public static void logLaunchingSideTask(int taskId) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("Launching side task id=%d", taskId));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Launching side task id=%d", taskId);
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "Launching side task id=%d", taskId));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "Launching side task id=%d", taskId);
+     }
+ 
+-    public static void logOnInputEventActionDown(int displayId,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("TIS.onMotionEvent(displayId=%d): ",
+-                        displayId).append(reason));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "TIS.onMotionEvent(displayId=%d): %s", displayId,
+-                    reason.toString());
+-        }
++    public static void logOnInputEventActionDown(
++            int displayId, @NonNull ActiveGestureLog.CompoundString reason) {
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "TIS.onMotionEvent(displayId=%d): ", displayId).append(reason));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "TIS.onMotionEvent(displayId=%d): %s", displayId, reason.toString());
+     }
+ 
+     public static void logStartNewTask(@NonNull ActiveGestureLog.CompoundString tasks) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("Launching task: ").append(tasks));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "TIS.onMotionEvent: %s", tasks.toString());
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "Launching task: ").append(tasks));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "TIS.onMotionEvent: %s", tasks.toString());
+     }
+ 
+     public static void logMotionPauseDetectorEvent(@NonNull ActiveGestureLog.CompoundString event) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("MotionPauseDetector: ").append(event));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "MotionPauseDetector: %s", event.toString());
+-        }
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "MotionPauseDetector: ").append(event));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "MotionPauseDetector: %s", event.toString());
+     }
+ 
+     public static void logOnInvalidTasksAppeared(@NonNull ActiveGestureLog.CompoundString reason) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "AbsSwipeHandler.onTasksAppeared check failed, "
+-                        + "attempting to forcefully finish recents animation. Reason: ").append(
+-                reason));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "AbsSwipeHandler.onTasksAppeared check failed, "
+-                            + "attempting to forcefully finish recents animation. Reason: %s",
+-                    reason.toString());
+-        }
++                        + "attempting to forcefully finish recents animation. Reason: ")
++                .append(reason));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "AbsSwipeHandler.onTasksAppeared check failed, "
++                + "attempting to forcefully finish recents animation. Reason: ",
++                reason.toString());
+     }
+ 
+     /**
+      * This is for special cases where the string is purely dynamic and therefore has no format that
+      * can be extracted. Do not use in any other case.
+      */
+-    public static void logDynamicString(@NonNull String string,
++    public static void logDynamicString(
++            @NonNull String string,
+             @Nullable ActiveGestureErrorDetector.GestureEvent gestureEvent) {
+         ActiveGestureLog.INSTANCE.addLog(string, gestureEvent);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "%s", string);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "%s", string);
+     }
+ 
+     public static void logOnSettledOnEndTarget(@NonNull String endTarget) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("onSettledOnEndTarget %s", endTarget),
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "onSettledOnEndTarget %s", endTarget),
+                 /* gestureEvent= */ ON_SETTLED_ON_END_TARGET);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "onSettledOnEndTarget %s", endTarget);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "onSettledOnEndTarget %s", endTarget);
+     }
+ 
+     public static void logOnCalculateEndTarget(float velocityX, float velocityY, double angle) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                        "calculateEndTarget: velocities=(x=%fdp/ms, y=%fdp/ms), angle=%f",
++                "calculateEndTarget: velocities=(x=%fdp/ms, y=%fdp/ms), angle=%f",
+                         velocityX,
+-                        velocityY, angle),
++                        velocityY,
++                        angle),
+                 velocityX == 0 && velocityY == 0 ? INVALID_VELOCITY_ON_SWIPE_UP : null);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "calculateEndTarget: velocities=(x=%fdp/ms, y=%fdp/ms), angle=%f", velocityX,
+-                    velocityY, angle);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "calculateEndTarget: velocities=(x=%fdp/ms, y=%fdp/ms), angle=%f",
++                velocityX,
++                velocityY,
++                angle);
+     }
+ 
+     public static void logCreateTouchRegionForDisplay(int displayRotation,
+             @NonNull Point displaySize, @NonNull RectF swipeRegion, @NonNull RectF ohmRegion,
+             int gesturalHeight, int largerGesturalHeight, @NonNull String reason) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "OrientationTouchTransformer.createRegionForDisplay: "
+-                            + "dispRot=%d, dispSize=%s, swipeRegion=%s, ohmRegion=%s, "
+-                            + "gesturalHeight=%d, largerGesturalHeight=%d, reason=%s",
+-                    displayRotation,
+-                    displaySize.flattenToString(), swipeRegion.toShortString(),
+-                    ohmRegion.toShortString(), gesturalHeight, largerGesturalHeight, reason);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "OrientationTouchTransformer.createRegionForDisplay: "
++                        + "dispRot=%d, dispSize=%s, swipeRegion=%s, ohmRegion=%s, "
++                        + "gesturalHeight=%d, largerGesturalHeight=%d, reason=%s",
++                displayRotation, displaySize.flattenToString(), swipeRegion.toShortString(),
++                ohmRegion.toShortString(), gesturalHeight, largerGesturalHeight, reason);
+     }
+ 
+     public static void logOnTaskAnimationManagerNotAvailable(int displayId) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                "TaskAnimationManager not available for displayId=%d", displayId));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "TaskAnimationManager not available for displayId=%d",
+-                    displayId);
+-        }
++                "TaskAnimationManager not available for displayId=%d",
++                displayId));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "TaskAnimationManager not available for displayId=%d",
++                displayId);
+     }
+ 
+     public static void logOnAbsSwipeUpHandlerNotAvailable(int displayId) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                "AbsSwipeUpHandler not available for displayId=%d", displayId));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "AbsSwipeUpHandler not available for displayId=%d",
+-                    displayId);
+-        }
++                "AbsSwipeUpHandler not available for displayId=%d",
++                displayId));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "AbsSwipeUpHandler not available for displayId=%d",
++                displayId);
+     }
+ 
+     public static void logGestureStartSwipeHandler(@NonNull String interactionHandler) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+                 "OtherActivityInputConsumer.startTouchTrackingForWindowAnimation: "
+                         + "interactionHandler=%s", interactionHandler));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "OtherActivityInputConsumer.startTouchTrackingForWindowAnimation: "
+-                            + "interactionHandler=%s", interactionHandler);
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "OtherActivityInputConsumer.startTouchTrackingForWindowAnimation: "
++                        + "interactionHandler=%s", interactionHandler);
+     }
+ 
+     public static void logQueuingForceFinishRecentsAnimation() {
+         ActiveGestureLog.INSTANCE.addLog("Launcher destroyed while mRecentsAnimationStartPending =="
+                         + " true, queuing a callback to clean the pending animation up on start",
+                 /* gestureEvent= */ ON_START_RECENTS_ANIMATION);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Launcher destroyed while mRecentsAnimationStartPending =="
+-                    + " true, queuing a callback to clean the pending animation up on start");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "Launcher destroyed while mRecentsAnimationStartPending =="
++                + " true, queuing a callback to clean the pending animation up on start");
+     }
+ 
+     public static void logRecentsAnimationStartTimedOut() {
+         ActiveGestureLog.INSTANCE.addLog("Recents animation start has timed out; forcefully "
+                         + "cleaning up the recents animation.",
+                 /* gestureEvent= */ RECENTS_ANIMATION_START_TIMEOUT);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Recents animation start has timed out; forcefully "
+-                    + "cleaning up the recents animation.");
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG, "Recents animation start has timed out; forcefully "
++                + "cleaning up the recents animation.");
+     }
+ 
+-    public static void logHandleUnfinishedTaskLaunch(@NonNull String endTarget,
++    public static void logHandleUnfinishedTaskLaunch(
++            @NonNull String endTarget,
+             @NonNull ActiveGestureLog.CompoundString reason) {
+         ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
+-                        "Recents animation interrupted unexpectedly during gesture to %s, reason=",
+-                        endTarget).append(reason),
++                "Recents animation interrupted unexpectedly during gesture to %s, reason=",
++                        endTarget)
++                        .append(reason),
+                 /* gestureEvent= */ UNFINISHED_TASK_LAUNCH);
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP,
+-                    "Recents animation interrupted unexpectedly during gesture to %s, reason=%s",
+-                    endTarget, reason.toString());
+-        }
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "Recents animation interrupted unexpectedly during gesture to %s, reason=%s",
++                endTarget,
++                reason.toString());
+     }
+ 
+-    public static void logCalculateEndTargetResultAndReason(@NonNull String endTarget,
+-            @NonNull ActiveGestureLog.CompoundString reason) {
+-        ActiveGestureLog.INSTANCE.addLog(
+-                new ActiveGestureLog.CompoundString("calculateEndTarget: endTarget=%s, reason=",
+-                        endTarget).append(reason));
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "calculateEndTarget: endTarget=%s, reason=%s", endTarget,
+-                    reason.toString());
+-        }
++    public static void logCalculateEndTargetResultAndReason(
++            @NonNull String endTarget, @NonNull ActiveGestureLog.CompoundString reason) {
++        ActiveGestureLog.INSTANCE.addLog(new ActiveGestureLog.CompoundString(
++                "calculateEndTarget: endTarget=%s, reason=", endTarget).append(reason));
++        if (!isProtoLogInitialized()) return;
++        ProtoLog.d(ACTIVE_GESTURE_LOG,
++                "calculateEndTarget: endTarget=%s, reason=%s",
++                endTarget,
++                reason.toString());
+     }
+ }
+diff --git a/quickstep/src_protolog/com/android/quickstep/util/RecentsWindowProtoLogProxy.java b/quickstep/src_protolog/com/android/quickstep/util/RecentsWindowProtoLogProxy.java
+index 2faf77a..615d073 100644
+--- a/quickstep/src_protolog/com/android/quickstep/util/RecentsWindowProtoLogProxy.java
++++ b/quickstep/src_protolog/com/android/quickstep/util/RecentsWindowProtoLogProxy.java
+@@ -19,7 +19,6 @@ package com.android.quickstep.util;
+ import static com.android.quickstep.util.QuickstepProtoLogGroup.RECENTS_WINDOW;
+ import static com.android.quickstep.util.QuickstepProtoLogGroup.isProtoLogInitialized;
+ 
+-import android.util.Log;
+ import android.window.DesktopExperienceFlags;
+ 
+ import androidx.annotation.NonNull;
+@@ -38,55 +37,38 @@ import com.android.launcher3.Flags;
+  * method. Or, if an existing entry needs to be modified, simply update it here.
+  */
+ public class RecentsWindowProtoLogProxy {
+-    private static final boolean IS_RECENTS_WINDOW_PROTOLOG_ENABLED =
+-            new DesktopExperienceFlags.DesktopExperienceFlag(Flags::enableRecentsWindowProtoLog,
+-                    false, Flags.FLAG_ENABLE_RECENTS_WINDOW_PROTO_LOG).isTrue();
+-    private static final QuickstepProtoLogGroup PROTO_LOG_GROUP = RECENTS_WINDOW;
+-
+-    private static boolean willProtoLog() {
+-        return IS_RECENTS_WINDOW_PROTOLOG_ENABLED && isProtoLogInitialized();
+-    }
+ 
+-    private static void logToLogcatIfNeeded(String message, Object... args) {
+-        if (!willProtoLog() || !PROTO_LOG_GROUP.isLogToLogcat()) {
+-            Log.d(PROTO_LOG_GROUP.getTag(), String.format(message, args));
+-        }
+-    }
++    private static final boolean IS_RECENTS_WINDOW_PROTOLOG_ENABLED =
++            new DesktopExperienceFlags.DesktopExperienceFlag(
++                    Flags::enableRecentsWindowProtoLog,
++                    false,
++                    Flags.FLAG_ENABLE_RECENTS_WINDOW_PROTO_LOG).isTrue();
+ 
+     public static void logOnStateSetStart(@NonNull String stateName) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "onStateSetStart: %s", stateName);
+-        }
+-        logToLogcatIfNeeded("onStateSetStart: %s", stateName);
++        if (!IS_RECENTS_WINDOW_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(RECENTS_WINDOW, "onStateSetStart: %s", stateName);
+     }
+ 
+     public static void logOnStateSetEnd(@NonNull String stateName) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "onStateSetEnd: %s", stateName);
+-        }
+-        logToLogcatIfNeeded("onStateSetEnd: %s", stateName);
++        if (!IS_RECENTS_WINDOW_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(RECENTS_WINDOW, "onStateSetEnd: %s", stateName);
+     }
+ 
+     public static void logOnRepeatStateSetAborted(@NonNull String stateName) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "onRepeatStateSetAborted: %s", stateName);
+-        }
+-        logToLogcatIfNeeded("onRepeatStateSetAborted: %s", stateName);
++        if (!IS_RECENTS_WINDOW_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(RECENTS_WINDOW, "onRepeatStateSetAborted: %s", stateName);
+     }
+ 
+     public static void logStartRecentsWindow(boolean isShown, boolean windowViewIsNull) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Starting recents window: isShow= %b, windowViewIsNull=%b",
+-                    isShown, windowViewIsNull);
+-        }
+-        logToLogcatIfNeeded("Starting recents window: isShow= %b, windowViewIsNull=%b", isShown,
++        if (!IS_RECENTS_WINDOW_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(RECENTS_WINDOW,
++                "Starting recents window: isShow= %b, windowViewIsNull=%b",
++                isShown,
+                 windowViewIsNull);
+     }
+ 
+     public static void logCleanup(boolean isShown) {
+-        if (willProtoLog()) {
+-            ProtoLog.d(PROTO_LOG_GROUP, "Cleaning up recents window: isShow= %b", isShown);
+-        }
+-        logToLogcatIfNeeded("Cleaning up recents window: isShow= %b", isShown);
++        if (!IS_RECENTS_WINDOW_PROTOLOG_ENABLED || !isProtoLogInitialized()) return;
++        ProtoLog.d(RECENTS_WINDOW, "Cleaning up recents window: isShow= %b", isShown);
+     }
+ }
+diff --git a/src/com/android/launcher3/statemanager/StateManager.java b/src/com/android/launcher3/statemanager/StateManager.java
+index 18ed8ad..fa17b63 100644
+--- a/src/com/android/launcher3/statemanager/StateManager.java
++++ b/src/com/android/launcher3/statemanager/StateManager.java
+@@ -18,6 +18,7 @@ package com.android.launcher3.statemanager;
+ 
+ import static android.animation.ValueAnimator.areAnimatorsEnabled;
+ 
++import static com.android.launcher3.Flags.enableStateManagerProtoLog;
+ import static com.android.launcher3.Utilities.getTrimmedStackTrace;
+ import static com.android.launcher3.anim.AnimatorPlaybackController.callListenerCommandRecursively;
+ import static com.android.launcher3.states.StateAnimationConfig.HANDLE_STATE_APPLY;
+@@ -29,6 +30,7 @@ import android.animation.AnimatorListenerAdapter;
+ import android.animation.AnimatorSet;
+ import android.os.Handler;
+ import android.os.Looper;
++import android.util.Log;
+ 
+ import androidx.annotation.FloatRange;
+ import androidx.annotation.Nullable;
+@@ -55,6 +57,8 @@ import java.util.ArrayList;
+ public class StateManager<S extends BaseState<S>, T extends StatefulContainer<S>> {
+ 
+     public static final String TAG = "StateManager";
++    // b/279059025, b/325463989
++    private static final boolean DEBUG = true;
+ 
+     private final AnimationState<S> mConfig = new AnimationState<>();
+     private final Handler mUiHandler;
+@@ -257,8 +261,14 @@ public class StateManager<S extends BaseState<S>, T extends StatefulContainer<S>
+ 
+     private void goToState(
+             S state, boolean animated, long delay, AnimatorListener listener) {
+-        StateManagerProtoLogProxy.logGoToState(
+-                mState, state, getTrimmedStackTrace("StateManager.goToState"));
++        if (enableStateManagerProtoLog()) {
++            StateManagerProtoLogProxy.logGoToState(
++                    mState, state, getTrimmedStackTrace("StateManager.goToState"));
++        }
++        if (DEBUG && !StateManagerProtoLogProxy.isLoggingToLogcat()) {
++            Log.d(TAG, "goToState - fromState: " + mState + ", toState: " + state
++                    + ", partial trace:\n" + getTrimmedStackTrace("StateManager.goToState"));
++        }
+ 
+         animated &= areAnimatorsEnabled();
+         if (getState() == state) {
+@@ -345,8 +355,15 @@ public class StateManager<S extends BaseState<S>, T extends StatefulContainer<S>
+      */
+     public AnimatorSet createAtomicAnimation(
+             S fromState, S toState, StateAnimationConfig config) {
+-        StateManagerProtoLogProxy.logCreateAtomicAnimation(
+-                mState, toState, getTrimmedStackTrace("StateManager.createAtomicAnimation"));
++        if (enableStateManagerProtoLog()) {
++            StateManagerProtoLogProxy.logCreateAtomicAnimation(
++                    mState, toState, getTrimmedStackTrace("StateManager.createAtomicAnimation"));
++        }
++        if (DEBUG && !StateManagerProtoLogProxy.isLoggingToLogcat()) {
++            Log.d(TAG, "createAtomicAnimation - fromState: " + fromState + ", toState: " + toState
++                    + ", partial trace:\n" + getTrimmedStackTrace(
++                            "StateManager.createAtomicAnimation"));
++        }
+ 
+         PendingAnimation builder = new PendingAnimation(config.duration);
+         prepareForAtomicAnimation(fromState, toState, config);
+@@ -422,8 +439,12 @@ public class StateManager<S extends BaseState<S>, T extends StatefulContainer<S>
+         }
+         mContainer.onStateSetStart(mState);
+ 
+-        StateManagerProtoLogProxy.logOnStateTransitionStart(state);
+-
++        if (enableStateManagerProtoLog()) {
++            StateManagerProtoLogProxy.logOnStateTransitionStart(state);
++        }
++        if (DEBUG && !StateManagerProtoLogProxy.isLoggingToLogcat()) {
++            Log.d(TAG, "onStateTransitionStart - state: " + state);
++        }
+         for (int i = mListeners.size() - 1; i >= 0; i--) {
+             mListeners.get(i).onStateTransitionStart(state);
+         }
+@@ -441,14 +462,24 @@ public class StateManager<S extends BaseState<S>, T extends StatefulContainer<S>
+             setRestState(null);
+         }
+ 
+-        StateManagerProtoLogProxy.logOnStateTransitionEnd(state);
++        if (enableStateManagerProtoLog()) {
++            StateManagerProtoLogProxy.logOnStateTransitionEnd(state);
++        }
++        if (DEBUG && !StateManagerProtoLogProxy.isLoggingToLogcat()) {
++            Log.d(TAG, "onStateTransitionEnd - state: " + state);
++        }
+         for (int i = mListeners.size() - 1; i >= 0; i--) {
+             mListeners.get(i).onStateTransitionComplete(state);
+         }
+     }
+ 
+     private void onRepeatStateSetAborted(S state) {
+-        StateManagerProtoLogProxy.logOnRepeatStateSetAborted(state);
++        if (enableStateManagerProtoLog()) {
++            StateManagerProtoLogProxy.logOnRepeatStateSetAborted(state);
++        }
++        if (DEBUG && !StateManagerProtoLogProxy.isLoggingToLogcat()) {
++            Log.d(TAG, "onRepeatStateSetAborted - state: " + state);
++        }
+         mContainer.onRepeatStateSetAborted(state);
+     }
+ 
+@@ -484,9 +515,16 @@ public class StateManager<S extends BaseState<S>, T extends StatefulContainer<S>
+      * Cancels the current animation.
+      */
+     public void cancelAnimation() {
+-        StateManagerProtoLogProxy.logCancelAnimation(
+-                mConfig.currentAnimation != null,
+-                getTrimmedStackTrace("StateManager.cancelAnimation"));
++        if (enableStateManagerProtoLog()) {
++            StateManagerProtoLogProxy.logCancelAnimation(
++                    mConfig.currentAnimation != null,
++                    getTrimmedStackTrace("StateManager.cancelAnimation"));
++        }
++        if (DEBUG && mConfig.currentAnimation != null
++                && !StateManagerProtoLogProxy.isLoggingToLogcat()) {
++            Log.d(TAG, "cancelAnimation - with ongoing animation"
++                    + ", partial trace:\n" + getTrimmedStackTrace("StateManager.cancelAnimation"));
++        }
+         mConfig.reset();
+         // It could happen that a new animation is set as a result of an endListener on the
+         // existing animation.
+-- 
+2.53.0
+

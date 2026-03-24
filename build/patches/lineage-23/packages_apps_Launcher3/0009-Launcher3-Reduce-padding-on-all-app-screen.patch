@@ -1,7 +1,7 @@
-From 567575564fbf13ddd776a81fa1d67b728d9017ef Mon Sep 17 00:00:00 2001
+From 249df9405c399368dc17bb4f89cf9f99e2887f09 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Mon, 22 Dec 2025 20:56:19 +0100
-Subject: [PATCH 5/5] Launcher3: Reduce padding on all app screen
+Subject: [PATCH 9/9] Launcher3: Reduce padding on all app screen
 
 Change-Id: I7c23b8be01692839f12f6aaaa27e372e1b1d7bf8
 ---
@@ -9,7 +9,7 @@ Change-Id: I7c23b8be01692839f12f6aaaa27e372e1b1d7bf8
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java b/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
-index 84855f0fabe..895a1c829fe 100644
+index 84855f0..895a1c8 100644
 --- a/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
 +++ b/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
 @@ -195,7 +195,7 @@ public class AppsSearchContainerLayout extends ExtendedEditText
@@ -22,5 +22,5 @@ index 84855f0fabe..895a1c829fe 100644
      }
  
 -- 
-2.52.0
+2.53.0
 
