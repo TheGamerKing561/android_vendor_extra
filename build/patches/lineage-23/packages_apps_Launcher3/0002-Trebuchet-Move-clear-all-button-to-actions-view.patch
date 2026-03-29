@@ -1,7 +1,7 @@
-From ee04df5d09c6e5350942e59cd4a08171c4b2e139 Mon Sep 17 00:00:00 2001
+From d56be3d79e2e68b38a86f0aba799fe0b87c589a5 Mon Sep 17 00:00:00 2001
 From: Vachounet <vachounet@live.fr>
 Date: Mon, 26 Oct 2020 17:05:18 +0100
-Subject: [PATCH 6/9] Trebuchet: Move clear all button to actions view
+Subject: [PATCH 2/5] Trebuchet: Move clear all button to actions view
 
 [AndyCGYan: Instead of removing the original, hide it in a simple way]
 [ItsVixano: Match Android 16 QPR1 theme]
@@ -19,7 +19,7 @@ Change-Id: I7a0b2729c163169f7606ad4644870d07d5165e8e
 
 diff --git a/quickstep/res/drawable/ic_recents_clear_all.xml b/quickstep/res/drawable/ic_recents_clear_all.xml
 new file mode 100644
-index 0000000..2ad0bb8
+index 00000000000..2ad0bb824d4
 --- /dev/null
 +++ b/quickstep/res/drawable/ic_recents_clear_all.xml
 @@ -0,0 +1,18 @@
@@ -42,7 +42,7 @@ index 0000000..2ad0bb8
 +    <path android:fillColor="#FF000000" android:pathData="M5,13H19V11H5M3,17H17V15H3M7,7V9H21V7" />
 +</vector>
 diff --git a/quickstep/res/layout/overview_actions_container.xml b/quickstep/res/layout/overview_actions_container.xml
-index ce54028..63bf9ef 100644
+index ce54028256e..63bf9efaea9 100644
 --- a/quickstep/res/layout/overview_actions_container.xml
 +++ b/quickstep/res/layout/overview_actions_container.xml
 @@ -37,6 +37,18 @@
@@ -72,7 +72,7 @@ index ce54028..63bf9ef 100644
 \ No newline at end of file
 +</com.android.quickstep.views.OverviewActionsView>
 diff --git a/quickstep/src/com/android/quickstep/fallback/RecentsState.kt b/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
-index 51008c2..0fad3e9 100644
+index 51008c24f69..0fad3e9e9ef 100644
 --- a/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
 +++ b/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
 @@ -72,7 +72,7 @@ open class RecentsState(@JvmField val ordinal: Int, private val mFlags: Int) :
@@ -85,7 +85,7 @@ index 51008c2..0fad3e9 100644
      /** For this state, whether add desk button should be shown. */
      fun hasAddDeskButton() = hasFlag(FLAG_ADD_DESK_BUTTON)
 diff --git a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
-index 98c138d..29f6856 100644
+index 98c138d67a4..29f68567b84 100644
 --- a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
 +++ b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
 @@ -191,8 +191,7 @@ public class LauncherRecentsView extends RecentsView<QuickstepLauncher, Launcher
@@ -99,7 +99,7 @@ index 98c138d..29f6856 100644
          }
      }
 diff --git a/quickstep/src/com/android/quickstep/views/RecentsView.java b/quickstep/src/com/android/quickstep/views/RecentsView.java
-index 38f8a53..21c0ee8 100644
+index 111c99b53a5..6fc54599b55 100644
 --- a/quickstep/src/com/android/quickstep/views/RecentsView.java
 +++ b/quickstep/src/com/android/quickstep/views/RecentsView.java
 @@ -132,6 +132,7 @@ import android.view.ViewTreeObserver.OnScrollChangedListener;
@@ -110,7 +110,7 @@ index 38f8a53..21c0ee8 100644
  import android.widget.ListView;
  import android.widget.OverScroller;
  import android.widget.Toast;
-@@ -570,6 +571,7 @@ public abstract class RecentsView<
+@@ -571,6 +572,7 @@ public abstract class RecentsView<
      private final RecentsModel mModel;
      private final int mSplitPlaceholderSize;
      private final int mSplitPlaceholderInset;
@@ -118,7 +118,7 @@ index 38f8a53..21c0ee8 100644
      private final ClearAllButton mClearAllButton;
      @Nullable
      private AddDesktopButton mAddDesktopButton = null;
-@@ -1243,6 +1245,8 @@ public abstract class RecentsView<
+@@ -1244,6 +1246,8 @@ public abstract class RecentsView<
          mActionsView.updateFor3pLauncher(mIs3PLauncher);
          mSplitSelectStateController = splitController;
          mDesktopRecentsTransitionController = desktopRecentsTransitionController;
@@ -127,7 +127,7 @@ index 38f8a53..21c0ee8 100644
      }
  
      public SplitSelectStateController getSplitSelectController() {
-@@ -1718,7 +1722,7 @@ public abstract class RecentsView<
+@@ -1719,7 +1723,7 @@ public abstract class RecentsView<
       * button fully visible, center page is Clear All button.
       */
      public boolean isClearAllHidden() {
@@ -137,5 +137,5 @@ index 38f8a53..21c0ee8 100644
  
      @Override
 -- 
-2.53.0
+2.52.0
 
