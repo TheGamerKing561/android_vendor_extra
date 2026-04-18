@@ -46,6 +46,10 @@ PRODUCT_PACKAGES += \
     SystemUIOverlayEXTRA \
     UpdaterOverlayEXTRA
 
+ifneq ($(filter piloti tiro xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+PRODUCT_PACKAGES += Launcher3OverlayEXTRA
+endif
+
 ifneq ($(filter cerro dodge lisa nairo piloti racer tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 $(call soong_config_set,lineage_extra,product_has_nfc,true)
 endif
