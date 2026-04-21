@@ -15,6 +15,9 @@ TARGET_ARCH_VARIANT := armv8-2a-dotprod
 endif
 
 # Kernel
+ifneq (,$(filter $(TARGET_BOARD_PLATFORM),lahaina))
+BOOT_SECURITY_PATCH := $(VENDOR_SECURITY_PATCH)
+endif
 ifneq (,$(filter $(TARGET_BOARD_PLATFORM),mt6895 pineapple sun))
 KERNEL_LTO := thin
 endif
