@@ -3,6 +3,8 @@
 # SPDX-FileCopyrightText: Giovanni Ricca
 # SPDX-License-Identifier: Apache-2.0
 
+export TOP=$(gettop)
+
 # Hardcode High Memory Parallel Process
 export NINJA_HIGHMEM_NUM_JOBS=1
 
@@ -31,10 +33,6 @@ export USE_DEX2OAT_DEBUG=false
 #
 # For now, just skip the ABI checks to fix build errors.
 export SKIP_ABI_CHECKS=true
-
-# HAX
-export LINEAGE_FIXUP_COMMON_OUT=true
-export TOP=$(gettop)
 
 # Defs
 LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/config/version.mk)
@@ -158,48 +156,6 @@ function mka_build() {
 
     if ! mka bacon -j${MKA_JOBS}; then
         LOGE "bacon failed!"
-        return 1
-    fi
-
-    LOGI "Done!"
-}
-
-function mka_kernel() {
-    # Defs
-    DEVICE=""
-    BETA_BUILD="false"
-    local BUILD_TYPE="userdebug"
-
-    while [ "$#" -gt 0 ]; do
-        case "${1}" in
-            --device)
-                DEVICE="${2}"
-                ;;
-        esac
-        shift
-    done
-
-    if [[ -z "${DEVICE}" ]]; then
-        LOGE "Please define --device value"
-        return 1
-    fi
-
-    # Build
-    breakfast "${DEVICE}" "${BUILD_TYPE}"
-
-    declare -A device_kernel_targets=(
-        [gemstone]="dtboimage vendorbootimage"
-        [lisa]="dtboimage vendor_dlkmimage vendorbootimage"
-        [nairo]="dtboimage vendor_dlkmimage"
-        [racer]="dtboimage vendor_dlkmimage"
-        [venus]="dtboimage vendor_dlkmimage vendorbootimage"
-        [xaga]="vendor_dlkmimage vendorbootimage"
-    )
-
-    kernel_targets="bootimage ${device_kernel_targets[$DEVICE]}"
-
-    if ! mka ${kernel_targets} -j${MKA_JOBS}; then
-        LOGE "${kernel_targets} failed!"
         return 1
     fi
 

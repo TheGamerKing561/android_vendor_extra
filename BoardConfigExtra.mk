@@ -9,11 +9,6 @@
 # Inherit extra Makefile
 include $(VENDOR_EXTRA_PATH)/sepolicy/SEPolicy.mk
 
-# Architecture
-ifneq (,$(filter $(TARGET_BOARD_PLATFORM),lahaina))
-TARGET_ARCH_VARIANT := armv8-2a-dotprod
-endif
-
 # Kernel
 ifneq (,$(filter $(TARGET_BOARD_PLATFORM),lahaina))
 BOOT_SECURITY_PATCH := $(VENDOR_SECURITY_PATCH)
