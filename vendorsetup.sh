@@ -6,7 +6,7 @@
 export TOP=$(gettop)
 
 # Hardcode High Memory Parallel Process
-export NINJA_HIGHMEM_NUM_JOBS=1
+export NINJA_HIGHMEM_NUM_JOBS=3
 
 # Override host metadata to make builds more reproducible and avoid leaking info
 export BUILD_USERNAME=android-build
