@@ -121,6 +121,7 @@ function mka_build() {
     local BUILD_TYPE="userdebug"
     export WITH_GMS=
     export TARGET_UNOFFICIAL_BUILD_ID=
+    export TARGET_FORCE_PREBUILT_KERNEL=
 
     while [ "$#" -gt 0 ]; do
         case "${1}" in
@@ -136,6 +137,11 @@ function mka_build() {
             --microg)
                 export WITH_GMS=true
                 export TARGET_UNOFFICIAL_BUILD_ID=microG
+                ;;
+            -p | --prebuilt-kernel)
+                # Release builds SHOULD have a prebuilt kernel setup
+                # to save up time. Leave it disabled by default
+                export TARGET_FORCE_PREBUILT_KERNEL=true
                 ;;
         esac
         shift

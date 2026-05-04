@@ -22,6 +22,11 @@ ifneq (,$(filter $(TARGET_BOARD_PLATFORM),mt6895 pineapple sun))
 KERNEL_LTO := thin
 endif
 
+# Kernel (prebuilt)
+ifeq ($(TARGET_FORCE_PREBUILT_KERNEL), true)
+include kernel/lineage/prebuilts/BoardConfigKernel.mk
+endif
+
 # Partitions (treble) - reserved size
 EXTRA_TREBLE_PARTITIONS := odm vendor
 EXTRA_TREBLE_RESERVE_SIZE := 104857600 # 100mb * 1024 * 1024
