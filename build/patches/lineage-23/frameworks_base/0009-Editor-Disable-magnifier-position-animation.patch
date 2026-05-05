@@ -1,7 +1,7 @@
-From 41d1cc99042871263313b86b3e3d15ebd6562b03 Mon Sep 17 00:00:00 2001
+From c9e1c221ad63db3bb774870f470ea478f5f8b555 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 20:25:27 -0700
-Subject: [PATCH 09/25] Editor: Disable magnifier position animation
+Subject: [PATCH 09/26] Editor: Disable magnifier position animation
 
 In my opinion, this animation serves no purpose because it doesn't
 correspond to any animations in the text selection/handle flow, and is
@@ -28,5 +28,5 @@ index 06b0c1a4e..ac2f664ad 100644
              if (startNewAnimation) {
                  if (mAnimator.isRunning()) {
 -- 
-2.52.0
+2.54.0
 

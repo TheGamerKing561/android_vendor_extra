@@ -1,7 +1,7 @@
-From e255cb1a382950ddf8e800338a155046937276e6 Mon Sep 17 00:00:00 2001
+From 9724e61001a374136a2f4cfb8006581ba0e79346 Mon Sep 17 00:00:00 2001
 From: claxten10 <claxten10@gmail.com>
 Date: Tue, 11 Nov 2025 19:12:12 +0100
-Subject: [PATCH 20/25] res: Replace standard_accelerate with linear
+Subject: [PATCH 20/26] res: Replace standard_accelerate with linear
  interpolator
 
 * Inspired from Android S.
@@ -26,5 +26,5 @@ index d98ce93f6..2ba8c8283 100644
          android:duration="450" />
  
 -- 
-2.52.0
+2.54.0
 

@@ -1,7 +1,7 @@
-From 93a1a2f5de316ac2cb2c48bc971812760160a85c Mon Sep 17 00:00:00 2001
+From 6db77d266902f2a77f60b7c8cdf47639e0179732 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <daniel.micay@grapheneos.org>
 Date: Fri, 2 Feb 2024 18:54:40 -0500
-Subject: [PATCH 01/25] run full explicit GC in SystemUI and system_server
+Subject: [PATCH 01/26] run full explicit GC in SystemUI and system_server
  after locking
 
 ART has special support for System.gc() and Android already uses this to
@@ -13,10 +13,10 @@ when locking too.
  2 files changed, 9 insertions(+)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/keyguard/KeyguardViewMediator.java b/packages/SystemUI/src/com/android/systemui/keyguard/KeyguardViewMediator.java
-index ea9047194..a6458984d 100644
+index 62c41395d..8d9000391 100644
 --- a/packages/SystemUI/src/com/android/systemui/keyguard/KeyguardViewMediator.java
 +++ b/packages/SystemUI/src/com/android/systemui/keyguard/KeyguardViewMediator.java
-@@ -3165,6 +3165,9 @@ public class KeyguardViewMediator implements CoreStartable,
+@@ -3167,6 +3167,9 @@ public class KeyguardViewMediator implements CoreStartable,
              userActivity();
              mUpdateMonitor.setKeyguardGoingAway(false);
              mKeyguardViewControllerLazy.get().setKeyguardGoingAwayState(false);
@@ -44,5 +44,5 @@ index c0aa8aeff..6e086c6c2 100644
  
      @Override // Binder interface
 -- 
-2.52.0
+2.54.0
 

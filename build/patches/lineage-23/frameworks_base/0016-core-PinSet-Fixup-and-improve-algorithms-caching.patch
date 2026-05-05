@@ -1,7 +1,7 @@
-From 6a776655d200405f18c5b2c7e6eee8dfc016f6b2 Mon Sep 17 00:00:00 2001
+From 54d8b0b43629ed1d37e6eda95d4c8dde915355f8 Mon Sep 17 00:00:00 2001
 From: jhonboy121 <alfredmathew05@gmail.com>
 Date: Fri, 29 Oct 2021 17:54:49 +0530
-Subject: [PATCH 16/25] core: PinSet: Fixup and improve algorithms caching
+Subject: [PATCH 16/26] core: PinSet: Fixup and improve algorithms caching
 
 * algorithms shouldn't be a static field since pins is an instance variable
 * use stream API's to map and collect pin algorithms to an ArraySet
@@ -57,5 +57,5 @@ index 87fcde943..ff66b6c3b 100644
      }
  }
 -- 
-2.52.0
+2.54.0
 

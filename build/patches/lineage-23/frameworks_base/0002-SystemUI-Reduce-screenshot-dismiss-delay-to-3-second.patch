@@ -1,7 +1,7 @@
-From 49d8ae36bf2db708e6eb88a914257f81c05c54b9 Mon Sep 17 00:00:00 2001
+From b8db40b421eb0ca7f92394b07a862dda7501c2e0 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 19:18:48 -0700
-Subject: [PATCH 02/25] SystemUI: Reduce screenshot dismiss delay to 3 seconds
+Subject: [PATCH 02/26] SystemUI: Reduce screenshot dismiss delay to 3 seconds
 
 3 seconds is enough in most cases. Keeping the overlay around for too
 long forces the user to dismiss it manually, which is a regression
@@ -26,5 +26,5 @@ index 2b825d1ab..625250602 100644
          val SCREENSHOT_MULTIDISPLAY_FOCUS_CHANGE =
              DesktopExperienceFlags.DesktopExperienceFlag(
 -- 
-2.52.0
+2.54.0
 
