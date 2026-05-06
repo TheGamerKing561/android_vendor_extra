@@ -1,7 +1,7 @@
-From 946e97aca7c89e98c2eae0c6b49effa276747fd9 Mon Sep 17 00:00:00 2001
+From 633be07b2da44808e9f8e890d2917ef0e9be1b3c Mon Sep 17 00:00:00 2001
 From: rmp22 <195054967+rmp22@users.noreply.github.com>
 Date: Wed, 27 Aug 2025 18:26:05 +0800
-Subject: [PATCH 22/26] add perf activity anim override
+Subject: [PATCH 22/24] add perf activity anim override
 
 fix for mtk and low-end devices perf regression caused by fixed dp translate and fade animation
 
