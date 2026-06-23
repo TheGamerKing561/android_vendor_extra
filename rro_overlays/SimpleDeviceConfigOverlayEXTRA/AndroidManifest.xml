@@ -7,5 +7,5 @@
           package="org.protonaosp.deviceconfig.overlay.extra">
     <overlay android:targetPackage="org.protonaosp.deviceconfig"
              android:isStatic="true"
-             android:priority="999" />
+             android:priority="1337" />
 </manifest>

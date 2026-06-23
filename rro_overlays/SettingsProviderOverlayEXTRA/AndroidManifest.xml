@@ -7,5 +7,5 @@
           package="com.android.providers.settings.overlay.extra">
     <overlay android:targetPackage="com.android.providers.settings"
              android:isStatic="true"
-             android:priority="999" />
+             android:priority="1337" />
 </manifest>
