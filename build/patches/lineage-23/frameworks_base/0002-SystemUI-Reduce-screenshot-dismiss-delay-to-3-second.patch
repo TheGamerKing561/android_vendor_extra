@@ -1,7 +1,7 @@
-From fbde50b9c9e4d67193a2fd2939af95304a31844f Mon Sep 17 00:00:00 2001
+From f326dfe19c265dc57eafbdc1a30e31b1cf41de00 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 19:18:48 -0700
-Subject: [PATCH 02/24] SystemUI: Reduce screenshot dismiss delay to 3 seconds
+Subject: [PATCH 02/25] SystemUI: Reduce screenshot dismiss delay to 3 seconds
 
 3 seconds is enough in most cases. Keeping the overlay around for too
 long forces the user to dismiss it manually, which is a regression

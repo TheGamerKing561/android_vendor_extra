@@ -1,7 +1,7 @@
-From 1f7435c5ff587d3c33268c9e28addaac00f364a0 Mon Sep 17 00:00:00 2001
+From 535706baa1dc7f3e318d06a973b85fb3c2ad7991 Mon Sep 17 00:00:00 2001
 From: Pranav Vashi <neobuddy89@gmail.com>
 Date: Sat, 16 Mar 2024 20:01:22 +0530
-Subject: [PATCH 23/24] Allow signature spoofing on user builds
+Subject: [PATCH 24/25] Allow signature spoofing on user builds
 
 * This is custom rom breaking google's integrity check.
 
@@ -16,7 +16,7 @@ Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
  delete mode 100644 services/core/jni/com_android_server_pm_ComputerEngine.cpp
 
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 1cc02de12..d00d646a0 100644
+index 26deb6ccd..ae61be173 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -1483,13 +1483,7 @@ public class ComputerEngine implements Computer {

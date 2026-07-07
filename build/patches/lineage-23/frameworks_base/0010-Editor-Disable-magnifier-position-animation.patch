@@ -1,7 +1,7 @@
-From ca3294481453db41a14fa9cfb02cf425e6e7c554 Mon Sep 17 00:00:00 2001
+From dd54389d7abc4268c5ce0c24ce0e565dca98d86b Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 20:25:27 -0700
-Subject: [PATCH 09/24] Editor: Disable magnifier position animation
+Subject: [PATCH 10/25] Editor: Disable magnifier position animation
 
 In my opinion, this animation serves no purpose because it doesn't
 correspond to any animations in the text selection/handle flow, and is
@@ -15,10 +15,10 @@ Change-Id: I5fed9fc06db4491dc2811815741830001d295030
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/core/java/android/widget/Editor.java b/core/java/android/widget/Editor.java
-index 06b0c1a4e..ac2f664ad 100644
+index 88eb3392a..f68aa14ba 100644
 --- a/core/java/android/widget/Editor.java
 +++ b/core/java/android/widget/Editor.java
-@@ -5032,7 +5032,7 @@ public class Editor {
+@@ -5031,7 +5031,7 @@ public class Editor {
           * animation is added to the jump.
           */
          private void show(final float x, final float y) {

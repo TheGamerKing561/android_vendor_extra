@@ -1,7 +1,7 @@
-From a4bff106242d9306bab1f9c2585ab228366711cd Mon Sep 17 00:00:00 2001
+From 7cf2ccdccf75ab858176cdfac1706f0cd80db42d Mon Sep 17 00:00:00 2001
 From: Till Kottmann <till.kottmann@bison-group.com>
 Date: Fri, 24 Aug 2018 08:56:47 +0200
-Subject: [PATCH 13/24] (Point) Only calculate sin and cos once
+Subject: [PATCH 14/25] (Point) Only calculate sin and cos once
 
 Change-Id: I6157d91ca93a771b32bd2c3b859c19ed42efa469
 Signed-off-by: Pranav <npv12@iitbbs.ac.in>

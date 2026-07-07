@@ -1,7 +1,7 @@
-From 0e8afd1c7852405715010d335c2d78dd380c6cfc Mon Sep 17 00:00:00 2001
+From 7ee9d21bc8c1a4c30d9980a340c32c2e3ff455dd Mon Sep 17 00:00:00 2001
 From: Oliver Scott <olivercscott@gmail.com>
 Date: Thu, 5 Jan 2023 22:37:42 -0500
-Subject: [PATCH 24/24] Set FakeStore/PlayStore as Aurora Store installer
+Subject: [PATCH 25/25] Set FakeStore/PlayStore as Aurora Store installer
  package name
 
 Issue: calyxos#240
@@ -14,7 +14,7 @@ Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
  1 file changed, 21 insertions(+)
 
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index d00d646a0..19b8263be 100644
+index ae61be173..002469a17 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -87,6 +87,7 @@ import android.content.pm.InstantAppResolveInfo;
