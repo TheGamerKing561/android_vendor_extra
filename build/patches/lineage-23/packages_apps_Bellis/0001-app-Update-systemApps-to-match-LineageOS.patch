@@ -1,0 +1,31 @@
+From 63042e88629397c320e04528804de466522be90c Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Sat, 11 Jul 2026 17:05:36 +0200
+Subject: [PATCH] app: Update `systemApps` to match LineageOS
+
+Change-Id: Id90577a7429a50e5bd420e1422694f9f495cdabb
+---
+ .../main/java/org/calyxos/bellis/utils/SystemAppWorker.kt  | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/app/src/main/java/org/calyxos/bellis/utils/SystemAppWorker.kt b/app/src/main/java/org/calyxos/bellis/utils/SystemAppWorker.kt
+index 637f964..9584c87 100644
+--- a/app/src/main/java/org/calyxos/bellis/utils/SystemAppWorker.kt
++++ b/app/src/main/java/org/calyxos/bellis/utils/SystemAppWorker.kt
+@@ -29,7 +29,12 @@ class SystemAppWorker(private val context: Context, workerParams: WorkerParamete
+         "org.calyxos.twelve",
+         "org.calyxos.etar",
+         "org.calyxos.glimpse",
+-        "org.chromium.chrome"
++        "org.chromium.chrome",
++        "org.lineageos.aperture",
++        "org.lineageos.twelve",
++        "org.lineageos.jelly",
++        "org.lineageos.glimpse",
++        "org.lineageos.etar"
+     )
+ 
+     override fun doWork(): Result {
+-- 
+2.54.0
+
