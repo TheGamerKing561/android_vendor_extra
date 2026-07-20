@@ -1,4 +1,4 @@
-From 8261e4716485d2b990d85e376c535931eb3270e4 Mon Sep 17 00:00:00 2001
+From c2f7c9fd72e1e0662c56e1f389e1043c572783ed Mon Sep 17 00:00:00 2001
 From: claxten10 <claxten10@gmail.com>
 Date: Wed, 12 Nov 2025 17:59:44 +0530
 Subject: [PATCH 22/25] res: Increase alpha duration from 83ms to 160ms
@@ -40,5 +40,5 @@ index 1674dab30..83e0d3bee 100644
      <translate
          android:fromXDelta="10%"
 -- 
-2.54.0
+2.55.0
 

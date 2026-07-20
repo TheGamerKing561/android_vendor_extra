@@ -1,4 +1,4 @@
-From 25d232b2e278655bf017ab4b5f5819df5ead9dba Mon Sep 17 00:00:00 2001
+From e6304ffe9b07a01a624ede347dfd2e1969e4e79f Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Wed, 24 Mar 2021 18:56:33 -0700
 Subject: [PATCH 06/25] ThemedResourceCache: Replace ArrayMap with HashMap for
@@ -148,5 +148,5 @@ index c7fcc1a38..5a82c4399 100644
  
          pruneEntriesLocked(mNullThemedEntries, configChanges);
 -- 
-2.54.0
+2.55.0
 

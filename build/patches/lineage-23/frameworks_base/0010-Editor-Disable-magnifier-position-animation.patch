@@ -1,4 +1,4 @@
-From dd54389d7abc4268c5ce0c24ce0e565dca98d86b Mon Sep 17 00:00:00 2001
+From e3ec87fcd5d95ca1f7af25c6061d09696b27d977 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 20:25:27 -0700
 Subject: [PATCH 10/25] Editor: Disable magnifier position animation
@@ -28,5 +28,5 @@ index 88eb3392a..f68aa14ba 100644
              if (startNewAnimation) {
                  if (mAnimator.isRunning()) {
 -- 
-2.54.0
+2.55.0
 

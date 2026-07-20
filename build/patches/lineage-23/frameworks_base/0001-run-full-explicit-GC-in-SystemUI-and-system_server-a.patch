@@ -1,4 +1,4 @@
-From 040dfae75785f054fdad419b4e0464aadb2aa422 Mon Sep 17 00:00:00 2001
+From ab9c8726acb5d87ddd9067bdb2cbaca043e1d4e6 Mon Sep 17 00:00:00 2001
 From: Daniel Micay <daniel.micay@grapheneos.org>
 Date: Fri, 2 Feb 2024 18:54:40 -0500
 Subject: [PATCH 01/25] run full explicit GC in SystemUI and system_server
@@ -44,5 +44,5 @@ index c0aa8aeff..6e086c6c2 100644
  
      @Override // Binder interface
 -- 
-2.54.0
+2.55.0
 

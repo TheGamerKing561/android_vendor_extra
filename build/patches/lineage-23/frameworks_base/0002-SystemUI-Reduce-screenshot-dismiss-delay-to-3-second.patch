@@ -1,4 +1,4 @@
-From f326dfe19c265dc57eafbdc1a30e31b1cf41de00 Mon Sep 17 00:00:00 2001
+From 78f3312765a81fab6badc9c5cdc261febc0eff8d Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 19:18:48 -0700
 Subject: [PATCH 02/25] SystemUI: Reduce screenshot dismiss delay to 3 seconds
@@ -26,5 +26,5 @@ index 2b825d1ab..625250602 100644
          val SCREENSHOT_MULTIDISPLAY_FOCUS_CHANGE =
              DesktopExperienceFlags.DesktopExperienceFlag(
 -- 
-2.54.0
+2.55.0
 

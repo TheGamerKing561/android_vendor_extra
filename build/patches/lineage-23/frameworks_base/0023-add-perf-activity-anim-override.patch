@@ -1,4 +1,4 @@
-From f8d70a2dabb1076897989f09d0ee1e019dd49506 Mon Sep 17 00:00:00 2001
+From 1c37fbc85bfd58c15dffec0e0009ac15a59e300c Mon Sep 17 00:00:00 2001
 From: rmp22 <195054967+rmp22@users.noreply.github.com>
 Date: Wed, 27 Aug 2025 18:26:05 +0800
 Subject: [PATCH 23/25] add perf activity anim override
@@ -156,5 +156,5 @@ index dbb68372a..ac3a59d54 100644
 +    }
  }
 -- 
-2.54.0
+2.55.0
 

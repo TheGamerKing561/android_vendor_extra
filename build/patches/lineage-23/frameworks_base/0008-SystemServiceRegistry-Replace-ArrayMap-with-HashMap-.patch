@@ -1,4 +1,4 @@
-From 0f33ce61e220bceaee03b66997e89a65d2b5d92d Mon Sep 17 00:00:00 2001
+From 03c0b6b7ff69a1fd7b01c4c9528cee31e492843a Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Mon, 5 Apr 2021 23:05:02 -0700
 Subject: [PATCH 08/25] SystemServiceRegistry: Replace ArrayMap with HashMap
@@ -151,5 +151,5 @@ index 60a938d70..e2f5c8d53 100644
      private static int sServiceCacheSize;
  
 -- 
-2.54.0
+2.55.0
 

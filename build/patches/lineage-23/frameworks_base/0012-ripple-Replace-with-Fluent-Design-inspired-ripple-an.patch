@@ -1,4 +1,4 @@
-From f29b7f9f5c91dfe8a88692d5caa329ef2481fe17 Mon Sep 17 00:00:00 2001
+From 786b4b16e8274cb28d91784729519797e38cc2f2 Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 21:00:42 -0700
 Subject: [PATCH 12/25] ripple: Replace with Fluent Design-inspired ripple
@@ -253,5 +253,5 @@ index c2a7a84ad..99dba9635 100644
      private static final String SHADER = SHADER_UNIFORMS + SHADER_LIB + SHADER_MAIN;
      private static final double PI_ROTATE_RIGHT = Math.PI * 0.0078125;
 -- 
-2.54.0
+2.55.0
 

@@ -1,4 +1,4 @@
-From 6a56502edc13ec1863ba01008f69e8eaf3c44c68 Mon Sep 17 00:00:00 2001
+From 07906e0f8af184a7f7e1d3dc94200d3a9e7ce553 Mon Sep 17 00:00:00 2001
 From: claxten10 <claxten10@gmail.com>
 Date: Tue, 11 Nov 2025 19:12:12 +0100
 Subject: [PATCH 21/25] res: Replace standard_accelerate with linear
@@ -26,5 +26,5 @@ index d98ce93f6..2ba8c8283 100644
          android:duration="450" />
  
 -- 
-2.54.0
+2.55.0
 

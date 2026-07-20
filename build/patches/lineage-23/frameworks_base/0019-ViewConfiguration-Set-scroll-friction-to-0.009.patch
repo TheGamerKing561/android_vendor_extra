@@ -1,4 +1,4 @@
-From 75a0b9253a554d40e63ea372dc765c8d37b54eb6 Mon Sep 17 00:00:00 2001
+From 8d978da8f8766b9a6182766b11b203b4c14514da Mon Sep 17 00:00:00 2001
 From: Alex Naidis <alex.naidis@linux.com>
 Date: Thu, 16 Mar 2017 14:59:53 +0100
 Subject: [PATCH 19/25] ViewConfiguration: Set scroll friction to 0.009
@@ -27,5 +27,5 @@ index f070d87ef..1758fa035 100644
      /**
       * Max distance in dips to overscroll for edge effects
 -- 
-2.54.0
+2.55.0
 

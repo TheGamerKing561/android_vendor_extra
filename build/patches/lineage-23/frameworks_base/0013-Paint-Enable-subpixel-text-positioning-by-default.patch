@@ -1,4 +1,4 @@
-From 0aaca1dedd9089bceae67bdb6cbc28bfbcc9f7f9 Mon Sep 17 00:00:00 2001
+From ca67dd8dc1126607bfe45c8f06a11eb250ed76de Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 5 Oct 2021 21:01:50 -0700
 Subject: [PATCH 13/25] Paint: Enable subpixel text positioning by default
@@ -37,5 +37,5 @@ index cd7270938..ecb30a2b5 100644
      /**
       * Font hinter option that disables font hinting.
 -- 
-2.54.0
+2.55.0
 

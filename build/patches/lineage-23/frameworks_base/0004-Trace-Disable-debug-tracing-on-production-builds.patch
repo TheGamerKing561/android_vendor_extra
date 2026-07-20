@@ -1,4 +1,4 @@
-From 5623b083af161fc60f76558a07688761a78119ab Mon Sep 17 00:00:00 2001
+From 42af51f2c45a13a1c25cf20e501a84880c6469bf Mon Sep 17 00:00:00 2001
 From: Danny Lin <danny@kdrag0n.dev>
 Date: Tue, 6 Apr 2021 08:26:47 -0700
 Subject: [PATCH 04/25] Trace: Disable debug tracing on production builds
@@ -110,5 +110,5 @@ index 1c4f0fe46..879aab17e 100644
      }
  
 -- 
-2.54.0
+2.55.0
 

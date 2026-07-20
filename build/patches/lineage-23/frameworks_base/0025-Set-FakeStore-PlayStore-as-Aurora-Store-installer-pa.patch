@@ -1,4 +1,4 @@
-From 7ee9d21bc8c1a4c30d9980a340c32c2e3ff455dd Mon Sep 17 00:00:00 2001
+From 83450c608bf4ee3d3d92049ec5ea59b0d87638df Mon Sep 17 00:00:00 2001
 From: Oliver Scott <olivercscott@gmail.com>
 Date: Thu, 5 Jan 2023 22:37:42 -0500
 Subject: [PATCH 25/25] Set FakeStore/PlayStore as Aurora Store installer
@@ -14,7 +14,7 @@ Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
  1 file changed, 21 insertions(+)
 
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index ae61be173..002469a17 100644
+index 726d6bb41..cfd74e906 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -87,6 +87,7 @@ import android.content.pm.InstantAppResolveInfo;
@@ -36,7 +36,7 @@ index ae61be173..002469a17 100644
      // PackageManagerService attributes that are primitives are referenced through the
      // pms object directly.  Primitives are the only attributes so referenced.
      protected final PackageManagerService mService;
-@@ -5142,6 +5147,22 @@ public class ComputerEngine implements Computer {
+@@ -5144,6 +5149,22 @@ public class ComputerEngine implements Computer {
              return null;
          }
  
@@ -60,5 +60,5 @@ index ae61be173..002469a17 100644
      }
  
 -- 
-2.54.0
+2.55.0
 

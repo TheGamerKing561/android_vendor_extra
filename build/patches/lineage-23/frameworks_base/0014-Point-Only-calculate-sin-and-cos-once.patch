@@ -1,4 +1,4 @@
-From 7cf2ccdccf75ab858176cdfac1706f0cd80db42d Mon Sep 17 00:00:00 2001
+From 4c65fdeb7bfa271015edbcaf026aa2eb4c7fc11f Mon Sep 17 00:00:00 2001
 From: Till Kottmann <till.kottmann@bison-group.com>
 Date: Fri, 24 Aug 2018 08:56:47 +0200
 Subject: [PATCH 14/25] (Point) Only calculate sin and cos once
@@ -27,5 +27,5 @@ index 96d2d7b08..c38d77659 100644
  
      public Point rotatedAround(Point center, float radians) {
 -- 
-2.54.0
+2.55.0
 
