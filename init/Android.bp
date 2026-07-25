@@ -10,10 +10,3 @@ prebuilt_etc {
     sub_dir: "init",
     product_specific: true,
 }
-
-prebuilt_etc {
-    name: "init.extra.rc",
-    src: "init.extra.rc",
-    sub_dir: "init",
-    product_specific: true,
-}

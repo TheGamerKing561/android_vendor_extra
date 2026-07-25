@@ -7,8 +7,9 @@
 export NINJA_HIGHMEM_NUM_JOBS=3
 
 # Override host metadata to make builds more reproducible and avoid leaking info
-export BUILD_USERNAME=android-build
-export BUILD_HOSTNAME=$(openssl rand -hex 6)
+# Commented out for now
+#export BUILD_USERNAME=android-build
+#export BUILD_HOSTNAME=$(openssl rand -hex 6)
 
 # Dexpreopt
 export WITH_DEXPREOPT_DEBUG_INFO=false
@@ -44,9 +45,6 @@ export TOP=$(gettop)
 LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/config/version.mk)
 AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' ${TOP}/vendor/lineage/vars/aosp_target_release)
 VENDOR_EXTRA_PATH=${TOP}/vendor/extra
-MKA_JOBS=$(($(nproc) - 5))
-[[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=12
-[[ $(cat /etc/hostname) = "cringemachine" ]] && MKA_JOBS=15
 
 # Logging defs
 function LOGI() {
@@ -116,10 +114,6 @@ if [[ "${APPLY_PATCHES}" == "true" ]]; then
     gen_release_config_map
 fi
 
-# Call ${TOP}/infra/vendorsetup.sh
-echo "including infra/vendorsetup.sh"
-. ${TOP}/infra/vendorsetup.sh
-
 # functions
 function mka_build() {
     # Defs
@@ -163,49 +157,6 @@ function mka_build() {
 
     while ! mka bacon -j${MKA_JOBS}; do
         LOGE "bacon failed!"
-        return 0
-    done
-
-    LOGI "Done!"
-}
-
-function mka_kernel() {
-    # Defs
-    DEVICE=""
-    BETA_BUILD="false"
-    local BUILD_TYPE="userdebug"
-
-    while [ "$#" -gt 0 ]; do
-        case "${1}" in
-            --device)
-                DEVICE="${2}"
-                ;;
-        esac
-        shift
-    done
-
-    if [[ -z "${DEVICE}" ]]; then
-        LOGE "Please define --device value"
-        return 0
-    fi
-
-    # Build
-    breakfast "${DEVICE}" "${BUILD_TYPE}"
-
-    declare -A device_kernel_targets=(
-        [gemstone]="dtboimage vendorbootimage"
-        [lisa]="dtboimage vendor_dlkmimage vendorbootimage"
-        [miatoll]="dtboimage"
-        [nairo]="dtboimage vendor_dlkmimage"
-        [racer]="dtboimage vendor_dlkmimage"
-        [venus]="dtboimage vendor_dlkmimage vendorbootimage"
-        [xaga]="vendor_dlkmimage vendorbootimage"
-    )
-
-    kernel_targets="bootimage ${device_kernel_targets[$DEVICE]}"
-
-    while ! mka ${kernel_targets} -j${MKA_JOBS}; do
-        LOGE "${kernel_targets} failed!"
         return 0
     done
 
