@@ -14,7 +14,7 @@ Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
  1 file changed, 21 insertions(+)
 
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 296222b21..0589afca6 100644
+index 726d6bb41..0589afca6 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -87,6 +87,7 @@ import android.content.pm.InstantAppResolveInfo;
