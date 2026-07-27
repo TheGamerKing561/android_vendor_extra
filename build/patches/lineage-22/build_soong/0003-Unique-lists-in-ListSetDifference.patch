@@ -1,7 +1,7 @@
 From 3e298a7b879d09b9e898df0a9690383e411b4086 Mon Sep 17 00:00:00 2001
 From: Cole Faust <colefaust@google.com>
 Date: Wed, 12 Feb 2025 21:21:04 -0800
-Subject: [PATCH 3/9] Unique lists in ListSetDifference
+Subject: [PATCH 3/8] Unique lists in ListSetDifference
 
 aosp/3492712 tried to make this function deterministic,
 but it accidentally changed the behavior by including

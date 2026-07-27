@@ -1,7 +1,7 @@
 From 8628f78703870255726bad4eabfcd439e7dc8088 Mon Sep 17 00:00:00 2001
 From: Ido Ben-Hur <idoybh2@gmail.com>
 Date: Sat, 21 Dec 2024 20:19:58 +0200
-Subject: [PATCH 6/9] soong: Add out/soong/*.glob* to installclean
+Subject: [PATCH 6/8] soong: Add out/soong/*.glob* to installclean
 
 Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
 ---

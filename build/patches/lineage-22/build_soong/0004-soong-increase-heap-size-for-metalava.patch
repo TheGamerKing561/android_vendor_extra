@@ -1,7 +1,7 @@
 From afa08590087f69f0e6fa4224b45a2fca05277ccf Mon Sep 17 00:00:00 2001
 From: LeddaZ <leonardoledda@gmail.com>
 Date: Fri, 29 Oct 2021 16:54:04 +0200
-Subject: [PATCH 4/9] soong: increase heap size for metalava
+Subject: [PATCH 4/8] soong: increase heap size for metalava
 
 * Fixes building on systems with < 16GB RAM
 
