@@ -1,7 +1,7 @@
 From c68e132543dfad73d933349db10d04200a9f527b Mon Sep 17 00:00:00 2001
 From: Park Ju Hyung <qkrwngud825@gmail.com>
 Date: Fri, 3 Jan 2020 00:11:47 +0900
-Subject: [PATCH 8/8] soong: Do not use compression upon creating zip (jar)
+Subject: [PATCH 6/6] soong: Do not use compression upon creating zip (jar)
  files
 
 A lot of zip files are created during builds for intermediate purposes

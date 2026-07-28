@@ -1,7 +1,7 @@
 From c7c4f9ea2f00ee5470512b1f7839cf6bc5736200 Mon Sep 17 00:00:00 2001
 From: Cole Faust <colefaust@google.com>
 Date: Wed, 12 Feb 2025 10:11:36 -0800
-Subject: [PATCH 1/8] Fix nondeterminism in ListSetDifference
+Subject: [PATCH 1/6] Fix nondeterminism in ListSetDifference
 
 Test: Presubmits
 Change-Id: Icafbe288810089f648a8a5051c3af45c61df3889

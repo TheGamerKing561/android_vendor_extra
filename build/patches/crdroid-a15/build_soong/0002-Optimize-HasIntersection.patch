@@ -1,7 +1,7 @@
 From 244ba03bd3b944167dabdc8d7b97d1b4c199ca49 Mon Sep 17 00:00:00 2001
 From: Cole Faust <colefaust@google.com>
 Date: Wed, 12 Feb 2025 21:04:09 -0800
-Subject: [PATCH 2/8] Optimize HasIntersection
+Subject: [PATCH 2/6] Optimize HasIntersection
 
 Just noticed it was wildly unoptimized while making
 a different change.
