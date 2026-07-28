@@ -1,0 +1,108 @@
+From 9cccd7d4f76ec5d8f1967137bb54780420595c6f Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Tue, 28 Jul 2026 12:09:24 +0200
+Subject: [PATCH 2/5] quickstep: Do not hide clear all button on tablets
+
+Assisted-by: opencode:deepseek-v4-flash
+Change-Id: I0fa10c0ce524feb739d9ca780f23b302b14b14c0
+---
+ .../fallback/FallbackRecentsStateController.java         | 3 ++-
+ .../android/quickstep/fallback/FallbackRecentsView.java  | 6 +++++-
+ .../src/com/android/quickstep/fallback/RecentsState.kt   | 2 +-
+ .../com/android/quickstep/views/LauncherRecentsView.java | 8 +++++++-
+ .../src/com/android/quickstep/views/RecentsView.java     | 9 ++++++++-
+ 5 files changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/quickstep/src/com/android/quickstep/fallback/FallbackRecentsStateController.java b/quickstep/src/com/android/quickstep/fallback/FallbackRecentsStateController.java
+index d2f76464a0..15a67e1bfb 100644
+--- a/quickstep/src/com/android/quickstep/fallback/FallbackRecentsStateController.java
++++ b/quickstep/src/com/android/quickstep/fallback/FallbackRecentsStateController.java
+@@ -97,7 +97,8 @@ public class FallbackRecentsStateController implements StateHandler<RecentsState
+ 
+     private void setProperties(RecentsState state, StateAnimationConfig config,
+             PropertySetter setter) {
+-        float clearAllButtonAlpha = state.hasClearAllButton() ? 1 : 0;
++        boolean isTablet = mRecentsViewContainer.getDeviceProfile().getDeviceProperties().isTablet();
++        float clearAllButtonAlpha = isTablet && state.hasClearAllButton() ? 1 : 0;
+         setter.setFloat(mRecentsView.getClearAllButton(),
+                 ClearAllButton.VISIBILITY_ALPHA, clearAllButtonAlpha, LINEAR);
+         if (mRecentsView.getAddDeskButton() != null) {
+diff --git a/quickstep/src/com/android/quickstep/fallback/FallbackRecentsView.java b/quickstep/src/com/android/quickstep/fallback/FallbackRecentsView.java
+index 9caef911d3..27f4fc2892 100644
+--- a/quickstep/src/com/android/quickstep/fallback/FallbackRecentsView.java
++++ b/quickstep/src/com/android/quickstep/fallback/FallbackRecentsView.java
+@@ -306,7 +306,11 @@ public class FallbackRecentsView<CONTAINER_TYPE extends Context & RecentsViewCon
+         super.setOverviewStateEnabled(enabled);
+         if (enabled) {
+             RecentsState state = mContainer.getStateManager().getState();
+-            setDisallowScrollToClearAll(!state.hasClearAllButton());
++            if (mContainer.getDeviceProfile().getDeviceProperties().isTablet()) {
++                setDisallowScrollToClearAll(!state.hasClearAllButton());
++            } else {
++                setDisallowScrollToClearAll(true);
++            }
+         }
+     }
+ 
+diff --git a/quickstep/src/com/android/quickstep/fallback/RecentsState.kt b/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
+index 0fad3e9e9e..51008c24f6 100644
+--- a/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
++++ b/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
+@@ -72,7 +72,7 @@ open class RecentsState(@JvmField val ordinal: Int, private val mFlags: Int) :
+     fun isFullScreen() = hasFlag(FLAG_FULL_SCREEN)
+ 
+     /** For this state, whether clear all button should be shown. */
+-    fun hasClearAllButton() = false
++    fun hasClearAllButton() = hasFlag(FLAG_CLEAR_ALL_BUTTON)
+ 
+     /** For this state, whether add desk button should be shown. */
+     fun hasAddDeskButton() = hasFlag(FLAG_ADD_DESK_BUTTON)
+diff --git a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
+index 29f68567b8..2f925d6789 100644
+--- a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
++++ b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
+@@ -191,7 +191,13 @@ public class LauncherRecentsView extends RecentsView<QuickstepLauncher, Launcher
+         super.setOverviewStateEnabled(enabled);
+         if (enabled) {
+             LauncherState state = getStateManager().getState();
+-            boolean hasClearAllButton = false;
++            boolean hasClearAllButton;
++            if (mContainer.getDeviceProfile().getDeviceProperties().isTablet()) {
++                hasClearAllButton = (state.getVisibleElements(mContainer.getLauncherUiState())
++                        & CLEAR_ALL_BUTTON) != 0;
++            } else {
++                hasClearAllButton = false;
++            }
+             setDisallowScrollToClearAll(!hasClearAllButton);
+         }
+     }
+diff --git a/quickstep/src/com/android/quickstep/views/RecentsView.java b/quickstep/src/com/android/quickstep/views/RecentsView.java
+index 6fc54599b5..dcaa477fde 100644
+--- a/quickstep/src/com/android/quickstep/views/RecentsView.java
++++ b/quickstep/src/com/android/quickstep/views/RecentsView.java
+@@ -1247,7 +1247,11 @@ public abstract class RecentsView<
+         mSplitSelectStateController = splitController;
+         mDesktopRecentsTransitionController = desktopRecentsTransitionController;
+         mActionClearAllButton = (Button) mActionsView.findViewById(R.id.action_clear_all);
+-        mActionClearAllButton.setOnClickListener(this::dismissAllTasks);
++        if (mContainer.getDeviceProfile().getDeviceProperties().isTablet()) {
++            mActionClearAllButton.setVisibility(GONE);
++        } else {
++            mActionClearAllButton.setOnClickListener(this::dismissAllTasks);
++        }
+     }
+ 
+     public SplitSelectStateController getSplitSelectController() {
+@@ -1723,6 +1727,9 @@ public abstract class RecentsView<
+      * button fully visible, center page is Clear All button.
+      */
+     public boolean isClearAllHidden() {
++        if (mContainer.getDeviceProfile().getDeviceProperties().isTablet()) {
++            return mClearAllButton.getAlpha() != 1f;
++        }
+         return true;
+     }
+ 
+-- 
+2.55.0
+

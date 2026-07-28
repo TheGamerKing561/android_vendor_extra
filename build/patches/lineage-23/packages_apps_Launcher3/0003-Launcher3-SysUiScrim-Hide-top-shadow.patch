@@ -1,4 +1,4 @@
-From 00ac24cd61e8e8d4abaa10c00706c907e9d0dbce Mon Sep 17 00:00:00 2001
+From c805ed7768bd3fe9a3d9792a8bf707afbc92db9e Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Thu, 7 Nov 2024 21:48:23 +0100
 Subject: [PATCH 3/5] Launcher3: SysUiScrim: Hide top shadow
@@ -11,7 +11,7 @@ Change-Id: I8e7c4d24ab40ad14ec7349cd52d50f27f8b382e3
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/com/android/launcher3/graphics/SysUiScrim.java b/src/com/android/launcher3/graphics/SysUiScrim.java
-index a9d4010bb1a..4f767924acf 100644
+index a9d4010bb1..4f767924ac 100644
 --- a/src/com/android/launcher3/graphics/SysUiScrim.java
 +++ b/src/com/android/launcher3/graphics/SysUiScrim.java
 @@ -86,7 +86,7 @@ public class SysUiScrim implements View.OnAttachStateChangeListener {
@@ -33,5 +33,5 @@ index a9d4010bb1a..4f767924acf 100644
          mTopMaskBitmap = mHideSysUiScrim ? null : createDitheredAlphaMask(mTopMaskHeight,
                  new int[]{0x3DFFFFFF, 0x0AFFFFFF, 0x00FFFFFF},
 -- 
-2.52.0
+2.55.0
 
