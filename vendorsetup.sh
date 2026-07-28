@@ -110,7 +110,7 @@ EOF
 }
 
 if [[ "${APPLY_PATCHES}" == "true" ]]; then
-    apply_patches "${VENDOR_EXTRA_PATH}"/build/patches/crdroid-a"${ANDROID_VERSION}"
+    apply_patches "${VENDOR_EXTRA_PATH}"/build/patches/evolution-a"${ANDROID_VERSION}"
     gen_release_config_map
 fi
 
