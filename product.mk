@@ -11,9 +11,6 @@ VENDOR_EXTRA_TARGET_DEVICE := $(shell echo -n $(TARGET_PRODUCT) | sed -e 's/^[a-
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/properties.mk)
 $(call inherit-product, $(VENDOR_EXTRA_PATH)/config/security.mk)
 
-# Inherit Pixel clocks Makefile
-$(call inherit-product, vendor/pixel_clocks/product.mk)
-
 # Boot animation
 TARGET_BOOTANIMATION_HALF_RES := true
 
