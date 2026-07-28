@@ -42,7 +42,7 @@ export LINEAGE_FIXUP_COMMON_OUT=true
 export TOP=$(gettop)
 
 # Defs
-LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/config/version.mk)
+ANDROID_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/config/version.mk)
 AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' ${TOP}/vendor/lineage/vars/aosp_target_release)
 VENDOR_EXTRA_PATH=${TOP}/vendor/extra
 
@@ -110,7 +110,7 @@ EOF
 }
 
 if [[ "${APPLY_PATCHES}" == "true" ]]; then
-    apply_patches "${VENDOR_EXTRA_PATH}"/build/patches/lineage-"${LOS_VERSION}"
+    apply_patches "${VENDOR_EXTRA_PATH}"/build/patches/crdroid-a"${ANDROID_VERSION}"
     gen_release_config_map
 fi
 
