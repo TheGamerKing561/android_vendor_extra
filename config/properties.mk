@@ -24,7 +24,7 @@ endif
 ifneq ($(filter cerro dodge gemstone piloti tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 TARGET_GAME_DEFAULT_FRAME_RATE := 120
 endif
-ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+ifneq ($(filter xaga peridotl,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 TARGET_GAME_DEFAULT_FRAME_RATE := 144
 endif
 
