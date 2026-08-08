@@ -6,7 +6,7 @@
 export TOP=$(gettop)
 
 # Hardcode High Memory Parallel Process
-export NINJA_HIGHMEM_NUM_JOBS=3
+export NINJA_HIGHMEM_NUM_JOBS=1
 
 # Override host metadata to make builds more reproducible and avoid leaking info
 export BUILD_USERNAME=android-build
@@ -19,6 +19,9 @@ export WITH_DEXPREOPT_DEBUG_INFO=false
 export ART_BUILD_TARGET_DEBUG=false
 export ART_BUILD_HOST_DEBUG=false
 export USE_DEX2OAT_DEBUG=false
+
+# soong backend
+export SOONG_NINJA=n2
 
 # ABI compatibility checks fail for several reasons:
 #   - The update to Clang 12 causes some changes, but no breakage has been
@@ -38,7 +41,7 @@ export SKIP_ABI_CHECKS=true
 LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/config/version.mk)
 AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' ${TOP}/vendor/lineage/vars/aosp_target_release)
 VENDOR_EXTRA_PATH=${TOP}/vendor/extra
-MKA_JOBS=$(($(nproc) - 5))
+MKA_JOBS=$(($(nproc) - 5)) # defaults for unknown hosts
 [[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=10
 
 # Logging defs
