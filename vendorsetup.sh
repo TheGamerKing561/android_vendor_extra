@@ -21,7 +21,8 @@ export ART_BUILD_HOST_DEBUG=false
 export USE_DEX2OAT_DEBUG=false
 
 # soong backend
-export SOONG_NINJA=n2
+export SOONG_NINJA=ninjago
+export NO_ABFS=true
 
 # ABI compatibility checks fail for several reasons:
 #   - The update to Clang 12 causes some changes, but no breakage has been

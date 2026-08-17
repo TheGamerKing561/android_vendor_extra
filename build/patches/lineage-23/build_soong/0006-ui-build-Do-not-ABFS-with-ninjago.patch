@@ -1,0 +1,25 @@
+From b001598f5142243a1fd4ed1cd7efdf082c8b32a2 Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Mon, 17 Aug 2026 18:06:14 +0200
+Subject: [PATCH 6/6] ui: build: Do not ABFS with ninjago
+
+Change-Id: I9fadad0e3acefabaae07c5ad854fca5a5a3057a1
+---
+ ui/build/config.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ui/build/config.go b/ui/build/config.go
+index 339c2fdf2..fb6810bdc 100644
+--- a/ui/build/config.go
++++ b/ui/build/config.go
+@@ -1456,6 +1456,7 @@ func (c *configImpl) canSupportRBE() bool {
+ }
+ 
+ func (c *configImpl) UseABFS() bool {
++	return false
+ 	if c.ninjaCommand == NINJA_NINJAGO {
+ 		return true
+ 	}
+-- 
+2.55.0
+
