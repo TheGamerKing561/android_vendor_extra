@@ -1,26 +1,41 @@
-From 567575564fbf13ddd776a81fa1d67b728d9017ef Mon Sep 17 00:00:00 2001
+From 639520330f0831fde203b6cc9835125d5d08dc6d Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Mon, 22 Dec 2025 20:56:19 +0100
 Subject: [PATCH 5/5] Launcher3: Reduce padding on all app screen
 
+Do not apply it on tablet / desktop mode
+
 Change-Id: I7c23b8be01692839f12f6aaaa27e372e1b1d7bf8
 ---
- .../launcher3/allapps/search/AppsSearchContainerLayout.java     | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../allapps/search/AppsSearchContainerLayout.java         | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java b/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
-index 84855f0fabe..895a1c829fe 100644
+index 84855f0fab..d99e5bf6cc 100644
 --- a/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
 +++ b/src/com/android/launcher3/allapps/search/AppsSearchContainerLayout.java
-@@ -195,7 +195,7 @@ public class AppsSearchContainerLayout extends ExtendedEditText
+@@ -36,6 +36,7 @@ import android.view.ViewGroup.MarginLayoutParams;
+ import com.android.launcher3.DeviceProfile;
+ import com.android.launcher3.ExtendedEditText;
+ import com.android.launcher3.Insettable;
++import com.android.launcher3.InvariantDeviceProfile;
+ import com.android.launcher3.R;
+ import com.android.launcher3.allapps.ActivityAllAppsContainerView;
+ import com.android.launcher3.allapps.AllAppsStore;
+@@ -195,7 +196,12 @@ public class AppsSearchContainerLayout extends ExtendedEditText
      @Override
      public void setInsets(Rect insets) {
          MarginLayoutParams mlp = (MarginLayoutParams) getLayoutParams();
 -        mlp.topMargin = insets.top;
-+        mlp.topMargin = insets.top / 5;
++        DeviceProfile dp = mLauncher.getDeviceProfile();
++        if (dp.getDeviceProperties().isTablet() || dp.inv.deviceType == InvariantDeviceProfile.TYPE_DESKTOP) {
++            mlp.topMargin = insets.top;
++        } else {
++            mlp.topMargin = insets.top / 5;
++        }
          requestLayout();
      }
  
 -- 
-2.52.0
+2.55.0
 

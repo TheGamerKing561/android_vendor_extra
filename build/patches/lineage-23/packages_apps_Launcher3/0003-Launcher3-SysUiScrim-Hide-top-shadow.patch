@@ -1,4 +1,4 @@
-From c805ed7768bd3fe9a3d9792a8bf707afbc92db9e Mon Sep 17 00:00:00 2001
+From 1ce8a5d580f4ffedee52b01c124d9ff7873ac642 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Thu, 7 Nov 2024 21:48:23 +0100
 Subject: [PATCH 3/5] Launcher3: SysUiScrim: Hide top shadow
