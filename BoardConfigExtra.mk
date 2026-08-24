@@ -6,9 +6,6 @@
 # Inherit MiuiCamera Makefile
 -include vendor/xiaomi/miuicamera-$(PRODUCT_DEVICE)/BoardConfig.mk
 
-# Inherit extra Makefile
-include $(VENDOR_EXTRA_PATH)/sepolicy/SEPolicy.mk
-
 # Architecture
 ifneq (,$(filter $(TARGET_BOARD_PLATFORM),lahaina))
 TARGET_ARCH_VARIANT := armv8-2a-dotprod
