@@ -18,13 +18,13 @@ PRODUCT_PRODUCT_PROPERTIES += \
 
 # SurfaceFlinger
 TARGET_GAME_DEFAULT_FRAME_RATE ?= 60
-ifneq ($(filter lisa nairo racer,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+ifneq ($(filter lisa nairo racer gem,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 TARGET_GAME_DEFAULT_FRAME_RATE := 90
 endif
 ifneq ($(filter cerro dodge gemstone piloti tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 TARGET_GAME_DEFAULT_FRAME_RATE := 120
 endif
-ifneq ($(filter xaga peridotl,$(VENDOR_EXTRA_TARGET_DEVICE)),)
+ifneq ($(filter peridotl,$(VENDOR_EXTRA_TARGET_DEVICE)),)
 TARGET_GAME_DEFAULT_FRAME_RATE := 144
 endif
 
@@ -40,9 +40,3 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     debug.hwui.skia_tracing_enabled=false \
     debug.hwui.skia_use_perfetto_track_events=false
-
-# Display
-ifneq ($(filter xaga,$(VENDOR_EXTRA_TARGET_DEVICE)),)
-PRODUCT_PRODUCT_PROPERTIES += \
-    persist.sys.activity_anim_perf_override=true
-endif
