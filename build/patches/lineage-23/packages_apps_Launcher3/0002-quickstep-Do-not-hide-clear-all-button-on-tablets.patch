@@ -1,7 +1,7 @@
 From fbe75ddc1f1042fb2f7a5062eef511a1f15c0078 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Tue, 28 Jul 2026 12:09:24 +0200
-Subject: [PATCH 2/5] quickstep: Do not hide clear all button on tablets
+Subject: [PATCH 2/4] quickstep: Do not hide clear all button on tablets
 
 Assisted-by: opencode:deepseek-v4-flash
 Change-Id: I0fa10c0ce524feb739d9ca780f23b302b14b14c0
