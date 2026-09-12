@@ -1,4 +1,4 @@
-From a95f853e62b368b4d84be8e8f37a65a812736288 Mon Sep 17 00:00:00 2001
+From f8d033b37b5d449a13de78f4288c915de7881fdc Mon Sep 17 00:00:00 2001
 From: Martin Liu <liumartin@google.com>
 Date: Tue, 12 Sep 2023 16:02:17 +0800
 Subject: [PATCH 2/3] sm8750-common: init: decrease swappiness to 60
@@ -27,5 +27,5 @@ index 1451d71..042dc4c 100755
  	#Set per-app max kgsl reclaim limit and per shrinker call limit
  	if [ -f /sys/class/kgsl/kgsl/page_reclaim_per_call ]; then
 -- 
-2.52.0
+2.55.0
 

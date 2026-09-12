@@ -1,4 +1,4 @@
-From b47637c1327628027a086b50012ac370b8ecf094 Mon Sep 17 00:00:00 2001
+From 0fac71d28a70f8d250bca2822aaa88de3e22ecb4 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Mon, 5 Jan 2026 19:29:20 +0100
 Subject: [PATCH 3/3] sm8750-common: init: Set zram compression algorithm to
@@ -42,5 +42,5 @@ index 042dc4c..a6f4030 100755
  	if [ -f /sys/block/zram0/disksize ]; then
  		if [ -f /sys/block/zram0/use_dedup ]; then
 -- 
-2.52.0
+2.55.0
 
