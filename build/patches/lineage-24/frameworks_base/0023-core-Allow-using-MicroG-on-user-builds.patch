@@ -1,0 +1,28 @@
+From 7aa2b3a232b6c5a0ddbe72c6c60cec25f6a5e166 Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Sun, 26 Jul 2026 09:28:45 +0200
+Subject: [PATCH 23/24] core: Allow using MicroG on user builds
+
+Change-Id: Ib984e5c366fb57bc27e5d7eed926b8ec1237c4cf
+---
+ services/core/java/com/android/server/pm/ComputerEngine.java | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
+index 4e499dcc6..35210f0d7 100644
+--- a/services/core/java/com/android/server/pm/ComputerEngine.java
++++ b/services/core/java/com/android/server/pm/ComputerEngine.java
+@@ -1492,10 +1492,6 @@ public class ComputerEngine implements Computer {
+     public static native boolean isDebuggable();
+ 
+     public static boolean isMicrogSigned(AndroidPackage p) {
+-        if (!isDebuggable()) {
+-            return false;
+-        }
+-
+         // Allowlist the following apps:
+         // * com.android.vending - microG Companion
+         // * com.google.android.gms - microG Services
+-- 
+2.55.0
+

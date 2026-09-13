@@ -1,0 +1,38 @@
+From 4f252ac11f525ebe4ec7a566df04cf5e13fa3837 Mon Sep 17 00:00:00 2001
+From: Pranav Vashi <neobuddy89@gmail.com>
+Date: Fri, 28 Oct 2022 23:18:18 +0530
+Subject: [PATCH 4/4] Launcher3: Refresh themed icons after OTA update
+
+[ItsVixano: Adapt to Android 17 QPR0]
+
+Change-Id: I17e78fe5962c0ee5dafa907337811cf97578d008
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ src/com/android/launcher3/icons/LauncherIconProvider.java | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/com/android/launcher3/icons/LauncherIconProvider.java b/src/com/android/launcher3/icons/LauncherIconProvider.java
+index 10cd5cb07f..b5cfa8dcc0 100644
+--- a/src/com/android/launcher3/icons/LauncherIconProvider.java
++++ b/src/com/android/launcher3/icons/LauncherIconProvider.java
+@@ -18,6 +18,7 @@ package com.android.launcher3.icons;
+ import android.content.Context;
+ import android.content.res.Resources;
+ import android.content.res.XmlResourceParser;
++import android.os.Build;
+ import android.text.TextUtils;
+ import android.util.ArrayMap;
+ import android.util.Log;
+@@ -71,7 +72,8 @@ public class LauncherIconProvider extends IconProvider {
+         super.updateSystemState();
+         mSystemState = mSystemState.withTheme(
+                 mThemeManager.getIconState().getThemeCode(),
+-                mThemeManager.getIconState().isCircle());
++                mThemeManager.getIconState().isCircle())
++                .withAdditionalValues(Build.VERSION.INCREMENTAL);
+     }
+ 
+     private Map<String, ThemeData> getThemedIconMap() {
+-- 
+2.55.0
+

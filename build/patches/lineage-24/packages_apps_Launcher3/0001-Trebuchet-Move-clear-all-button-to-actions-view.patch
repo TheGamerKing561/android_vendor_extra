@@ -1,0 +1,142 @@
+From 2307eaa229359a4e48dcb215b07e7644f51f7b1f Mon Sep 17 00:00:00 2001
+From: Vachounet <vachounet@live.fr>
+Date: Mon, 26 Oct 2020 17:05:18 +0100
+Subject: [PATCH 1/4] Trebuchet: Move clear all button to actions view
+
+[AndyCGYan: Instead of removing the original, hide it in a simple way]
+[ItsVixano: Match Android 16 QPR1 theme]
+[ItsVixano: Adapt to Android 16 QPR2]
+[ItsVixano: Adapt to Android 17 QPR0]
+
+Change-Id: I7a0b2729c163169f7606ad4644870d07d5165e8e
+---
+ .../res/drawable/ic_recents_clear_all.xml      | 18 ++++++++++++++++++
+ .../res/layout/overview_actions_container.xml  | 14 +++++++++++++-
+ .../android/quickstep/fallback/RecentsState.kt |  2 +-
+ .../quickstep/views/LauncherRecentsView.java   |  3 +--
+ .../android/quickstep/views/RecentsView.java   |  6 +++++-
+ 5 files changed, 38 insertions(+), 5 deletions(-)
+ create mode 100644 quickstep/res/drawable/ic_recents_clear_all.xml
+
+diff --git a/quickstep/res/drawable/ic_recents_clear_all.xml b/quickstep/res/drawable/ic_recents_clear_all.xml
+new file mode 100644
+index 0000000000..2ad0bb824d
+--- /dev/null
++++ b/quickstep/res/drawable/ic_recents_clear_all.xml
+@@ -0,0 +1,18 @@
++<!-- Copyright (C) 2020 The Android Open Source Project
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++          http://www.apache.org/licenses/LICENSE-2.0
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:height="24dp"
++    android:width="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path android:fillColor="#FF000000" android:pathData="M5,13H19V11H5M3,17H17V15H3M7,7V9H21V7" />
++</vector>
+diff --git a/quickstep/res/layout/overview_actions_container.xml b/quickstep/res/layout/overview_actions_container.xml
+index ce54028256..63bf9efaea 100644
+--- a/quickstep/res/layout/overview_actions_container.xml
++++ b/quickstep/res/layout/overview_actions_container.xml
+@@ -37,6 +37,18 @@
+             android:drawableStart="@drawable/ic_screenshot"
+             android:text="@string/action_screenshot" />
+ 
++        <Space
++            android:id="@+id/action_clear_all_space"
++            android:layout_width="@dimen/overview_actions_button_spacing"
++            android:layout_height="1dp" />
++
++        <Button
++            android:id="@+id/action_clear_all"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:drawableStart="@drawable/ic_recents_clear_all"
++            android:text="@string/recents_clear_all" />
++
+         <Button
+             android:id="@+id/action_split"
+             android:layout_width="wrap_content"
+@@ -57,4 +69,4 @@
+         android:layout_gravity="bottom|center_horizontal"
+         android:visibility="gone" />
+ 
+-</com.android.quickstep.views.OverviewActionsView>
+\ No newline at end of file
++</com.android.quickstep.views.OverviewActionsView>
+diff --git a/quickstep/src/com/android/quickstep/fallback/RecentsState.kt b/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
+index 33d5f5c3fd..5066a73616 100644
+--- a/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
++++ b/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
+@@ -75,7 +75,7 @@ open class RecentsState(@JvmField val ordinal: Int, private val mFlags: Int) :
+     fun isFullScreen() = hasFlag(FLAG_FULL_SCREEN)
+ 
+     /** For this state, whether clear all button should be shown. */
+-    fun hasClearAllButton() = hasFlag(FLAG_CLEAR_ALL_BUTTON)
++    fun hasClearAllButton() = false
+ 
+     /** For this state, whether add desk button should be shown. */
+     fun hasAddDeskButton() = hasFlag(FLAG_ADD_DESK_BUTTON)
+diff --git a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
+index 1b0786164d..b5f1f12e9d 100644
+--- a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
++++ b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
+@@ -194,8 +194,7 @@ public class LauncherRecentsView extends RecentsView<QuickstepLauncher, Launcher
+         super.setOverviewStateEnabled(enabled);
+         if (enabled) {
+             LauncherState state = getStateManager().getState();
+-            boolean hasClearAllButton = (state.getVisibleElements(mContainer.getLauncherUiState())
+-                            & CLEAR_ALL_BUTTON) != 0;
++            boolean hasClearAllButton = false;
+             setDisallowScrollToClearAll(!hasClearAllButton);
+         }
+     }
+diff --git a/quickstep/src/com/android/quickstep/views/RecentsView.java b/quickstep/src/com/android/quickstep/views/RecentsView.java
+index 4ca0a119f5..2cc6370df0 100644
+--- a/quickstep/src/com/android/quickstep/views/RecentsView.java
++++ b/quickstep/src/com/android/quickstep/views/RecentsView.java
+@@ -119,6 +119,7 @@ import android.view.ViewTreeObserver.OnScrollChangedListener;
+ import android.view.accessibility.AccessibilityEvent;
+ import android.view.accessibility.AccessibilityNodeInfo;
+ import android.view.animation.Interpolator;
++import android.widget.Button;
+ import android.widget.ListView;
+ import android.widget.OverScroller;
+ import android.widget.Toast;
+@@ -534,6 +535,7 @@ public abstract class RecentsView<
+     private final int mScrollHapticMinGapMillis;
+     private final int mSplitPlaceholderSize;
+     private final int mSplitPlaceholderInset;
++    private Button mActionClearAllButton;
+     private final ClearAllButton mClearAllButton;
+     @Nullable
+     private AddDesktopButton mAddDesktopButton = null;
+@@ -1048,6 +1050,8 @@ public abstract class RecentsView<
+         // RecentsViewContainer provided dependencies.
+         mSplitSelectStateController = splitController;
+         mDesktopRecentsTransitionController = desktopRecentsTransitionController;
++        mActionClearAllButton = (Button) mActionsView.findViewById(R.id.action_clear_all);
++        mActionClearAllButton.setOnClickListener(this::dismissAllTasks);
+         // Set in launcher to be in sync with the other Surface transactions e.g. in
+         // BaseDepthController for applying blur.
+         mSyncTransactionApplier = surfaceTransactionApplier;
+@@ -1554,7 +1558,7 @@ public abstract class RecentsView<
+      * button fully visible, center page is Clear All button.
+      */
+     public boolean isClearAllHidden() {
+-        return mClearAllButton.getAlpha() != 1f;
++        return true;
+     }
+ 
+     @Override
+-- 
+2.55.0
+
