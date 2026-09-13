@@ -21,6 +21,7 @@ export ART_BUILD_HOST_DEBUG=false
 export USE_DEX2OAT_DEBUG=false
 
 # soong backend
+export SOONG_INCREMENTAL_ANALYSIS=false
 export SOONG_NINJA=ninjago
 export NO_ABFS=true
 
