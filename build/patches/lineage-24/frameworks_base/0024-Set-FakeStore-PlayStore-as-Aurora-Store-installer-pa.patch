@@ -1,4 +1,4 @@
-From 352758573a7868ae4a2b915efffdeb86a64ef50a Mon Sep 17 00:00:00 2001
+From 337859410e86ed13952dea40c1796111a13d6dd1 Mon Sep 17 00:00:00 2001
 From: Oliver Scott <olivercscott@gmail.com>
 Date: Thu, 5 Jan 2023 22:37:42 -0500
 Subject: [PATCH 24/24] Set FakeStore/PlayStore as Aurora Store installer
@@ -10,11 +10,11 @@ Co-authored-by: Tad <tad@spotco.us>
 Change-Id: I883bc16231fa7417b71e273a1909f3178bb8e0b0
 Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
 ---
- .../com/android/server/pm/ComputerEngine.java | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../com/android/server/pm/ComputerEngine.java | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
 diff --git a/services/core/java/com/android/server/pm/ComputerEngine.java b/services/core/java/com/android/server/pm/ComputerEngine.java
-index 35210f0d7..9500ce7f1 100644
+index 35210f0d7..3fc28f7b0 100644
 --- a/services/core/java/com/android/server/pm/ComputerEngine.java
 +++ b/services/core/java/com/android/server/pm/ComputerEngine.java
 @@ -24,6 +24,7 @@ import static android.content.ContentProvider.isAuthorityRedirectedForCloneProfi
@@ -36,7 +36,7 @@ index 35210f0d7..9500ce7f1 100644
      // PackageManagerService attributes that are primitives are referenced through the
      // pms object directly.  Primitives are the only attributes so referenced.
      protected final PackageManagerService mService;
-@@ -5216,6 +5221,22 @@ public class ComputerEngine implements Computer {
+@@ -5216,6 +5221,23 @@ public class ComputerEngine implements Computer {
              return null;
          }
  
@@ -49,8 +49,9 @@ index 35210f0d7..9500ce7f1 100644
 +                || AURORA_SERVICES.equals(installerPackageName))) {
 +            return InstallSource.create(PLAY_STORE, PLAY_STORE, PLAY_STORE,
 +                            installSource.mInstallerPackageUid, // FIXME: likely wrong
-+                           installSource.mUpdateOwnerPackageName,
-+                           installSource.mInstallerAttributionTag,
++                            installSource.mInstallerPackageUid, // FIXME: likely wrong
++                            installSource.mUpdateOwnerPackageName,
++                            installSource.mInstallerAttributionTag,
 +                            PACKAGE_SOURCE_STORE)
 +                    .setInitiatingPackageSignatures(new PackageSignatures(
 +                            mSettings.getPackage(PLAY_STORE).getSigningDetails()));
