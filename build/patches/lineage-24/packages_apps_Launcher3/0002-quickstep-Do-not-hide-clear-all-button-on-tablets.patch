@@ -1,7 +1,9 @@
-From 243a7e8c1da5c31554fa04fc7380475e7fa80036 Mon Sep 17 00:00:00 2001
+From 3b178f88b1a2e122e28c083ceef68ea0744ccb47 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Tue, 28 Jul 2026 12:09:24 +0200
 Subject: [PATCH 2/4] quickstep: Do not hide clear all button on tablets
+
+[ItsVixano: Adapt to Android 17 QPR0]
 
 Assisted-by: opencode:deepseek-v4-flash
 Change-Id: I0fa10c0ce524feb739d9ca780f23b302b14b14c0
@@ -14,7 +16,7 @@ Change-Id: I0fa10c0ce524feb739d9ca780f23b302b14b14c0
  5 files changed, 23 insertions(+), 5 deletions(-)
 
 diff --git a/quickstep/src/com/android/quickstep/fallback/FallbackRecentsStateController.java b/quickstep/src/com/android/quickstep/fallback/FallbackRecentsStateController.java
-index 909d68a269..3a1cbe2046 100644
+index 909d68a..39b6f6d 100644
 --- a/quickstep/src/com/android/quickstep/fallback/FallbackRecentsStateController.java
 +++ b/quickstep/src/com/android/quickstep/fallback/FallbackRecentsStateController.java
 @@ -99,7 +99,8 @@ public class FallbackRecentsStateController implements StateHandler<RecentsState
@@ -22,13 +24,13 @@ index 909d68a269..3a1cbe2046 100644
          setter.setFloat(mRecentsView, CONTENT_ALPHA, state.isRecentsViewVisible() ? 1f : 0f,
                  config.getInterpolator(ANIM_OVERVIEW_FADE, AGGRESSIVE_EASE_IN_OUT));
 -        float clearAllButtonAlpha = state.hasClearAllButton() ? 1 : 0;
-+        boolean isTablet = mRecentsViewContainer.getDeviceProfile().getDeviceProperties().isTablet();
++        boolean isTablet = mRecentsViewContainer.getDeviceProfile().getDeviceProperties().isLargeScreen();
 +        float clearAllButtonAlpha = isTablet && state.hasClearAllButton() ? 1 : 0;
          setter.setFloat(mRecentsView.getClearAllButton(),
                  ClearAllButton.VISIBILITY_ALPHA, clearAllButtonAlpha, LINEAR);
          if (mRecentsView.getAddDeskButton() != null) {
 diff --git a/quickstep/src/com/android/quickstep/fallback/FallbackRecentsView.java b/quickstep/src/com/android/quickstep/fallback/FallbackRecentsView.java
-index 509e2f02fc..1c47d4f009 100644
+index 509e2f0..8fc00fd 100644
 --- a/quickstep/src/com/android/quickstep/fallback/FallbackRecentsView.java
 +++ b/quickstep/src/com/android/quickstep/fallback/FallbackRecentsView.java
 @@ -296,7 +296,11 @@ public abstract class FallbackRecentsView<CONTAINER_TYPE extends Context & Recen
@@ -36,7 +38,7 @@ index 509e2f02fc..1c47d4f009 100644
          if (enabled) {
              RecentsState state = mContainer.getStateManager().getState();
 -            setDisallowScrollToClearAll(!state.hasClearAllButton());
-+            if (mContainer.getDeviceProfile().getDeviceProperties().isTablet()) {
++            if (mContainer.getDeviceProfile().getDeviceProperties().isLargeScreen()) {
 +                setDisallowScrollToClearAll(!state.hasClearAllButton());
 +            } else {
 +                setDisallowScrollToClearAll(true);
@@ -45,7 +47,7 @@ index 509e2f02fc..1c47d4f009 100644
      }
  
 diff --git a/quickstep/src/com/android/quickstep/fallback/RecentsState.kt b/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
-index 5066a73616..33d5f5c3fd 100644
+index 5066a73..33d5f5c 100644
 --- a/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
 +++ b/quickstep/src/com/android/quickstep/fallback/RecentsState.kt
 @@ -75,7 +75,7 @@ open class RecentsState(@JvmField val ordinal: Int, private val mFlags: Int) :
@@ -58,7 +60,7 @@ index 5066a73616..33d5f5c3fd 100644
      /** For this state, whether add desk button should be shown. */
      fun hasAddDeskButton() = hasFlag(FLAG_ADD_DESK_BUTTON)
 diff --git a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
-index b5f1f12e9d..e002be48da 100644
+index b5f1f12..50e2d71 100644
 --- a/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
 +++ b/quickstep/src/com/android/quickstep/views/LauncherRecentsView.java
 @@ -194,7 +194,13 @@ public class LauncherRecentsView extends RecentsView<QuickstepLauncher, Launcher
@@ -67,7 +69,7 @@ index b5f1f12e9d..e002be48da 100644
              LauncherState state = getStateManager().getState();
 -            boolean hasClearAllButton = false;
 +            boolean hasClearAllButton;
-+            if (mContainer.getDeviceProfile().getDeviceProperties().isTablet()) {
++            if (mContainer.getDeviceProfile().getDeviceProperties().isLargeScreen()) {
 +                hasClearAllButton = (state.getVisibleElements(mContainer.getLauncherUiState())
 +                        & CLEAR_ALL_BUTTON) != 0;
 +            } else {
@@ -77,7 +79,7 @@ index b5f1f12e9d..e002be48da 100644
          }
      }
 diff --git a/quickstep/src/com/android/quickstep/views/RecentsView.java b/quickstep/src/com/android/quickstep/views/RecentsView.java
-index 2cc6370df0..c63192e309 100644
+index 2cc6370..33078a8 100644
 --- a/quickstep/src/com/android/quickstep/views/RecentsView.java
 +++ b/quickstep/src/com/android/quickstep/views/RecentsView.java
 @@ -1051,7 +1051,11 @@ public abstract class RecentsView<
@@ -85,7 +87,7 @@ index 2cc6370df0..c63192e309 100644
          mDesktopRecentsTransitionController = desktopRecentsTransitionController;
          mActionClearAllButton = (Button) mActionsView.findViewById(R.id.action_clear_all);
 -        mActionClearAllButton.setOnClickListener(this::dismissAllTasks);
-+        if (mContainer.getDeviceProfile().getDeviceProperties().isTablet()) {
++        if (mContainer.getDeviceProfile().getDeviceProperties().isLargeScreen()) {
 +            mActionClearAllButton.setVisibility(GONE);
 +        } else {
 +            mActionClearAllButton.setOnClickListener(this::dismissAllTasks);
@@ -97,7 +99,7 @@ index 2cc6370df0..c63192e309 100644
       * button fully visible, center page is Clear All button.
       */
      public boolean isClearAllHidden() {
-+        if (mContainer.getDeviceProfile().getDeviceProperties().isTablet()) {
++        if (mContainer.getDeviceProfile().getDeviceProperties().isLargeScreen()) {
 +            return mClearAllButton.getAlpha() != 1f;
 +        }
          return true;

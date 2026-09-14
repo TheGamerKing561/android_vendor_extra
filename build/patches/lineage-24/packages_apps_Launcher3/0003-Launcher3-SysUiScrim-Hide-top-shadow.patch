@@ -1,4 +1,4 @@
-From 6200fa9616f9d484dd66553a607dc9c24766f95d Mon Sep 17 00:00:00 2001
+From dbae2192b124bad4db5b322fb362e69eba1fa656 Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Thu, 7 Nov 2024 21:48:23 +0100
 Subject: [PATCH 3/4] Launcher3: SysUiScrim: Hide top shadow
@@ -11,7 +11,7 @@ Change-Id: I8e7c4d24ab40ad14ec7349cd52d50f27f8b382e3
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/com/android/launcher3/graphics/SysUiScrim.java b/src/com/android/launcher3/graphics/SysUiScrim.java
-index 09f84fcfe1..7d0e0c5b65 100644
+index 09f84fc..7d0e0c5 100644
 --- a/src/com/android/launcher3/graphics/SysUiScrim.java
 +++ b/src/com/android/launcher3/graphics/SysUiScrim.java
 @@ -86,7 +86,7 @@ public class SysUiScrim implements View.OnAttachStateChangeListener {
