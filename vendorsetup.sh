@@ -5,9 +5,6 @@
 
 export TOP=$(gettop)
 
-# Hardcode High Memory Parallel Process
-export NINJA_HIGHMEM_NUM_JOBS=1
-
 # Override host metadata to make builds more reproducible and avoid leaking info
 export BUILD_USERNAME=android-build
 export BUILD_HOSTNAME=123456789abc
@@ -20,31 +17,23 @@ export ART_BUILD_TARGET_DEBUG=false
 export ART_BUILD_HOST_DEBUG=false
 export USE_DEX2OAT_DEBUG=false
 
-# soong backend
-export SOONG_INCREMENTAL_ANALYSIS=false
-export SOONG_NINJA=ninjago
-export NO_ABFS=true
+# Hardcode High Memory Parallel Process
+export NINJA_HIGHMEM_NUM_JOBS=1
 
-# ABI compatibility checks fail for several reasons:
-#   - The update to Clang 12 causes some changes, but no breakage has been
-#     observed in practice.
-#   - Switching to zlib-ng changes some internal structs, but not the public
-#     API.
-#
-# We may fix these eventually by updating the ABI specifications, but it's
-# likely not worth the effort for us because of how many repos are affected.
-# We would need to fork a lot of extra repos (thus increasing maintenance
-# overhead) just to update the ABI specs.
-#
-# For now, just skip the ABI checks to fix build errors.
-export SKIP_ABI_CHECKS=true
+# Do not generate trace dumps
+export GENERATE_SOONG_DEBUG=false
+export GENERATE_INCREMENTAL_DEBUG=false
+export GENERATE_DEX_DEBUG=false
+
+# Soong backend
+export SOONG_NINJA=ninjago
+export NO_ABFS=true # no-op
 
 # Defs
 LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/config/version.mk)
 AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' ${TOP}/vendor/lineage/vars/aosp_target_release)
 VENDOR_EXTRA_PATH=${TOP}/vendor/extra
-MKA_JOBS=$(($(nproc) - 5)) # defaults for unknown hosts
-[[ $(cat /etc/hostname) = "asus" ]] && MKA_JOBS=10
+MKA_JOBS=$(($(nproc) / 2))
 
 # Logging defs
 function LOGI() {
@@ -121,7 +110,7 @@ echo "including infra/vendorsetup.sh"
 # functions
 function mka_build() {
     # Defs
-    DEVICE=""
+    local DEVICE=""
     local DIRTY_BUILD="false"
     local BUILD_TYPE="userdebug"
     export WITH_GMS=
@@ -131,7 +120,7 @@ function mka_build() {
     while [ "$#" -gt 0 ]; do
         case "${1}" in
             --device)
-                DEVICE="${2}"
+                local DEVICE="${2}"
                 ;;
             -d | --dirty)
                 local DIRTY_BUILD="true"
@@ -157,10 +146,12 @@ function mka_build() {
         return 1
     fi
 
-    # Build
+    # Haxs
     rm -rf out/target/product/"${DEVICE}"/lineage-*.zip &>/dev/null
     rm -rf out/soong/.intermediates/vendor/lineage/build/soong/generated_kernel_includes &>/dev/null
     find out/target/product/"${DEVICE}" -name manifest.xml -delete &>/dev/null
+
+    # Build
     breakfast "${DEVICE}" "${BUILD_TYPE}"
 
     [[ "${DIRTY_BUILD}" != "true" ]] && mka installclean
