@@ -67,7 +67,7 @@ function apply_patches() {
 
         [[ "${project_name}" == "external_jemalloc_new" ]] && project_path="external/jemalloc_new"
 
-        cd "${root_dir}/${project_path}" || continue
+        cd "${root_dir}/${project_path}" &>/dev/null || continue
 
         # Apply patches and suppress abort messages
         LOGI "Applying patches from ${patches_dir}/${project_name}\n"
