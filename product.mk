@@ -51,6 +51,10 @@ ifneq ($(filter cerro dodge lisa nairo piloti racer tiro venus,$(VENDOR_EXTRA_TA
 $(call soong_config_set,lineage_extra,product_has_nfc,true)
 endif
 
+# NoIMEBar
+PRODUCT_PACKAGES += \
+    NoIMEBar
+
 # tinymix
 PRODUCT_PACKAGES += \
     tinymix
