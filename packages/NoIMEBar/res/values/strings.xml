@@ -5,7 +5,4 @@
 -->
 <resources>
     <string name="app_name">No IME Bar</string>
-    <string name="tile_label">No IME Bar</string>
-    <string name="status_hidden">Hidden</string>
-    <string name="status_visible">Visible</string>
 </resources>

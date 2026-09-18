@@ -29,7 +29,6 @@ class NoIMEBarTileService : TileService() {
 
         qsTile?.apply {
             state = if (isEnabled) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-            subtitle = getString(if (isEnabled) R.string.status_hidden else R.string.status_visible)
             updateTile()
         }
     }
