@@ -1,7 +1,7 @@
-From 0a1c9776fcf4e6990db6be882a6df06f95ca5e56 Mon Sep 17 00:00:00 2001
+From ef9554e3ab2893075fc80b5548804884ee12671b Mon Sep 17 00:00:00 2001
 From: Giovanni Ricca <giovanniricca@proton.me>
 Date: Mon, 5 Jan 2026 19:29:20 +0100
-Subject: [PATCH 3/3] sm8750-common: init: Set zram compression algorithm to
+Subject: [PATCH 3/4] sm8750-common: init: Set zram compression algorithm to
  lz4 for everyone
 
 Offers nice decompression/compression speeds while being more

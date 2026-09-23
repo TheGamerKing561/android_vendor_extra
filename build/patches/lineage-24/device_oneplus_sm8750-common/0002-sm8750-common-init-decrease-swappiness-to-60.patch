@@ -1,7 +1,7 @@
-From fbe1aff7161aab6135fc567da7a1b7e1a71929b5 Mon Sep 17 00:00:00 2001
+From 39b3a041e899bec233334c024e915900899ed9ce Mon Sep 17 00:00:00 2001
 From: Martin Liu <liumartin@google.com>
 Date: Tue, 12 Sep 2023 16:02:17 +0800
-Subject: [PATCH 2/3] sm8750-common: init: decrease swappiness to 60
+Subject: [PATCH 2/4] sm8750-common: init: decrease swappiness to 60
 
 This tweak also aligns the policy with P23.
 

@@ -1,0 +1,69 @@
+From 5a7d2ed0155d6b39285829f69ef2ce01d665476b Mon Sep 17 00:00:00 2001
+From: Giovanni Ricca <giovanniricca@proton.me>
+Date: Wed, 23 Sep 2026 18:37:32 +0200
+Subject: [PATCH 4/4] sm8750-common: Route non-offload codecs to software
+
+The configuration installed for this SKU names no Bluetooth module, and
+the A2DP ports on the primary module name the formats the controller
+encodes.
+
+A format outside that set has no port to land on and reaches no HAL.
+audio.bluetooth.default is packaged and no configuration names it.
+
+Include bluetooth_lineage_audio_policy_configuration.xml after the
+primary module, its ports naming no encoded formats. The first module
+whose port matches gets the format, so the primary one keeps the offload
+and this one takes what is left.
+
+Package audio.bluetooth_lineage.default in place of
+audio.bluetooth.default, with the fragment and the backend. The HAL
+behind it reaches the session through the adapter in
+hardware/lineage/compat, the provider here writing to a store the stock
+module does not read.
+
+Change-Id: Ic364d25dbd61ba901fd7cc1f56908a7e6713f1b7
+---
+ common.mk                                    | 5 ++++-
+ configs/audio/audio_policy_configuration.xml | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/common.mk b/common.mk
+index aaaecaa..54b68ee 100644
+--- a/common.mk
++++ b/common.mk
+@@ -34,7 +34,7 @@ PRODUCT_PACKAGES += \
+ 
+ # Audio
+ PRODUCT_PACKAGES += \
+-    audio.bluetooth.default \
++    audio.bluetooth_lineage.default \
+     audio.r_submix.default \
+     audio.usb.default \
+     audioadsprpcd \
+@@ -45,6 +45,9 @@ PRODUCT_PACKAGES += \
+     libagmipcservice \
+     libaudiochargerlistener \
+     libbatterylistener \
++    bluetooth_lineage_audio_policy_configuration \
++    libbluetooth_audio_session_backend_current \
++    libbluetooth_audio_session_backend_v3 \
+     libcustomva_intf \
+     libfmpal \
+     libhfp_pal \
+diff --git a/configs/audio/audio_policy_configuration.xml b/configs/audio/audio_policy_configuration.xml
+index faa825b..84850e9 100644
+--- a/configs/audio/audio_policy_configuration.xml
++++ b/configs/audio/audio_policy_configuration.xml
+@@ -106,6 +106,9 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+             </routes>
+         </module> -->
+ 
++        <!-- Bluetooth Audio HAL, for codecs the controller cannot encode -->
++        <xi:include href="/vendor/etc/bluetooth_lineage_audio_policy_configuration.xml"/>
++
+         <!-- Usb Audio HAL -->
+         <module name="usb" halVersion="2.0">
+             <mixPorts>
+-- 
+2.55.0
+
