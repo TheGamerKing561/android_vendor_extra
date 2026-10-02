@@ -6,8 +6,9 @@
 export TOP=$(gettop)
 
 # Override host metadata to make builds more reproducible and avoid leaking info
-export BUILD_USERNAME=android-build
-export BUILD_HOSTNAME=123456789abc
+# Commented out for now
+#export BUILD_USERNAME=android-build
+#export BUILD_HOSTNAME=123456789abc
 
 # Dexpreopt
 export WITH_DEXPREOPT_DEBUG_INFO=false
@@ -33,7 +34,6 @@ export NO_ABFS=true # no-op
 LOS_VERSION=$(sed -n 's/PRODUCT_VERSION_MAJOR = //p' ${TOP}/vendor/lineage/config/version.mk)
 AOSP_TARGET_RELEASE=$(sed -n 's/aosp_target_release=//p' ${TOP}/vendor/lineage/vars/aosp_target_release)
 VENDOR_EXTRA_PATH=${TOP}/vendor/extra
-MKA_JOBS=$(($(nproc) / 2))
 
 # Logging defs
 function LOGI() {
@@ -102,10 +102,6 @@ if [[ "${APPLY_PATCHES}" == "true" ]]; then
     apply_patches "${VENDOR_EXTRA_PATH}"/build/patches/lineage-"${LOS_VERSION}"
     gen_release_config_map
 fi
-
-# Call ${TOP}/infra/vendorsetup.sh
-echo "including infra/vendorsetup.sh"
-. ${TOP}/infra/vendorsetup.sh
 
 # functions
 function mka_build() {

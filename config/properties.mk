@@ -18,15 +18,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 
 # SurfaceFlinger
 TARGET_GAME_DEFAULT_FRAME_RATE ?= 60
-ifneq ($(filter lisa nairo racer gem,$(VENDOR_EXTRA_TARGET_DEVICE)),)
-TARGET_GAME_DEFAULT_FRAME_RATE := 90
-endif
-ifneq ($(filter cerro dodge gemstone piloti tiro venus,$(VENDOR_EXTRA_TARGET_DEVICE)),)
-TARGET_GAME_DEFAULT_FRAME_RATE := 120
-endif
-ifneq ($(filter peridotl,$(VENDOR_EXTRA_TARGET_DEVICE)),)
-TARGET_GAME_DEFAULT_FRAME_RATE := 144
-endif
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.surface_flinger.game_default_frame_rate_override=$(TARGET_GAME_DEFAULT_FRAME_RATE) \

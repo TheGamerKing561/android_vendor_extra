@@ -3,22 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Inherit MiuiCamera Makefile
--include vendor/xiaomi/miuicamera-$(PRODUCT_DEVICE)/BoardConfig.mk
-
-# Architecture
-ifneq (,$(filter $(TARGET_BOARD_PLATFORM),lahaina))
-TARGET_ARCH_VARIANT := armv8-2a-dotprod
-endif
-
-# Kernel
-ifneq (,$(filter $(TARGET_BOARD_PLATFORM),lahaina))
-BOOT_SECURITY_PATCH := $(VENDOR_SECURITY_PATCH)
-endif
-ifneq (,$(filter $(TARGET_BOARD_PLATFORM),mt6897 pineapple sun))
-KERNEL_LTO := thin
-endif
-
 # Kernel (prebuilt)
 ifeq ($(TARGET_FORCE_PREBUILT_KERNEL), true)
 include kernel/lineage/prebuilts/BoardConfigKernel.mk
