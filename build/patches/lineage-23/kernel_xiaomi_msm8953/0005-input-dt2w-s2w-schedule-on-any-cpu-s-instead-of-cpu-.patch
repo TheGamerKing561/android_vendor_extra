@@ -1,0 +1,43 @@
+From 42a0ddcc517cfd538d21c0b03ddbcb2d14d07f10 Mon Sep 17 00:00:00 2001
+From: Ryan Andri <ryanandri@linuxmail.org>
+Date: Sun, 31 Dec 2017 10:37:53 +0700
+Subject: [PATCH 05/16] input: dt2w/s2w: schedule on any cpu's instead of cpu
+ 0.
+
+- reduced delay when call dt2w_input_callback() function.
+
+Signed-off-by: Ryan Andri <ryanandri@linuxmail.org>
+---
+ drivers/input/touchscreen/doubletap2wake.c | 2 +-
+ drivers/input/touchscreen/sweep2wake.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/doubletap2wake.c b/drivers/input/touchscreen/doubletap2wake.c
+index abcc5a63f..e95237f24 100644
+--- a/drivers/input/touchscreen/doubletap2wake.c
++++ b/drivers/input/touchscreen/doubletap2wake.c
+@@ -213,7 +213,7 @@ static void dt2w_input_event(struct input_handle *handle, unsigned int type,
+ 	if ((touch_x_called || touch_y_called) && touch_cnt)  {
+ 		touch_x_called = false;
+ 		touch_y_called = false;
+-		queue_work_on(0, dt2w_input_wq, &dt2w_input_work);
++		queue_work(dt2w_input_wq, &dt2w_input_work);
+ 	}
+ }
+ 
+diff --git a/drivers/input/touchscreen/sweep2wake.c b/drivers/input/touchscreen/sweep2wake.c
+index be5dfc4e8..430941f89 100644
+--- a/drivers/input/touchscreen/sweep2wake.c
++++ b/drivers/input/touchscreen/sweep2wake.c
+@@ -247,7 +247,7 @@ static void s2w_input_event(struct input_handle *handle, unsigned int type,
+ 	if (touch_x_called && touch_y_called) {
+ 		touch_x_called = false;
+ 		touch_y_called = false;
+-		queue_work_on(0, s2w_input_wq, &s2w_input_work);
++		queue_work(s2w_input_wq, &s2w_input_work);
+ 	}
+ }
+ 
+-- 
+2.55.0
+

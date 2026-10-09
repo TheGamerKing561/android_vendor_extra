@@ -1,0 +1,119 @@
+From 4360cf3b78c7801b9f6715fbd0313828b1489eec Mon Sep 17 00:00:00 2001
+From: Ryan Andri <ryanandri@linuxmail.org>
+Date: Sat, 6 Jan 2018 06:45:37 +0700
+Subject: [PATCH 07/16] input: dt2w/s2w: changes notifier screen state.
+
+- use simple api to query the display state (on/off) by francisco franko.
+
+[cafebabe] Omit changes on touchscreen drivers
+
+Signed-off-by: Ryan Andri <ryanandri@linuxmail.org>
+Change-Id: I36b8b0cb5c0a3c7bad3a83b1dbe730d41791aabf
+---
+ drivers/input/touchscreen/doubletap2wake.c | 4 ++--
+ drivers/input/touchscreen/sweep2wake.c     | 8 ++++----
+ include/linux/input/doubletap2wake.h       | 2 --
+ include/linux/input/sweep2wake.h           | 2 --
+ 4 files changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/input/touchscreen/doubletap2wake.c b/drivers/input/touchscreen/doubletap2wake.c
+index 95d9951fc..a6822fb26 100644
+--- a/drivers/input/touchscreen/doubletap2wake.c
++++ b/drivers/input/touchscreen/doubletap2wake.c
+@@ -30,6 +30,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/input.h>
+ #include <linux/hrtimer.h>
++#include <linux/display_state.h>
+ #include <asm-generic/cputime.h>
+ 
+ /* uncomment since no touchscreen defines android touch, do that here */
+@@ -61,7 +62,6 @@ MODULE_LICENSE("GPLv2");
+ 
+ /* Resources */
+ int dt2w_switch = DT2W_DEFAULT;
+-bool dt2w_scr_suspended = false;
+ static cputime64_t tap_time_pre = 0;
+ static int touch_x = 0, touch_y = 0, touch_nr = 0, x_pre = 0, y_pre = 0;
+ static bool touch_x_called = false, touch_y_called = false, touch_cnt = true;
+@@ -187,7 +187,7 @@ static void dt2w_input_event(struct input_handle *handle, unsigned int type,
+ 		(code==ABS_MT_TRACKING_ID) ? "ID" :
+ 		"undef"), code, value);
+ #endif
+-	if (!dt2w_scr_suspended)
++	if (is_display_on())
+ 		return;
+ 
+ 	if (code == ABS_MT_SLOT) {
+diff --git a/drivers/input/touchscreen/sweep2wake.c b/drivers/input/touchscreen/sweep2wake.c
+index 9914d99de..00bef1654 100644
+--- a/drivers/input/touchscreen/sweep2wake.c
++++ b/drivers/input/touchscreen/sweep2wake.c
+@@ -30,6 +30,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/input.h>
+ #include <linux/hrtimer.h>
++#include <linux/display_state.h>
+ 
+ /* uncomment since no touchscreen defines android touch, do that here */
+ //#define ANDROID_TOUCH_DECLARED
+@@ -80,7 +81,6 @@ MODULE_LICENSE("GPLv2");
+ 
+ /* Resources */
+ int s2w_switch = 0;
+-bool s2w_scr_suspended = false;
+ static int s2w_debug = 0;
+ static int s2w_pwrkey_dur = 30;
+ static int touch_x = 0, touch_y = 0;
+@@ -149,7 +149,7 @@ static void detect_sweep2wake(int x, int y)
+ 		pr_info(LOGTAG"x: %d, y: %d\n", x, y);
+ 
+ 	//left->right
+-	if (s2w_scr_suspended == true) {
++	if (!is_display_on()) {
+ 		prevx = 0;
+ 		nextx = S2W_X_B1;
+ 		if ((barrier[0] == true) ||
+@@ -178,7 +178,7 @@ static void detect_sweep2wake(int x, int y)
+ 			}
+ 		}
+ 	//right->left
+-	} else if ((s2w_scr_suspended == false) && (s2w_switch > 0)) {
++	} else if ((is_display_on()) && (s2w_switch > 0)) {
+ 		scr_on_touch=true;
+ 		prevx = (S2W_X_MAX - S2W_X_FINAL);
+ 		nextx = S2W_X_B2;
+@@ -221,7 +221,7 @@ static void s2w_input_callback(struct work_struct *unused) {
+ static void s2w_input_event(struct input_handle *handle, unsigned int type,
+ 				unsigned int code, int value)
+ {
+-	if ((!s2w_switch) || ((s2w_scr_suspended) && (s2w_switch > 1)))
++	if ((!s2w_switch) || ((is_display_on()) && (s2w_switch > 1)))
+ 		return;
+ 
+ 	if (code == ABS_MT_SLOT) {
+diff --git a/include/linux/input/doubletap2wake.h b/include/linux/input/doubletap2wake.h
+index 0f2305e6c..a28165009 100644
+--- a/include/linux/input/doubletap2wake.h
++++ b/include/linux/input/doubletap2wake.h
+@@ -23,6 +23,4 @@
+ 
+ extern int dt2w_switch;
+ 
+-extern bool dt2w_scr_suspended;
+-
+ #endif	/* _LINUX_DOUBLETAP2WAKE_H */
+diff --git a/include/linux/input/sweep2wake.h b/include/linux/input/sweep2wake.h
+index 2f75047bc..7c3947cfe 100644
+--- a/include/linux/input/sweep2wake.h
++++ b/include/linux/input/sweep2wake.h
+@@ -23,6 +23,4 @@
+ 
+ extern int s2w_switch;
+ 
+-extern bool s2w_scr_suspended;
+-
+ #endif	/* _LINUX_SWEEP2WAKE_H */
+-- 
+2.55.0
+

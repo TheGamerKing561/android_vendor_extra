@@ -1,0 +1,52 @@
+From ffc17e4ef6c5d16c35a71b02442a61895fac2d4f Mon Sep 17 00:00:00 2001
+From: Ryan Andri <ryanandri@linuxmail.org>
+Date: Fri, 29 Dec 2017 06:03:26 +0700
+Subject: [PATCH 04/16] input: dt2w/s2w: integrate all fixes into tree.
+
+- remove dependancy of PREVENT_TO_SLEEP config.
+- force to hardcode instead of module compile.
+- fix screen wakeup when touching home key.
+- fix screen wakeup when gesture occur while incall.
+- fix deep sleep issue.
+- fix screen freeze issue.
+
+* this feature can drain battery while activated.
+
+[cafebabe] We don't have FT5336, q6voice change is applied in another repo
+
+Signed-off-by: Ryan Andri <ryanandri@linuxmail.org>
+Change-Id: Iaf51d76b4628b909ee3d5c2340fcc545017ef564
+---
+ drivers/input/touchscreen/Kconfig | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index 3cdfae3c9..efb4ff77c 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -1483,20 +1483,11 @@ source "drivers/input/touchscreen/td4310_lansi_e7/Kconfig"
+ source "drivers/input/touchscreen/vituralsar_e7/Kconfig"
+ 
+ config TOUCHSCREEN_SWEEP2WAKE
+-        tristate "Sweep2Wake for touchscreens"
+-	select TOUCHSCREEN_PREVENT_SLEEP
++        bool "Sweep2Wake for touchscreens"
+         default n
+ 
+ config TOUCHSCREEN_DOUBLETAP2WAKE
+-	tristate "DoubleTap2Wake for touchscreens"
+-	select TOUCHSCREEN_PREVENT_SLEEP
++	bool "DoubleTap2Wake for touchscreens"
+ 	default n
+ 
+-config TOUCHSCREEN_PREVENT_SLEEP
+-	bool "Inihibit sleep on modified touchscreen drivers"
+-	default n
+-	depends on TOUCHSCREEN_SWEEP2WAKE || TOUCHSCREEN_DOUBLETAP2WAKE
+-	help
+-	  This disables the sleep function of modified touchscreen drivers.
+-
+ endif
+-- 
+2.55.0
+

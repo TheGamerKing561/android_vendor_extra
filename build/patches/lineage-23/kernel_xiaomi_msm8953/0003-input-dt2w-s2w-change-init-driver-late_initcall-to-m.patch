@@ -1,0 +1,37 @@
+From 215a2ddd084242e45f09835e0e5656d7f117813b Mon Sep 17 00:00:00 2001
+From: Ryan Andri <ryanandri@linuxmail.org>
+Date: Fri, 29 Dec 2017 03:52:22 +0700
+Subject: [PATCH 03/16] input: dt2w/s2w: change init driver late_initcall to
+ module_init.
+
+Signed-off-by: Ryan Andri <ryanandri@linuxmail.org>
+---
+ drivers/input/touchscreen/doubletap2wake.c | 2 +-
+ drivers/input/touchscreen/sweep2wake.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/doubletap2wake.c b/drivers/input/touchscreen/doubletap2wake.c
+index b9d0cee29..abcc5a63f 100644
+--- a/drivers/input/touchscreen/doubletap2wake.c
++++ b/drivers/input/touchscreen/doubletap2wake.c
+@@ -397,5 +397,5 @@ static void __exit doubletap2wake_exit(void)
+ 	return;
+ }
+ 
+-late_initcall(doubletap2wake_init);
++module_init(doubletap2wake_init);
+ module_exit(doubletap2wake_exit);
+diff --git a/drivers/input/touchscreen/sweep2wake.c b/drivers/input/touchscreen/sweep2wake.c
+index aaed4fc68..be5dfc4e8 100644
+--- a/drivers/input/touchscreen/sweep2wake.c
++++ b/drivers/input/touchscreen/sweep2wake.c
+@@ -480,5 +480,5 @@ static void __exit sweep2wake_exit(void)
+ 	return;
+ }
+ 
+-late_initcall(sweep2wake_init);
++module_init(sweep2wake_init);
+ module_exit(sweep2wake_exit);
+-- 
+2.55.0
+

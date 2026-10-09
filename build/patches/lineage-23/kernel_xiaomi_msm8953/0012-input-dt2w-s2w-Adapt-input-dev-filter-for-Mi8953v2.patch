@@ -1,0 +1,39 @@
+From 85cd739cae348501422810199c578c800f4e4149 Mon Sep 17 00:00:00 2001
+From: RenzAlt <129452476+RennAlt@users.noreply.github.com>
+Date: Mon, 31 Mar 2025 17:06:51 +0000
+Subject: [PATCH 12/16] input: dt2w/s2w: Adapt input dev filter for Mi8953v2
+
+---
+ drivers/input/touchscreen/doubletap2wake.c | 2 +-
+ drivers/input/touchscreen/sweep2wake.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/doubletap2wake.c b/drivers/input/touchscreen/doubletap2wake.c
+index cb1647c66..8bc0af59f 100644
+--- a/drivers/input/touchscreen/doubletap2wake.c
++++ b/drivers/input/touchscreen/doubletap2wake.c
+@@ -208,7 +208,7 @@ static void dt2w_input_event(struct input_handle *handle, unsigned int type,
+ 
+ static int input_dev_filter(struct input_dev *dev) {
+ 	if (strstr(dev->name, "touch") ||
+-		strstr(dev->name, "synaptics_dsx_i2c")) {
++		strstr(dev->name, "fts_ts-mi8953")) {
+ 		return 0;
+ 	} else {
+ 		return 1;
+diff --git a/drivers/input/touchscreen/sweep2wake.c b/drivers/input/touchscreen/sweep2wake.c
+index 074466a9d..a850af83f 100644
+--- a/drivers/input/touchscreen/sweep2wake.c
++++ b/drivers/input/touchscreen/sweep2wake.c
+@@ -220,7 +220,7 @@ static void s2w_input_event(struct input_handle *handle, unsigned int type,
+ 
+ static int input_dev_filter(struct input_dev *dev) {
+ 	if (strstr(dev->name, "touch") ||
+-		strstr(dev->name, "synaptics_dsx_i2c")) {
++		strstr(dev->name, "fts_ts-mi8953")) {
+ 		return 0;
+ 	} else {
+ 		return 1;
+-- 
+2.55.0
+

@@ -1,0 +1,508 @@
+From c68eae6ea289b1a3a7d34612724760cccd84cec8 Mon Sep 17 00:00:00 2001
+From: Eyad Tamer <eyadtamer2121@gmail.com>
+Date: Sat, 25 Jul 2026 17:24:03 +0300
+Subject: [PATCH 15/16] Move dt2w node from
+ /proc/sys/dev/xiaomi_msm8953_touchscreen/enable_dt2w to
+ /proc/touchpanel/wakeup_gesture
+
+---
+ arch/arm64/configs/xiaomi/daisy.config        |   2 +-
+ .../include/xiaomi-titanium/touchscreen.h     |   2 +-
+ techpack/xiaomi-titanium/touchscreen/Kconfig  |   4 +-
+ techpack/xiaomi-titanium/touchscreen/Makefile |   2 +-
+ .../focaltech_touch/focaltech_core.c          |   6 +-
+ .../focaltech_touch/focaltech_core.h          |   4 +-
+ .../focaltech_touch/focaltech_gesture.c       |   2 +-
+ .../xiaomi-titanium/touchscreen/ts_procfs.c   | 186 ++++++++++++++++++
+ .../xiaomi-titanium/touchscreen/ts_sysctl.c   | 166 ----------------
+ 9 files changed, 197 insertions(+), 177 deletions(-)
+ create mode 100644 techpack/xiaomi-titanium/touchscreen/ts_procfs.c
+ delete mode 100644 techpack/xiaomi-titanium/touchscreen/ts_sysctl.c
+
+diff --git a/arch/arm64/configs/xiaomi/daisy.config b/arch/arm64/configs/xiaomi/daisy.config
+index 5d703e4a4..5b80a4715 100644
+--- a/arch/arm64/configs/xiaomi/daisy.config
++++ b/arch/arm64/configs/xiaomi/daisy.config
+@@ -13,7 +13,7 @@ CONFIG_ENABLE_PM_TP_SUSPEND_RESUME=y
+ # Input Device Drivers
+ CONFIG_TOUCHSCREEN_GT917D_D1S=y
+ # CONFIG_TOUCHSCREEN_FT5446_D1S=y
+-CONFIG_TOUCHSCREEN_SYSCTL_MI8953=y
++CONFIG_TOUCHSCREEN_PROCFS_MI8953=y
+ CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE=y
+ CONFIG_TOUCHSCREEN_SWEEP2WAKE=y
+ CONFIG_TOUCHSCREEN_FTS_MI8953=y
+diff --git a/techpack/xiaomi-titanium/include/xiaomi-titanium/touchscreen.h b/techpack/xiaomi-titanium/include/xiaomi-titanium/touchscreen.h
+index 3f3f98165..2b8f99689 100644
+--- a/techpack/xiaomi-titanium/include/xiaomi-titanium/touchscreen.h
++++ b/techpack/xiaomi-titanium/include/xiaomi-titanium/touchscreen.h
+@@ -1,7 +1,7 @@
+ #ifndef _XIAOMI_MSM8953_TOUCHSCREEN_H
+ #define _XIAOMI_MSM8953_TOUCHSCREEN_H
+ 
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_SYSCTL_MI8953)
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_PROCFS_MI8953)
+ #include <linux/device.h>
+  
+ struct xiaomi_msm8953_touchscreen_operations_t {
+diff --git a/techpack/xiaomi-titanium/touchscreen/Kconfig b/techpack/xiaomi-titanium/touchscreen/Kconfig
+index dd214d887..eec93bd9a 100644
+--- a/techpack/xiaomi-titanium/touchscreen/Kconfig
++++ b/techpack/xiaomi-titanium/touchscreen/Kconfig
+@@ -57,8 +57,8 @@ config TOUCHSCREEN_GT9XX_v24
+ 
+           If unsure, say N.
+ 
+-config TOUCHSCREEN_SYSCTL_MI8953
+- 	bool "Sysctl control interface for Xiaomi MSM8953 touchscreens"
++config TOUCHSCREEN_PROCFS_MI8953
++ 	bool "Procfs control interface for Xiaomi MSM8953 touchscreens"
+  	help
+  	  Say Y here to enable sysctl control interface for Xiaomi MSM8953 touchscreens
+ 
+diff --git a/techpack/xiaomi-titanium/touchscreen/Makefile b/techpack/xiaomi-titanium/touchscreen/Makefile
+index 738c8e566..78df42036 100644
+--- a/techpack/xiaomi-titanium/touchscreen/Makefile
++++ b/techpack/xiaomi-titanium/touchscreen/Makefile
+@@ -9,4 +9,4 @@ obj-$(CONFIG_TOUCHSCREEN_NT36XXX) += nt36xxx/
+ obj-$(CONFIG_TOUCHSCREEN_IST3038C)	+= ist3038c/
+ obj-$(CONFIG_TOUCHSCREEN_GT9XX_v24)	+= gt9xx_v2.4/
+ obj-$(CONFIG_MACH_XIAOMI_YSL)		+= lct_tp_fm_info_e6.o
+-obj-$(CONFIG_TOUCHSCREEN_SYSCTL_MI8953) += ts_sysctl.o
+\ No newline at end of file
++obj-$(CONFIG_TOUCHSCREEN_PROCFS_MI8953) += ts_procfs.o
+\ No newline at end of file
+diff --git a/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_core.c b/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_core.c
+index 23d75fa1f..e46164f65 100644
+--- a/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_core.c
++++ b/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_core.c
+@@ -1715,7 +1715,7 @@ static int fts_input_report_key(struct fts_ts_data *data, int index)
+ 		return -EINVAL;
+ 	}
+ 
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_SYSCTL_MI8953)
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_PROCFS_MI8953)
+ 	if (data->disable_keys) {
+ 		return -EINVAL;
+ 	}
+@@ -2857,7 +2857,7 @@ static int fts_charger_notify(struct notifier_block *nb,
+ }
+ #endif
+ 
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_SYSCTL_MI8953)
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_PROCFS_MI8953)
+ static int fts_mi8953_ops_disable_keys(struct device *dev, bool disable)
+ {
+  	struct fts_ts_data *ts_data = fts_data;
+@@ -3127,7 +3127,7 @@ static int fts_ts_probe_entry(struct fts_ts_data *ts_data)
+ 	}
+ #endif
+ 
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_SYSCTL_MI8953)
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_PROCFS_MI8953)
+  	fts_mi8953_ts_ops.dev = ts_data->dev;
+  	xiaomi_msm8953_touchscreen_register_operations(&fts_mi8953_ts_ops);
+ #endif
+diff --git a/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_core.h b/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_core.h
+index 1866e8187..0c5c707c2 100644
+--- a/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_core.h
++++ b/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_core.h
+@@ -315,7 +315,7 @@ struct fts_ts_data {
+ 	atomic_t trusted_touch_mode;
+ #endif
+ 	atomic_t delayed_vm_probe_pending;
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_SYSCTL_MI8953)
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_PROCFS_MI8953)
+ 	bool disable_keys;
+ #endif
+ };
+@@ -342,7 +342,7 @@ int fts_bus_init(struct fts_ts_data *ts_data);
+ int fts_bus_exit(struct fts_ts_data *ts_data);
+ 
+ /* Gesture functions */
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_SYSCTL_MI8953)
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_PROCFS_MI8953)
+ int fts_mi8953_ops_enable_dt2w(struct device *dev, bool enable);
+ #endif
+ int fts_gesture_init(struct fts_ts_data *ts_data);
+diff --git a/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_gesture.c b/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_gesture.c
+index 5ecedd878..c5026b59a 100644
+--- a/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_gesture.c
++++ b/techpack/xiaomi-titanium/touchscreen/focaltech_touch/focaltech_gesture.c
+@@ -100,7 +100,7 @@ static struct fts_gesture_st fts_gesture_data;
+ /*****************************************************************************
+ * Static function prototypes
+ *****************************************************************************/
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_SYSCTL_MI8953)
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_PROCFS_MI8953)
+ int fts_mi8953_ops_enable_dt2w(struct device *dev, bool enable)
+ {
+  	struct fts_ts_data *ts_data = fts_data;
+diff --git a/techpack/xiaomi-titanium/touchscreen/ts_procfs.c b/techpack/xiaomi-titanium/touchscreen/ts_procfs.c
+new file mode 100644
+index 000000000..ea8c9f6b1
+--- /dev/null
++++ b/techpack/xiaomi-titanium/touchscreen/ts_procfs.c
+@@ -0,0 +1,186 @@
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/proc_fs.h>
++#include <linux/uaccess.h>
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE)
++#include <linux/input/doubletap2wake.h>
++#endif
++#include <xiaomi-titanium/touchscreen.h>
++
++struct xiaomi_msm8953_touchscreen_operations_t *xiaomi_msm8953_touchscreen_operations;
++
++static bool use_software_dt2w = true;
++static int xiaomi_msm8953_touchscreen_enable_dt2w_val = 0;
++static int xiaomi_msm8953_touchscreen_disable_keys_val = 0;
++
++static struct proc_dir_entry *touchpanel_dir;
++
++int xiaomi_msm8953_touchscreen_register_operations(struct xiaomi_msm8953_touchscreen_operations_t *ts_ops)
++{
++	if (IS_ERR_OR_NULL(ts_ops))
++		return -EINVAL;
++
++	if (!dev_get_drvdata(ts_ops->dev))
++		return -EINVAL;
++
++	xiaomi_msm8953_touchscreen_operations = ts_ops;
++
++	if (!IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations->enable_dt2w))
++		xiaomi_msm8953_touchscreen_operations->enable_dt2w(xiaomi_msm8953_touchscreen_operations->dev, false);
++	if (!IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations->disable_keys))
++		xiaomi_msm8953_touchscreen_operations->disable_keys(xiaomi_msm8953_touchscreen_operations->dev, false);
++
++	return 0;
++}
++EXPORT_SYMBOL(xiaomi_msm8953_touchscreen_register_operations);
++
++/* --- wakeup_gesture handlers --- */
++static ssize_t wakeup_gesture_read(struct file *file, char __user *buffer, size_t count, loff_t *ppos)
++{
++	char page[32];
++	int len = snprintf(page, sizeof(page), "%d\n", xiaomi_msm8953_touchscreen_enable_dt2w_val);
++	return simple_read_from_buffer(buffer, count, ppos, page, len);
++}
++
++static ssize_t wakeup_gesture_write(struct file *file, const char __user *buffer, size_t count, loff_t *ppos)
++{
++	int val, rc = 0;
++	char kbuf[32];
++
++	if (count > sizeof(kbuf) - 1)
++		return -EINVAL;
++
++	if (copy_from_user(kbuf, buffer, count))
++		return -EFAULT;
++
++	kbuf[count] = '\0';
++
++	if (kstrtoint(kbuf, 10, &val))
++		return -EINVAL;
++
++	if (IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations) ||
++		IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations->enable_dt2w))
++		return -EFAULT;
++
++	if (val != xiaomi_msm8953_touchscreen_enable_dt2w_val) {
++		switch (val) {
++			case 0:
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE)
++				if (use_software_dt2w)
++					dt2w_switch = 0;
++				else
++#endif
++				rc = xiaomi_msm8953_touchscreen_operations->enable_dt2w(xiaomi_msm8953_touchscreen_operations->dev, false);
++				break;
++			case 1:
++#if IS_ENABLED(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE)
++				if (use_software_dt2w)
++					dt2w_switch = 1;
++				else
++#endif
++				rc = xiaomi_msm8953_touchscreen_operations->enable_dt2w(xiaomi_msm8953_touchscreen_operations->dev, true);
++				break;
++			default:
++				return -EINVAL;
++		}
++
++		if (rc < 0)
++			return rc;
++
++		xiaomi_msm8953_touchscreen_enable_dt2w_val = val;
++	}
++
++	return count;
++}
++
++/* --- disable_keys handlers --- */
++static ssize_t disable_keys_read(struct file *file, char __user *buffer, size_t count, loff_t *ppos)
++{
++	char page[32];
++	int len = snprintf(page, sizeof(page), "%d\n", xiaomi_msm8953_touchscreen_disable_keys_val);
++	return simple_read_from_buffer(buffer, count, ppos, page, len);
++}
++
++static ssize_t disable_keys_write(struct file *file, const char __user *buffer, size_t count, loff_t *ppos)
++{
++	int val, rc = 0;
++	char kbuf[32];
++
++	if (count > sizeof(kbuf) - 1)
++		return -EINVAL;
++
++	if (copy_from_user(kbuf, buffer, count))
++		return -EFAULT;
++
++	kbuf[count] = '\0';
++
++	if (kstrtoint(kbuf, 10, &val))
++		return -EINVAL;
++
++	if (IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations) ||
++		IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations->disable_keys))
++		return -EFAULT;
++
++	if (val != xiaomi_msm8953_touchscreen_disable_keys_val) {
++		switch (val) {
++			case 0:
++				rc = xiaomi_msm8953_touchscreen_operations->disable_keys(xiaomi_msm8953_touchscreen_operations->dev, false);
++				break;
++			case 1:
++				rc = xiaomi_msm8953_touchscreen_operations->disable_keys(xiaomi_msm8953_touchscreen_operations->dev, true);
++				break;
++			default:
++				return -EINVAL;
++		}
++
++		if (rc < 0)
++			return rc;
++
++		xiaomi_msm8953_touchscreen_disable_keys_val = val;
++	}
++
++	return count;
++}
++
++static const struct file_operations wakeup_gesture_proc_ops = {
++	.read = wakeup_gesture_read,
++	.write = wakeup_gesture_write,
++};
++
++static const struct file_operations disable_keys_proc_ops = {
++	.read = disable_keys_read,
++	.write = disable_keys_write,
++};
++
++static int __init xiaomi_msm8953_touchscreen_proc_init(void)
++{
++	use_software_dt2w = true;
++
++	touchpanel_dir = proc_mkdir("touchpanel", NULL);
++	if (!touchpanel_dir)
++		return -ENOMEM;
++
++	if (!proc_create("wakeup_gesture", 0666, touchpanel_dir, &wakeup_gesture_proc_ops))
++		goto err_node1;
++
++	if (!proc_create("disable_keys", 0666, touchpanel_dir, &disable_keys_proc_ops))
++		goto err_node2;
++
++	return 0;
++
++err_node2:
++	remove_proc_entry("wakeup_gesture", touchpanel_dir);
++err_node1:
++	remove_proc_entry("touchpanel", NULL);
++	return -ENOMEM;
++}
++
++static void __exit xiaomi_msm8953_touchscreen_proc_exit(void)
++{
++	remove_proc_entry("wakeup_gesture", touchpanel_dir);
++	remove_proc_entry("disable_keys", touchpanel_dir);
++	remove_proc_entry("touchpanel", NULL);
++}
++
++module_init(xiaomi_msm8953_touchscreen_proc_init);
++module_exit(xiaomi_msm8953_touchscreen_proc_exit);
+\ No newline at end of file
+diff --git a/techpack/xiaomi-titanium/touchscreen/ts_sysctl.c b/techpack/xiaomi-titanium/touchscreen/ts_sysctl.c
+deleted file mode 100644
+index b6d8eb052..000000000
+--- a/techpack/xiaomi-titanium/touchscreen/ts_sysctl.c
++++ /dev/null
+@@ -1,166 +0,0 @@
+-#include <linux/device.h>
+-#include <linux/module.h>
+-#include <linux/sysctl.h>
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE)
+-#include <linux/input/doubletap2wake.h>
+-#endif
+-#include <xiaomi-titanium/touchscreen.h>
+-
+-struct xiaomi_msm8953_touchscreen_operations_t *xiaomi_msm8953_touchscreen_operations;
+-
+-static bool use_software_dt2w = true;
+-static int xiaomi_msm8953_touchscreen_enable_dt2w_val = -1;
+-static int xiaomi_msm8953_touchscreen_disable_keys_val = -1;
+-
+-int xiaomi_msm8953_touchscreen_register_operations(struct xiaomi_msm8953_touchscreen_operations_t *ts_ops)
+-{
+-	if (IS_ERR_OR_NULL(ts_ops))
+-		return -EINVAL;
+-
+-	if (!dev_get_drvdata(ts_ops->dev))
+-		return -EINVAL;
+-
+-	xiaomi_msm8953_touchscreen_operations = ts_ops;
+-
+-	/* Set initial state to false */
+-	if (!IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations->enable_dt2w))
+-		xiaomi_msm8953_touchscreen_operations->enable_dt2w(xiaomi_msm8953_touchscreen_operations->dev, false);
+-	if (!IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations->disable_keys))
+-		xiaomi_msm8953_touchscreen_operations->disable_keys(xiaomi_msm8953_touchscreen_operations->dev, false);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(xiaomi_msm8953_touchscreen_register_operations);
+-
+-static int xiaomi_msm8953_touchscreen_toggle_enable_dt2w(struct ctl_table *table,
+-					int write, void __user *buffer, size_t *lenp, loff_t *ppos)
+-{
+-	int *valp = table->data;
+-	int old_val = *valp;
+-	int rc;
+-
+-	if (IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations) ||
+-		IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations->enable_dt2w))
+-		return -EFAULT;
+-
+-	rc = proc_dointvec(table, write, buffer, lenp, ppos);
+-
+-	if (rc == 0 && write && *valp != old_val) {
+-		switch (*valp) {
+-			case 0:
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE)
+-				if (use_software_dt2w)
+-					dt2w_switch = 0;
+-				else
+-#endif
+-				rc = xiaomi_msm8953_touchscreen_operations->enable_dt2w(xiaomi_msm8953_touchscreen_operations->dev, false);
+-				break;
+-			case 1:
+-#if IS_ENABLED(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE)
+-				if (use_software_dt2w)
+-					dt2w_switch = 1;
+-				else
+-#endif
+-				rc = xiaomi_msm8953_touchscreen_operations->enable_dt2w(xiaomi_msm8953_touchscreen_operations->dev, true);
+-				break;
+-			default:
+-				rc = -EINVAL;
+-				break;
+-		}
+-	}
+-
+-	/* Restore the old value in case of error */
+-	if (rc)
+-		*valp = old_val;
+-
+-	return rc;
+-}
+-
+-static int xiaomi_msm8953_touchscreen_toggle_disable_keys(struct ctl_table *table,
+-					int write, void __user *buffer, size_t *lenp, loff_t *ppos)
+-{
+-	int *valp = table->data;
+-	int old_val = *valp;
+-	int rc;
+-
+-	if (IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations) ||
+-		IS_ERR_OR_NULL(xiaomi_msm8953_touchscreen_operations->disable_keys))
+-		return -EFAULT;
+-
+-	rc = proc_dointvec(table, write, buffer, lenp, ppos);
+-
+-	if (rc == 0 && write && *valp != old_val) {
+-		switch (*valp) {
+-			case 0:
+-				rc = xiaomi_msm8953_touchscreen_operations->disable_keys(xiaomi_msm8953_touchscreen_operations->dev, false);
+-				break;
+-			case 1:
+-				rc = xiaomi_msm8953_touchscreen_operations->disable_keys(xiaomi_msm8953_touchscreen_operations->dev, true);
+-				break;
+-			default:
+-				rc = -EINVAL;
+-				break;
+-		}
+-	}
+-
+-	/* Restore the old value in case of error */
+-	if (rc)
+-		*valp = old_val;
+-
+-	return rc;
+-}
+-
+-/* file(s) in /proc/sys/dev/xiaomi_msm8953_touchscreen */
+-static struct ctl_table xiaomi_msm8953_touchscreen_files[] = {
+-	{
+-		.procname	= "enable_dt2w",
+-		.data		= &xiaomi_msm8953_touchscreen_enable_dt2w_val,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0666,
+-		.proc_handler	= xiaomi_msm8953_touchscreen_toggle_enable_dt2w,
+-	},
+-	{
+-		.procname	= "disable_keys",
+-		.data		= &xiaomi_msm8953_touchscreen_disable_keys_val,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0666,
+-		.proc_handler	= xiaomi_msm8953_touchscreen_toggle_disable_keys,
+-	},
+-	{ }
+-};
+-
+-/* dir in /proc/sys/dev */
+-static struct ctl_table xiaomi_msm8953_touchscreen_dir[] = {
+-	{
+-		.procname	= "xiaomi_msm8953_touchscreen",
+-		.maxlen		= 0,
+-		.mode		= 0555,
+-		.child		= xiaomi_msm8953_touchscreen_files,
+-	},
+-	{ }
+-};
+-
+-/* /proc/sys/dev itself, in case that is not there yet */
+-static struct ctl_table xiaomi_msm8953_touchscreen_root_dir[] = {
+-	{
+-		.procname	= "dev",
+-		.maxlen		= 0,
+-		.mode		= 0555,
+-		.child		= xiaomi_msm8953_touchscreen_dir,
+-	},
+-	{ }
+-};
+-
+-static struct ctl_table_header *xiaomi_msm8953_touchscreen_sysctl_header;
+-
+-static int __init xiaomi_msm8953_touchscreen_sysctl_init(void)
+-{
+-	use_software_dt2w = true;
+-
+-	xiaomi_msm8953_touchscreen_sysctl_header = register_sysctl_table(xiaomi_msm8953_touchscreen_root_dir);
+-	if (!xiaomi_msm8953_touchscreen_sysctl_header)
+-		return -ENOMEM;
+-
+-	return 0;
+-}
+-module_init(xiaomi_msm8953_touchscreen_sysctl_init);
+-- 
+2.55.0
+

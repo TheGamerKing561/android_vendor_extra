@@ -1,0 +1,27 @@
+From 9c9ad309ccea688cbff87acd3f9712651589a2b5 Mon Sep 17 00:00:00 2001
+From: Aqur3nz <enashinonome264@gmail.com>
+Date: Sat, 25 Apr 2026 08:23:46 +0000
+Subject: [PATCH 14/16] techpack: stub: Define gesture_incall incase audio
+ isn't compiled
+
+---
+ techpack/stub/stub.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/techpack/stub/stub.c b/techpack/stub/stub.c
+index 6024341df..f1110194a 100644
+--- a/techpack/stub/stub.c
++++ b/techpack/stub/stub.c
+@@ -1,3 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/types.h>
++
++bool gesture_incall = false;
++
+ static void _techpack_stub(void)
+ {
+ }
+-- 
+2.55.0
+

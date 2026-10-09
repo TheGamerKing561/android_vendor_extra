@@ -1,0 +1,65 @@
+From 8b708c528eb8d86cc8610635fbbfb3dfb05f4f14 Mon Sep 17 00:00:00 2001
+From: me-cafebabe <87921983+me-cafebabe@users.noreply.github.com>
+Date: Sat, 27 Feb 2021 17:45:05 +0800
+Subject: [PATCH 11/16] input: dt2w/s2w: Wake up by KEY_WAKEUP instead
+
+---
+ drivers/input/touchscreen/doubletap2wake.c | 6 +++---
+ drivers/input/touchscreen/sweep2wake.c     | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/input/touchscreen/doubletap2wake.c b/drivers/input/touchscreen/doubletap2wake.c
+index 74c72409c..cb1647c66 100644
+--- a/drivers/input/touchscreen/doubletap2wake.c
++++ b/drivers/input/touchscreen/doubletap2wake.c
+@@ -101,10 +101,10 @@ static void doubletap2wake_reset(void) {
+ static void doubletap2wake_presspwr(struct work_struct * doubletap2wake_presspwr_work) {
+ 	if (!mutex_trylock(&pwrkeyworklock))
+                 return;
+-	input_event(doubletap2wake_pwrdev, EV_KEY, KEY_POWER, 1);
++	input_event(doubletap2wake_pwrdev, EV_KEY, KEY_WAKEUP, 1);
+ 	input_event(doubletap2wake_pwrdev, EV_SYN, 0, 0);
+ 	msleep(DT2W_PWRKEY_DUR);
+-	input_event(doubletap2wake_pwrdev, EV_KEY, KEY_POWER, 0);
++	input_event(doubletap2wake_pwrdev, EV_KEY, KEY_WAKEUP, 0);
+ 	input_event(doubletap2wake_pwrdev, EV_SYN, 0, 0);
+ 	msleep(DT2W_PWRKEY_DUR);
+         mutex_unlock(&pwrkeyworklock);
+@@ -330,7 +330,7 @@ static int __init doubletap2wake_init(void)
+ 		goto err_alloc_dev;
+ 	}
+ 
+-	input_set_capability(doubletap2wake_pwrdev, EV_KEY, KEY_POWER);
++	input_set_capability(doubletap2wake_pwrdev, EV_KEY, KEY_WAKEUP);
+ 	doubletap2wake_pwrdev->name = "dt2w_pwrkey";
+ 	doubletap2wake_pwrdev->phys = "dt2w_pwrkey/input0";
+ 
+diff --git a/drivers/input/touchscreen/sweep2wake.c b/drivers/input/touchscreen/sweep2wake.c
+index e2c590a13..074466a9d 100644
+--- a/drivers/input/touchscreen/sweep2wake.c
++++ b/drivers/input/touchscreen/sweep2wake.c
+@@ -112,10 +112,10 @@ __setup("s2w=", read_s2w_cmdline);
+ static void sweep2wake_presspwr(struct work_struct * sweep2wake_presspwr_work) {
+ 	if (!mutex_trylock(&pwrkeyworklock))
+                 return;
+-	input_event(sweep2wake_pwrdev, EV_KEY, KEY_POWER, 1);
++	input_event(sweep2wake_pwrdev, EV_KEY, KEY_WAKEUP, 1);
+ 	input_event(sweep2wake_pwrdev, EV_SYN, 0, 0);
+ 	msleep(s2w_pwrkey_dur);
+-	input_event(sweep2wake_pwrdev, EV_KEY, KEY_POWER, 0);
++	input_event(sweep2wake_pwrdev, EV_KEY, KEY_WAKEUP, 0);
+ 	input_event(sweep2wake_pwrdev, EV_SYN, 0, 0);
+ 	msleep(s2w_pwrkey_dur);
+         mutex_unlock(&pwrkeyworklock);
+@@ -384,7 +384,7 @@ static int __init sweep2wake_init(void)
+ 		goto err_alloc_dev;
+ 	}
+ 
+-	input_set_capability(sweep2wake_pwrdev, EV_KEY, KEY_POWER);
++	input_set_capability(sweep2wake_pwrdev, EV_KEY, KEY_WAKEUP);
+ 	sweep2wake_pwrdev->name = "s2w_pwrkey";
+ 	sweep2wake_pwrdev->phys = "s2w_pwrkey/input0";
+ 
+-- 
+2.55.0
+

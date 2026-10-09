@@ -1,0 +1,86 @@
+From 4e726c415a55b37c61ae39c90eea145499fc8567 Mon Sep 17 00:00:00 2001
+From: Francisco Franco <franciscofranco.1990@gmail.com>
+Date: Fri, 17 Feb 2017 13:58:13 +0100
+Subject: [PATCH 13/16] msm: mdss: add a simple api to query the display state
+ (on/off) at any point in time
+
+Change-Id: Ie6f726ad2ad0d194c46a56526181574b92884c04
+
+Signed-off-by: franciscofranco <franciscofranco.1990@gmail.com>
+Change-Id: I5ea480e10a6b6ab5dec550819c689da3b81422e5
+---
+ drivers/video/fbdev/msm/mdss_dsi_panel.c | 12 ++++++++++++
+ include/linux/display_state.h            | 17 +++++++++++++++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 include/linux/display_state.h
+
+diff --git a/drivers/video/fbdev/msm/mdss_dsi_panel.c b/drivers/video/fbdev/msm/mdss_dsi_panel.c
+index e3721cbf8..078e7f373 100644
+--- a/drivers/video/fbdev/msm/mdss_dsi_panel.c
++++ b/drivers/video/fbdev/msm/mdss_dsi_panel.c
+@@ -22,6 +22,7 @@
+ #include <linux/qpnp/pwm.h>
+ #include <linux/err.h>
+ #include <linux/string.h>
++#include <linux/display_state.h>
+ 
+ #include "mdss_dsi.h"
+ #include "mdss_debug.h"
+@@ -35,6 +36,13 @@
+ 
+ #define VSYNC_DELAY msecs_to_jiffies(17)
+ 
++static bool display_on = true;
++
++bool is_display_on(void)
++{
++	return display_on;
++}
++
+ DEFINE_LED_TRIGGER(bl_led_trigger);
+ 
+ void mdss_dsi_panel_pwm_cfg(struct mdss_dsi_ctrl_pdata *ctrl)
+@@ -941,6 +949,8 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
+ 		return -EINVAL;
+ 	}
+ 
++	display_on = true;
++
+ 	pinfo = &pdata->panel_info;
+ 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
+ 				panel_data);
+@@ -1057,6 +1067,8 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
+ 		return -EINVAL;
+ 	}
+ 
++	display_on = false;
++
+ 	pinfo = &pdata->panel_info;
+ 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
+ 				panel_data);
+diff --git a/include/linux/display_state.h b/include/linux/display_state.h
+new file mode 100644
+index 000000000..e2cd6011e
+--- /dev/null
++++ b/include/linux/display_state.h
+@@ -0,0 +1,17 @@
++/*
++ * include/linux/display_state.h
++ *
++ * Copyright (c) 2016 Francisco Franco
++ * franciscofranco.1990@gmail.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _LINUX_DISPLAY_STATE_H
++#define _LINUX_DISPLAY_STATE_H
++
++bool is_display_on(void);
++
++#endif
+-- 
+2.55.0
+

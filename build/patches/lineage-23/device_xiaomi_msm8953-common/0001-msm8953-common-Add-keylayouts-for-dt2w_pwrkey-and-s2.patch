@@ -1,0 +1,100 @@
+From 63b025767940145b1663c1b12d4b24bc8beeb073 Mon Sep 17 00:00:00 2001
+From: TheGamerKing <eyadtamer2121@gmail.com>
+Date: Sun, 26 Jul 2026 22:02:28 +0300
+Subject: [PATCH] msm8953-common: Add keylayouts for dt2w_pwrkey and s2w_pwrkey
+
+This is for the new DT2W and S2W software implementation in kernel, see https://github.com/TheGamerKing561/android_kernel_xiaomi_msm8953/commit/61ffc036364caf2ff4e9da7a4272329e83213a5b
+
+Signed-off-by: TheGamerKing <eyadtamer2121@gmail.com>
+---
+ keylayout/dt2w_pwrkey.kl | 28 ++++++++++++++++++++++++++++
+ keylayout/s2w_pwrkey.kl  | 28 ++++++++++++++++++++++++++++
+ msm8953.mk               |  2 ++
+ 3 files changed, 58 insertions(+)
+ create mode 100644 keylayout/dt2w_pwrkey.kl
+ create mode 100644 keylayout/s2w_pwrkey.kl
+
+diff --git a/keylayout/dt2w_pwrkey.kl b/keylayout/dt2w_pwrkey.kl
+new file mode 100644
+index 0000000..f6f5448
+--- /dev/null
++++ b/keylayout/dt2w_pwrkey.kl
+@@ -0,0 +1,28 @@
++# Copyright (c) 2014, The Linux Foundation. All rights reserved.
++#
++# Redistribution and use in source and binary forms, with or without
++# modification, are permitted provided that the following conditions are
++# met:
++#     * Redistributions of source code must retain the above copyright
++#       notice, this list of conditions and the following disclaimer.
++#     * Redistributions in binary form must reproduce the above
++#       copyright notice, this list of conditions and the following
++#       disclaimer in the documentation and/or other materials provided
++#       with the distribution.
++#     * Neither the name of The Linux Foundation nor the names of its
++#       contributors may be used to endorse or promote products derived
++#       from this software without specific prior written permission.
++#
++# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
++# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
++# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
++# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
++# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
++# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++key 143    WAKEUP
+diff --git a/keylayout/s2w_pwrkey.kl b/keylayout/s2w_pwrkey.kl
+new file mode 100644
+index 0000000..f6f5448
+--- /dev/null
++++ b/keylayout/s2w_pwrkey.kl
+@@ -0,0 +1,28 @@
++# Copyright (c) 2014, The Linux Foundation. All rights reserved.
++#
++# Redistribution and use in source and binary forms, with or without
++# modification, are permitted provided that the following conditions are
++# met:
++#     * Redistributions of source code must retain the above copyright
++#       notice, this list of conditions and the following disclaimer.
++#     * Redistributions in binary form must reproduce the above
++#       copyright notice, this list of conditions and the following
++#       disclaimer in the documentation and/or other materials provided
++#       with the distribution.
++#     * Neither the name of The Linux Foundation nor the names of its
++#       contributors may be used to endorse or promote products derived
++#       from this software without specific prior written permission.
++#
++# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
++# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
++# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
++# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
++# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
++# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++key 143    WAKEUP
+diff --git a/msm8953.mk b/msm8953.mk
+index 6a99e45..2fda506 100644
+--- a/msm8953.mk
++++ b/msm8953.mk
+@@ -187,6 +187,8 @@ PRODUCT_COPY_FILES += \
+     $(LOCAL_PATH)/keylayout/ft5435_ts.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/ft5435_ts.kl \
+     $(LOCAL_PATH)/keylayout/gf3208.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/gf3208.kl \
+     $(LOCAL_PATH)/keylayout/goodix-ts.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/goodix-ts.kl \
++    $(LOCAL_PATH)/keylayout/dt2w_pwrkey.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/dt2w_pwrkey.kl \
++    $(LOCAL_PATH)/keylayout/s2w_pwrkey.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/s2w_pwrkey.kl \
+     $(LOCAL_PATH)/keylayout/gpio-keys.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/gpio-keys.kl \
+     $(LOCAL_PATH)/keylayout/ist30xx_ts_input.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/ist30xx_ts_input.kl \
+     $(LOCAL_PATH)/keylayout/msm8953-snd-card-mtp_Button_Jack.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/msm8953-snd-card-mtp_Button_Jack.kl \
+-- 
+2.55.0
+

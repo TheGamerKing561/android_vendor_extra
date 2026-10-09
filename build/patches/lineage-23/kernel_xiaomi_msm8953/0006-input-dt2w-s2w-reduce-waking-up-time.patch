@@ -1,0 +1,40 @@
+From 33116bb9ebb10c6f0a7b3ff3a3022d4f1ce3c0f9 Mon Sep 17 00:00:00 2001
+From: Ryan Andri <ryanandri@linuxmail.org>
+Date: Fri, 29 Dec 2017 08:21:50 +0700
+Subject: [PATCH 06/16] input: dt2w/s2w: reduce waking up time.
+
+Signed-off-by: Ryan Andri <ryanandri@linuxmail.org>
+---
+ drivers/input/touchscreen/doubletap2wake.c | 2 +-
+ drivers/input/touchscreen/sweep2wake.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/doubletap2wake.c b/drivers/input/touchscreen/doubletap2wake.c
+index e95237f24..95d9951fc 100644
+--- a/drivers/input/touchscreen/doubletap2wake.c
++++ b/drivers/input/touchscreen/doubletap2wake.c
+@@ -55,7 +55,7 @@ MODULE_LICENSE("GPLv2");
+ #define DT2W_DEBUG		0
+ #define DT2W_DEFAULT		0
+ 
+-#define DT2W_PWRKEY_DUR		60
++#define DT2W_PWRKEY_DUR		30
+ #define DT2W_FEATHER		200
+ #define DT2W_TIME		700
+ 
+diff --git a/drivers/input/touchscreen/sweep2wake.c b/drivers/input/touchscreen/sweep2wake.c
+index 430941f89..9914d99de 100644
+--- a/drivers/input/touchscreen/sweep2wake.c
++++ b/drivers/input/touchscreen/sweep2wake.c
+@@ -82,7 +82,7 @@ MODULE_LICENSE("GPLv2");
+ int s2w_switch = 0;
+ bool s2w_scr_suspended = false;
+ static int s2w_debug = 0;
+-static int s2w_pwrkey_dur = 60;
++static int s2w_pwrkey_dur = 30;
+ static int touch_x = 0, touch_y = 0;
+ static bool touch_x_called = false, touch_y_called = false;
+ static bool exec_count = true;
+-- 
+2.55.0
+

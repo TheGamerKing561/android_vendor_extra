@@ -1,0 +1,30 @@
+From 2187ed738740a4c8260496a860c14ba75dfe61ee Mon Sep 17 00:00:00 2001
+From: Eyad Tamer <eyadtamer2121@gmail.com>
+Date: Mon, 27 Jul 2026 15:11:07 +0000
+Subject: [PATCH 16/16] arm64: configs: xiaomi: sakura.config: Use new FTS
+ driver
+
+---
+ arch/arm64/configs/xiaomi/sakura.config | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/configs/xiaomi/sakura.config b/arch/arm64/configs/xiaomi/sakura.config
+index 531c1007a..477560768 100644
+--- a/arch/arm64/configs/xiaomi/sakura.config
++++ b/arch/arm64/configs/xiaomi/sakura.config
+@@ -12,7 +12,11 @@ CONFIG_ENABLE_PM_TP_SUSPEND_RESUME=y
+ 
+ # Input Device Drivers
+ CONFIG_TOUCHSCREEN_GT917D_D1S=y
+-CONFIG_TOUCHSCREEN_FT5446_D1S=y
++# CONFIG_TOUCHSCREEN_FT5446_D1S=y
++CONFIG_TOUCHSCREEN_PROCFS_MI8953=y
++CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE=y
++CONFIG_TOUCHSCREEN_SWEEP2WAKE=y
++CONFIG_TOUCHSCREEN_FTS_MI8953=y
+ CONFIG_FINGERPRINT_FPC1020=y
+ CONFIG_FINGERPRINT_GOODIX_GF3208=y
+ 
+-- 
+2.55.0
+
